@@ -1,17 +1,30 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { Suspense } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import AppLayout from "./layouts/AppLayout";
+import { AppProvider } from "./context/AppContext";
+import { routes } from "./routes";
+import NotFound from "./pages/NotFound";
 
-function App() {
-  
-
+export default function App() {
   return (
-    <>
-      <p>Welcome to MedBridge</p>
-    </>
-  )
+    <AppProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<AppLayout />}>
+            {routes.map(({ path, element: Element }) => (
+              <Route key={path} path={path} element={<Element />} />
+            ))}
+          </Route>
+          <Route
+            path="*"
+            element={
+              <Suspense fallback={null}>
+                <NotFound />
+              </Suspense>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </AppProvider>
+  );
 }
-
-export default App
