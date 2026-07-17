@@ -1,0 +1,57 @@
+.myreq-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.myreq-loading-pad {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.myreq-table {
+  width: 100%;
+  font-size: 0.875rem;
+  border-collapse: collapse;
+}
+
+.myreq-table thead tr {
+  text-align: left;
+  font-size: 0.75rem;
+  color: var(--ink-faint);
+  border-bottom: 1px solid var(--line);
+  background: rgba(245, 247, 250, 0.6);
+}
+
+.myreq-table th {
+  font-weight: 500;
+  padding: 0.75rem 0.5rem;
+}
+.myreq-table th:first-child { padding-left: 1.25rem; }
+.myreq-table th:last-child { padding-right: 1.25rem; }
+
+.myreq-table td {
+  padding: 0.75rem 0.5rem;
+}
+.myreq-table td:first-child { padding-left: 1.25rem; }
+.myreq-table td:last-child { padding-right: 1.25rem; }
+
+.myreq-table tbody tr {
+  border-bottom: 1px solid var(--line);
+}
+.myreq-table tbody tr:last-child { border-bottom: none; }
+
+.myreq-name-cell {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.myreq-mono-cell {
+  font-family: var(--font-mono);
+  color: var(--ink-soft);
+}
+
+.myreq-muted-cell {
+  color: var(--ink-soft);
+}
