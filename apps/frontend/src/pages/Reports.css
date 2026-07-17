@@ -1,0 +1,54 @@
+.rep-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.rep-loading-pad {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.rep-divide > * + * {
+  border-top: 1px solid var(--line);
+}
+
+.rep-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+}
+
+.rep-icon-wrap {
+  height: 2.5rem;
+  width: 2.5rem;
+  border-radius: 0.5rem;
+  background: var(--navy-50);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--navy-600);
+}
+
+.rep-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.rep-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rep-meta {
+  font-size: 0.75rem;
+  color: var(--ink-faint);
+  margin-top: 0.125rem;
+}
