@@ -1,61 +1,143 @@
-// Data access layer.
-//
-// Every page talks to *this* file, never to mockData.js directly.
-// That means when the real backend exists, only this file changes —
-// swap each function body for `fetch(...)` / axios and the rest of
-// the app keeps working unchanged.
-
-import * as mock from "../data/mockData";
-
-const delay = (ms = 250) => new Promise((res) => setTimeout(res, ms));
+import { request } from "./httpClient";
+import {
+  mapUser,
+  mapMedicine,
+  mapExchangeRequest,
+  mapNotification,
+  mapReport,
+  mapCategories,
+  mapExpiryAlert,
+  mapActivityFromNotifications,
+  toMedicinePayload,
+  exchangeStatusEnum,
+} from "../utils/mappers";
 
 export const api = {
   async getCurrentUser() {
-    await delay();
-    return mock.currentUser;
+    const user = await request("/auth/me");
+    return mapUser(user);
   },
+
   async getDashboardStats() {
-    await delay();
-    return mock.stats;
+    return request("/dashboard/stats");
   },
+
   async getInventoryOverview() {
-    await delay();
-    return mock.inventoryOverview;
+    return request("/dashboard/inventory-overview");
   },
+
   async getMedicineCategories() {
-    await delay();
-    return mock.medicineCategories;
+    const rows = await request("/medicines/meta/categories");
+    return mapCategories(rows);
   },
-  async getMedicines() {
-    await delay();
-    return mock.medicines;
+
+  async getMedicines(params = {}) {
+    const qs = new URLSearchParams();
+    if (params.search) qs.set("search", params.search);
+    if (params.status) qs.set("status", params.status);
+    const query = qs.toString();
+    const rows = await request(`/medicines${query ? `?${query}` : ""}`);
+    return rows.map(mapMedicine);
   },
-  async getExpiryAlerts() {
-    await delay();
-    return mock.expiryAlerts;
+
+  async getMedicine(id) {
+    return mapMedicine(await request(`/medicines/${id}`));
   },
+
+  async createMedicine(data) {
+    return mapMedicine(
+      await request("/medicines", {
+        method: "POST",
+        body: JSON.stringify(toMedicinePayload(data)),
+      })
+    );
+  },
+
+  async updateMedicine(id, data) {
+    return mapMedicine(
+      await request(`/medicines/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify(toMedicinePayload(data)),
+      })
+    );
+  },
+
+  async deleteMedicine(id) {
+    return request(`/medicines/${id}`, { method: "DELETE" });
+  },
+
+  async getExpiryAlerts(days = 30) {
+    const rows = await request(`/medicines/meta/expiring-soon?days=${days}`);
+    return rows.map(mapExpiryAlert);
+  },
+
   async getRecentActivity() {
-    await delay();
-    return mock.recentActivity;
+    const notifications = await request("/notifications");
+    return mapActivityFromNotifications(notifications);
   },
+
   async getHospitals() {
-    await delay();
-    return mock.hospitals;
+    return request("/hospitals");
   },
-  async getExchangeRequests() {
-    await delay();
-    return mock.exchangeRequests;
+
+  async getExchangeRequests(params = {}) {
+    const qs = new URLSearchParams();
+    if (params.direction) qs.set("direction", params.direction);
+    const query = qs.toString();
+    const rows = await request(`/exchange-requests${query ? `?${query}` : ""}`);
+    return rows.map(mapExchangeRequest);
   },
+
+  async createExchangeRequest(data) {
+    const result = await request("/exchange-requests", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+    return mapExchangeRequest(result);
+  },
+
+  async updateExchangeStatus(id, status) {
+    const enumStatus = exchangeStatusEnum(status);
+    const result = await request(`/exchange-requests/${id}/status`, {
+      method: "PATCH",
+      body: JSON.stringify({ status: enumStatus }),
+    });
+    return mapExchangeRequest(result);
+  },
+
   async getNotifications() {
-    await delay();
-    return mock.notifications;
+    const rows = await request("/notifications");
+    return rows.map(mapNotification);
   },
+
+  async markAllNotificationsRead() {
+    const rows = await request("/notifications/read-all", { method: "PATCH" });
+    return rows.map(mapNotification);
+  },
+
+  async markNotificationRead(id) {
+    await request(`/notifications/${id}/read`, { method: "PATCH" });
+  },
+
   async getDemandForecast() {
-    await delay();
-    return mock.demandForecast;
+    return request("/demand-forecast");
   },
+
   async getReports() {
-    await delay();
-    return mock.reports;
+    const rows = await request("/reports");
+    return rows.map(mapReport);
+  },
+
+  async createReport(data) {
+    return mapReport(
+      await request("/reports", {
+        method: "POST",
+        body: JSON.stringify({
+          name: data.name,
+          period: data.period,
+          type: data.type,
+        }),
+      })
+    );
   },
 };

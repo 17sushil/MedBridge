@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import clsx from "clsx";
-import { Plus, Search, Pill, SlidersHorizontal } from "lucide-react";
+import { Plus, Search, Pill, SlidersHorizontal, Pencil, Trash2 } from "lucide-react";
 import { api } from "../services/api";
 import PageHeader from "../components/ui/PageHeader";
 import Card from "../components/ui/Card";
@@ -8,6 +8,7 @@ import Badge from "../components/ui/Badge";
 import Button from "../components/ui/Button";
 import Skeleton from "../components/ui/Skeleton";
 import EmptyState from "../components/ui/EmptyState";
+import MedicineFormModal from "../components/modals/MedicineFormModal";
 import { formatDate } from "../utils/format";
 import { statusTone } from "../utils/expiry";
 import "./Inventory.css";
@@ -18,10 +19,17 @@ export default function Inventory() {
   const [medicines, setMedicines] = useState(null);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("All");
+  const [modal, setModal] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
 
-  useEffect(() => {
+  const loadMedicines = useCallback(() => {
+    setMedicines(null);
     api.getMedicines().then(setMedicines);
   }, []);
+
+  useEffect(() => {
+    loadMedicines();
+  }, [loadMedicines]);
 
   const filtered = useMemo(() => {
     if (!medicines) return [];
@@ -34,13 +42,35 @@ export default function Inventory() {
     });
   }, [medicines, query, filter]);
 
+  const handleSave = async (data) => {
+    if (modal?.mode === "edit") {
+      await api.updateMedicine(modal.medicine.id, data);
+    } else {
+      await api.createMedicine(data);
+    }
+    loadMedicines();
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Delete this medicine from inventory?")) return;
+    setDeletingId(id);
+    try {
+      await api.deleteMedicine(id);
+      loadMedicines();
+    } catch (err) {
+      alert(err.message || "Failed to delete");
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   return (
     <div>
       <PageHeader
         title="Inventory"
         subtitle="Track stock levels, expiry, and batches across your hospital."
         actions={
-          <Button variant="teal">
+          <Button variant="teal" onClick={() => setModal({ mode: "create" })}>
             <Plus size={16} /> Add Medicine
           </Button>
         }
@@ -108,6 +138,7 @@ export default function Inventory() {
                   <th>Quantity</th>
                   <th>Expiry Date</th>
                   <th>Status</th>
+                  <th aria-label="Actions" />
                 </tr>
               </thead>
               <tbody>
@@ -132,6 +163,27 @@ export default function Inventory() {
                     <td>
                       <Badge tone={statusTone(m.status)}>{m.status}</Badge>
                     </td>
+                    <td>
+                      <div className="inv-row-actions">
+                        <button
+                          type="button"
+                          className="inv-action-btn"
+                          title="Edit"
+                          onClick={() => setModal({ mode: "edit", medicine: m })}
+                        >
+                          <Pencil size={14} />
+                        </button>
+                        <button
+                          type="button"
+                          className="inv-action-btn inv-action-btn-danger"
+                          title="Delete"
+                          disabled={deletingId === m.id}
+                          onClick={() => handleDelete(m.id)}
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -139,6 +191,14 @@ export default function Inventory() {
           </div>
         )}
       </Card>
+
+      {modal && (
+        <MedicineFormModal
+          medicine={modal.mode === "edit" ? modal.medicine : null}
+          onClose={() => setModal(null)}
+          onSave={handleSave}
+        />
+      )}
     </div>
   );
 }
