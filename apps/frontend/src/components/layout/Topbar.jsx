@@ -1,13 +1,21 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import { Bell, ChevronDown, Menu, Search } from "lucide-react";
 import { useApp } from "../../context/AppContext";
+import { useAuth } from "../../context/AuthContext";
 import "./Topbar.css";
 
 export default function Topbar() {
   const { user, unreadCount, setSidebarMobileOpen } = useApp();
+  const { logout } = useAuth();
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login", { replace: true });
+  };
 
   return (
     <header className="topbar">
@@ -54,10 +62,14 @@ export default function Topbar() {
               Account settings
             </Link>
             <Link to="/hospitals" className="topbar-dropdown-item" onClick={() => setMenuOpen(false)}>
-              Switch hospital
+              Partner hospitals
             </Link>
             <div className="topbar-dropdown-divider" />
-            <button className={clsx("topbar-dropdown-item", "topbar-dropdown-danger")}>
+            <button
+              type="button"
+              className={clsx("topbar-dropdown-item", "topbar-dropdown-danger")}
+              onClick={handleLogout}
+            >
               Sign out
             </button>
           </div>
