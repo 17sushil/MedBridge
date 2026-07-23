@@ -10,6 +10,7 @@ import {
   mapActivityFromNotifications,
   toMedicinePayload,
   exchangeStatusEnum,
+  medicineStatusEnum,
 } from "../utils/mappers";
 
 export const api = {
@@ -34,7 +35,7 @@ export const api = {
   async getMedicines(params = {}) {
     const qs = new URLSearchParams();
     if (params.search) qs.set("search", params.search);
-    if (params.status) qs.set("status", params.status);
+    if (params.status && params.status !== "All") qs.set("status", medicineStatusEnum(params.status));
     const query = qs.toString();
     const rows = await request(`/medicines${query ? `?${query}` : ""}`);
     return rows.map(mapMedicine);
