@@ -3,7 +3,7 @@ import { useAuth } from "../../context/AuthContext";
 import "../../pages/auth/Auth.css";
 
 export function ProtectedRoute() {
-  const { user, loading } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
 
   if (loading) {
     return (
@@ -13,12 +13,12 @@ export function ProtectedRoute() {
     );
   }
 
-  if (!user) return <Navigate to="/login" replace />;
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
   return <Outlet />;
 }
 
 export function GuestRoute() {
-  const { user, loading } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
 
   if (loading) {
     return (
@@ -28,6 +28,6 @@ export function GuestRoute() {
     );
   }
 
-  if (user) return <Navigate to="/" replace />;
+  if (isAuthenticated) return <Navigate to="/" replace />;
   return <Outlet />;
 }
