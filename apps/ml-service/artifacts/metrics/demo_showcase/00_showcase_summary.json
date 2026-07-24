@@ -1,0 +1,19 @@
+{
+  "demo_hospitals": [
+    "DEMO-01",
+    "DEMO-02",
+    "DEMO-03",
+    "DEMO-04",
+    "DEMO-05",
+    "DEMO-06",
+    "DEMO-07",
+    "DEMO-08"
+  ],
+  "latest_forecast_week": "2026-06-29",
+  "forecast_mae": 7.2024,
+  "forecast_r2": 0.996303,
+  "n_expiry_alerts": 274,
+  "n_low_stock": 53,
+  "n_exchange_suggestions": 40,
+  "output_dir": "/home/user/MedBridge/apps/ml-service/artifacts/metrics/demo_showcase"
+}
