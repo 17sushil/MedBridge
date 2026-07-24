@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useCallback } from "react";
 import { Link } from "react-router-dom";
 import {
   Pill,
@@ -9,11 +9,13 @@ import {
 } from "lucide-react";
 import { api } from "../services/api";
 import { aiService } from "../services/aiService";
+import { useAsyncData } from "../hooks/useAsyncData";
 import PageHeader from "../components/ui/PageHeader";
 import Card from "../components/ui/Card";
 import StatCard from "../components/ui/StatCard";
 import Badge from "../components/ui/Badge";
 import Skeleton from "../components/ui/Skeleton";
+import ErrorState from "../components/ui/ErrorState";
 import InventoryTrendChart from "../components/charts/InventoryTrendChart";
 import CategoryDonutChart from "../components/charts/CategoryDonutChart";
 import AIInsightPanel from "../components/ai/AIInsightPanel";
@@ -21,22 +23,33 @@ import { formatCurrency, formatNumber, formatDate } from "../utils/format";
 import { statusTone } from "../utils/expiry";
 import "./Dashboard.css";
 
-export default function Dashboard() {
-  const [stats, setStats] = useState(null);
-  const [overview, setOverview] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [medicines, setMedicines] = useState([]);
-  const [alerts, setAlerts] = useState([]);
-  const [activity, setActivity] = useState([]);
+const getRecentMedicines = () => api.getMedicines().then((m) => m.slice(0, 4));
 
-  useEffect(() => {
-    api.getDashboardStats().then(setStats);
-    api.getInventoryOverview().then(setOverview);
-    api.getMedicineCategories().then(setCategories);
-    api.getMedicines().then((m) => setMedicines(m.slice(0, 4)));
-    api.getExpiryAlerts().then(setAlerts);
-    api.getRecentActivity().then(setActivity);
-  }, []);
+export default function Dashboard() {
+  const { data: stats, error: statsError, reload: reloadStats } = useAsyncData(
+    () => api.getDashboardStats(),
+    []
+  );
+  const { data: overview, error: overviewError, reload: reloadOverview } = useAsyncData(
+    () => api.getInventoryOverview(),
+    []
+  );
+  const { data: categories, error: categoriesError, reload: reloadCategories } = useAsyncData(
+    () => api.getMedicineCategories(),
+    []
+  );
+  const { data: medicines, error: medicinesError, reload: reloadMedicines } = useAsyncData(
+    getRecentMedicines,
+    []
+  );
+  const { data: alerts, error: alertsError, reload: reloadAlerts } = useAsyncData(
+    () => api.getExpiryAlerts(),
+    []
+  );
+  const { data: activity, error: activityError, reload: reloadActivity } = useAsyncData(
+    () => api.getRecentActivity(),
+    []
+  );
 
   const forecastFetcher = useCallback(() => aiService.getForecastInsight(), []);
 
@@ -48,7 +61,15 @@ export default function Dashboard() {
       />
 
       <div className="dash-stat-grid">
-        {stats ? (
+        {statsError ? (
+          <Card className="dash-skeleton-card" style={{ gridColumn: "1 / -1" }}>
+            <ErrorState
+              title="Couldn't load dashboard stats"
+              description={statsError.message}
+              onRetry={reloadStats}
+            />
+          </Card>
+        ) : stats ? (
           <>
             <StatCard
               label="Total Medicines"
@@ -102,7 +123,13 @@ export default function Dashboard() {
               <option>This Quarter</option>
             </select>
           </div>
-          {overview.length ? (
+          {overviewError ? (
+            <ErrorState
+              title="Couldn't load inventory overview"
+              description={overviewError.message}
+              onRetry={reloadOverview}
+            />
+          ) : overview ? (
             <InventoryTrendChart data={overview} />
           ) : (
             <Skeleton style={{ height: 260, width: "100%", marginTop: "0.5rem" }} />
@@ -111,7 +138,13 @@ export default function Dashboard() {
 
         <Card className="dash-categories-card">
           <h3 className="dash-categories-title">Medicine Categories</h3>
-          {categories.length ? (
+          {categoriesError ? (
+            <ErrorState
+              title="Couldn't load categories"
+              description={categoriesError.message}
+              onRetry={reloadCategories}
+            />
+          ) : categories ? (
             <CategoryDonutChart data={categories} />
           ) : (
             <Skeleton style={{ height: 132, width: "100%" }} />
@@ -128,7 +161,13 @@ export default function Dashboard() {
             </Link>
           </div>
           <div className="dash-alert-list">
-            {alerts.length ? (
+            {alertsError ? (
+              <ErrorState
+                title="Couldn't load expiry alerts"
+                description={alertsError.message}
+                onRetry={reloadAlerts}
+              />
+            ) : alerts ? (
               alerts.map((a) => (
                 <div key={a.id} className="dash-alert-row">
                   <div className="dash-alert-dial">
@@ -156,7 +195,13 @@ export default function Dashboard() {
             </Link>
           </div>
           <div className="dash-activity-list">
-            {activity.length ? (
+            {activityError ? (
+              <ErrorState
+                title="Couldn't load recent activity"
+                description={activityError.message}
+                onRetry={reloadActivity}
+              />
+            ) : activity ? (
               activity.map((a) => (
                 <div key={a.id} className="dash-activity-row">
                   <span className="dash-activity-dot" />
@@ -182,43 +227,51 @@ export default function Dashboard() {
             View all <ArrowRight size={12} />
           </Link>
         </div>
-        <div className="dash-table-scroll">
-          <table className="dash-table">
-            <thead>
-              <tr>
-                <th>Medicine Name</th>
-                <th>Category</th>
-                <th>Quantity</th>
-                <th>Expiry Date</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {medicines.map((m) => (
-                <tr key={m.id}>
-                  <td>
-                    <div className="dash-med-cell">
-                      <div className="dash-med-icon">
-                        <Pill size={16} />
-                      </div>
-                      <span className="dash-med-name">{m.name}</span>
-                    </div>
-                  </td>
-                  <td>
-                    <Badge tone="navy">{m.category}</Badge>
-                  </td>
-                  <td className="dash-mono-cell">
-                    {m.quantity} {m.unit}
-                  </td>
-                  <td className="dash-muted-cell">{formatDate(m.expiry)}</td>
-                  <td>
-                    <Badge tone={statusTone(m.status)}>{m.status}</Badge>
-                  </td>
+        {medicinesError ? (
+          <ErrorState
+            title="Couldn't load recent medicines"
+            description={medicinesError.message}
+            onRetry={reloadMedicines}
+          />
+        ) : (
+          <div className="dash-table-scroll">
+            <table className="dash-table">
+              <thead>
+                <tr>
+                  <th>Medicine Name</th>
+                  <th>Category</th>
+                  <th>Quantity</th>
+                  <th>Expiry Date</th>
+                  <th>Status</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {(medicines || []).map((m) => (
+                  <tr key={m.id}>
+                    <td>
+                      <div className="dash-med-cell">
+                        <div className="dash-med-icon">
+                          <Pill size={16} />
+                        </div>
+                        <span className="dash-med-name">{m.name}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <Badge tone="navy">{m.category}</Badge>
+                    </td>
+                    <td className="dash-mono-cell">
+                      {m.quantity} {m.unit}
+                    </td>
+                    <td className="dash-muted-cell">{formatDate(m.expiry)}</td>
+                    <td>
+                      <Badge tone={statusTone(m.status)}>{m.status}</Badge>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </Card>
     </div>
   );
