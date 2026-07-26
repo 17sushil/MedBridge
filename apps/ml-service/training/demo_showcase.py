@@ -19,9 +19,9 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from app.services.exchange_service import demo_exchange_plan
-from app.services.forecast_service import batch_forecast
-from app.services.inventory_service import (
+from app.services.exchange_services import demo_exchange_plan
+from app.services.forecast_services import batch_forecast
+from app.services.inventory_services import (
     expiry_alerts,
     hospital_inventory_summary,
     low_stock_alerts,

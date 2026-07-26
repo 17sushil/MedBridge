@@ -5,34 +5,34 @@
   "n_features": 74,
   "best_iteration": 1199,
   "train_metrics": {
-    "MAE": 2.2485,
-    "RMSE": 11.3305,
-    "R2": 0.999046,
-    "sMAPE_pct": 9.9911,
-    "MAPE_nonzero_pct": 1.0711,
+    "MAE": 2.1777,
+    "RMSE": 10.5824,
+    "R2": 0.999109,
+    "sMAPE_pct": 9.6119,
+    "MAPE_nonzero_pct": 1.0808,
     "n": 428040,
-    "mean_actual": 164.928,
-    "mean_pred": 164.8606
+    "mean_actual": 161.7038,
+    "mean_pred": 161.6374
   },
   "valid_metrics": {
-    "MAE": 2.3292,
-    "RMSE": 14.2989,
-    "R2": 0.997755,
-    "sMAPE_pct": 9.968,
-    "MAPE_nonzero_pct": 1.1538,
+    "MAE": 2.1773,
+    "RMSE": 12.5525,
+    "R2": 0.998241,
+    "sMAPE_pct": 9.5717,
+    "MAPE_nonzero_pct": 1.1393,
     "n": 38376,
-    "mean_actual": 146.7267,
-    "mean_pred": 146.3157
+    "mean_actual": 145.4495,
+    "mean_pred": 145.2368
   },
   "test_metrics": {
-    "MAE": 3.0247,
-    "RMSE": 21.8285,
-    "R2": 0.9959,
-    "sMAPE_pct": 10.5211,
-    "MAPE_nonzero_pct": 1.1562,
+    "MAE": 3.2689,
+    "RMSE": 23.0656,
+    "R2": 0.995705,
+    "sMAPE_pct": 9.7649,
+    "MAPE_nonzero_pct": 1.2003,
     "n": 38376,
-    "mean_actual": 157.5538,
-    "mean_pred": 157.4958
+    "mean_actual": 160.6648,
+    "mean_pred": 160.5927
   },
   "split": {
     "train": "week_start <= 2025-12-29",
@@ -40,7 +40,7 @@
     "test": "week_start >= 2026-04-06"
   },
   "paths": {
-    "model_json": "artifacts/models/xgb_demand_model.json",
+    "model_json": "artifacts\\models\\xgb_demand_model.json",
     "model_joblib": "artifacts/models/xgb_demand_model.joblib",
     "encoders": "artifacts/encoders/label_encoders.joblib"
   }

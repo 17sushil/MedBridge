@@ -1,37 +1,55 @@
-// AI integration seam.
-//
-// Nothing here calls a model yet — it's a stable interface so the UI
-// (AIInsightPanel, AI Assistant page, future smart-matching in
-// Exchange Requests) can be built now and wired to a real model
-// later without changing any component code.
-//
-// When ready, point these at your API route, e.g.:
-//   const res = await fetch("/api/ai/forecast", { method: "POST", body: ... })
+// AI integration seam — wired to backend /api/ai/* which calls the XGBoost ML service.
+// UI components (AIInsightPanel, AI Assistant, etc.) stay unchanged.
+
+import { request } from "./httpClient";
 
 export const aiService = {
-  isEnabled: false,
+  isEnabled: true,
 
   async getForecastInsight() {
-    return {
-      available: false,
-      message:
-        "AI-powered demand forecasting isn't connected yet. Once enabled, this panel will highlight predicted shortages before they happen.",
-    };
+    try {
+      return await request("/ai/forecast-insight");
+    } catch (err) {
+      return {
+        available: false,
+        message:
+          err.message ||
+          "AI-powered demand forecasting isn't connected yet. Start the ML service on port 8000.",
+      };
+    }
   },
 
   async getSmartMatchSuggestions() {
-    return {
-      available: false,
-      message:
-        "Smart exchange matching will suggest the best partner hospital for a request based on stock, distance, and expiry.",
-    };
+    try {
+      return await request("/ai/smart-match");
+    } catch (err) {
+      return {
+        available: false,
+        message:
+          err.message ||
+          "Smart exchange matching is offline. Start the ML service on port 8000.",
+      };
+    }
   },
 
-  async askAssistant(_question) {
-    return {
-      available: false,
-      message:
-        "The MedBridge Assistant is coming soon. It will be able to answer questions like \"which medicines expire this month?\" directly.",
-    };
+  async askAssistant(question) {
+    try {
+      const res = await request("/ai/assistant", {
+        method: "POST",
+        body: JSON.stringify({ question }),
+      });
+      // Frontend AIAssistant renders res.message
+      return {
+        available: res.available !== false,
+        message: res.message || res.answer || "No response.",
+      };
+    } catch (err) {
+      return {
+        available: false,
+        message:
+          err.message ||
+          "The MedBridge Assistant could not reach the API/ML service.",
+      };
+    }
   },
 };
