@@ -1,3 +1,4 @@
 data/processed/.gitkeep
 artifacts/models/
 artifacts/metrics/
+database/
