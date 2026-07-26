@@ -1,4 +1,4 @@
-data/processed/.gitkeep
+data/processed/
 artifacts/models/
 artifacts/metrics/
 database/
