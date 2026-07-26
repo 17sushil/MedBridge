@@ -1,0 +1,47 @@
+{
+  "model": "XGBRegressor",
+  "target": "target_demand (weekly units)",
+  "target_transform": "log1p / expm1",
+  "n_features": 74,
+  "best_iteration": 1199,
+  "train_metrics": {
+    "MAE": 2.2485,
+    "RMSE": 11.3305,
+    "R2": 0.999046,
+    "sMAPE_pct": 9.9911,
+    "MAPE_nonzero_pct": 1.0711,
+    "n": 428040,
+    "mean_actual": 164.928,
+    "mean_pred": 164.8606
+  },
+  "valid_metrics": {
+    "MAE": 2.3292,
+    "RMSE": 14.2989,
+    "R2": 0.997755,
+    "sMAPE_pct": 9.968,
+    "MAPE_nonzero_pct": 1.1538,
+    "n": 38376,
+    "mean_actual": 146.7267,
+    "mean_pred": 146.3157
+  },
+  "test_metrics": {
+    "MAE": 3.0247,
+    "RMSE": 21.8285,
+    "R2": 0.9959,
+    "sMAPE_pct": 10.5211,
+    "MAPE_nonzero_pct": 1.1562,
+    "n": 38376,
+    "mean_actual": 157.5538,
+    "mean_pred": 157.4958
+  },
+  "split": {
+    "train": "week_start <= 2025-12-29",
+    "valid": "2026-01-05 .. 2026-03-30",
+    "test": "week_start >= 2026-04-06"
+  },
+  "paths": {
+    "model_json": "artifacts/models/xgb_demand_model.json",
+    "model_joblib": "artifacts/models/xgb_demand_model.joblib",
+    "encoders": "artifacts/encoders/label_encoders.joblib"
+  }
+}
