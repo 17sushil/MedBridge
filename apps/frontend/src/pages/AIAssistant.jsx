@@ -16,7 +16,7 @@ export default function AIAssistant() {
   const [messages, setMessages] = useState([
     {
       role: "assistant",
-      text: "Hi, I'm the MedBridge Assistant. I'm not connected to a model yet, but this is where I'll help you query inventory, forecast demand, and match exchange requests in plain language.",
+      text: "Hi, I'm the MedBridge Assistant. Ask me about expiring medicines, demand forecasts (XGBoost), low stock, or which hospital to request supplies from.",
     },
   ]);
   const [input, setInput] = useState("");
@@ -44,7 +44,7 @@ export default function AIAssistant() {
           </div>
           <div>
             <div className="ai-chat-head-name">MedBridge Assistant</div>
-            <div className="ai-chat-head-status">Preview · not yet connected</div>
+            <div className="ai-chat-head-status">Connected · inventory + XGBoost + exchange match</div>
           </div>
         </div>
 

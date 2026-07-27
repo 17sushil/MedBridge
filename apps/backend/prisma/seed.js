@@ -1,12 +1,122 @@
-const { PrismaClient } = require("@prisma/client");
+/**
+ * Seed MedBridge DB from ML synthetic CSVs (8 demo hospital logins).
+ *
+ * Reads:
+ *   apps/ml-service/data/raw/hospitals.csv
+ *   apps/ml-service/data/raw/medicines.csv
+ *   apps/ml-service/data/raw/inventory_snapshots.csv
+ *   apps/ml-service/data/raw/demo_hospital_accounts.csv
+ *   apps/ml-service/data/raw/resource_exchange_log.csv
+ *
+ * Demo password for all: MedBridge@2026
+ * Emails: admin@demo-01.medbridge.local … admin@demo-08.medbridge.local
+ * Legacy: sarah.johnson@cityhospital.org / password123  (maps to DEMO-01)
+ */
+
+const fs = require("fs");
+const path = require("path");
 const bcrypt = require("bcryptjs");
+const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
-async function main() {
-  console.log("Seeding database…");
+const ML_RAW = path.resolve(__dirname, "../../ml-service/data/raw");
 
-  // Clean slate for repeatable seeding in dev.
+function readCsv(fileName) {
+  const full = path.join(ML_RAW, fileName);
+  if (!fs.existsSync(full)) {
+    throw new Error(`Missing ${full}. Run: cd apps/ml-service && python training/generate_synthetic_data.py`);
+  }
+  const text = fs.readFileSync(full, "utf8").trim();
+  if (!text) throw new Error(`Empty CSV: ${full}`);
+  const lines = text.split(/\r?\n/);
+  const headers = splitCsvLine(lines[0]);
+  return lines.slice(1).filter(Boolean).map((line) => {
+    const cols = splitCsvLine(line);
+    const row = {};
+    headers.forEach((h, i) => {
+      row[h] = cols[i] !== undefined ? cols[i] : "";
+    });
+    return row;
+  });
+}
+
+/** Minimal CSV splitter supporting quoted commas */
+function splitCsvLine(line) {
+  const out = [];
+  let cur = "";
+  let inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') {
+      if (inQ && line[i + 1] === '"') {
+        cur += '"';
+        i++;
+      } else {
+        inQ = !inQ;
+      }
+    } else if (ch === "," && !inQ) {
+      out.push(cur);
+      cur = "";
+    } else {
+      cur += ch;
+    }
+  }
+  out.push(cur);
+  return out;
+}
+
+function mapStockStatus(status, quantity, reorder) {
+  const s = String(status || "").toUpperCase();
+  if (s.includes("OUT")) return "CRITICAL";
+  if (s.includes("LOW_AND") || s.includes("LOW_STOCK")) return "LOW_STOCK";
+  if (s.includes("NEAR")) return "MEDIUM_STOCK";
+  if (quantity <= (reorder || 0)) return "LOW_STOCK";
+  if (quantity < (reorder || 0) * 2) return "MEDIUM_STOCK";
+  return "IN_STOCK";
+}
+
+function mapExchangeStatus(status) {
+  const s = String(status || "").toLowerCase();
+  if (s.includes("complete")) return "COMPLETED";
+  if (s.includes("transit")) return "IN_TRANSIT";
+  if (s.includes("approve")) return "APPROVED";
+  if (s.includes("reject")) return "DECLINED";
+  if (s.includes("request")) return "PENDING";
+  return "PENDING";
+}
+
+function facilityTypeLabel(t) {
+  return String(t || "General").replace(/_/g, " ");
+}
+
+async function main() {
+  console.log("Seeding from ML CSVs in", ML_RAW);
+
+  const hospitalsCsv = readCsv("hospitals.csv");
+  const medicinesCsv = readCsv("medicines.csv");
+  const inventoryCsv = readCsv("inventory_snapshots.csv");
+  let accountsCsv = [];
+  try {
+    accountsCsv = readCsv("demo_hospital_accounts.csv");
+  } catch {
+    console.warn("demo_hospital_accounts.csv missing — will synthesize accounts");
+  }
+  let exchangeCsv = [];
+  try {
+    exchangeCsv = readCsv("resource_exchange_log.csv");
+  } catch {
+    console.warn("resource_exchange_log.csv missing — skipping exchanges");
+  }
+
+  const demoHospitals = hospitalsCsv.filter((h) => String(h.is_demo) === "1");
+  if (demoHospitals.length === 0) {
+    throw new Error("No is_demo=1 hospitals in hospitals.csv");
+  }
+
+  const medById = Object.fromEntries(medicinesCsv.map((m) => [m.medicine_id, m]));
+
+  console.log("Cleaning existing data…");
   await prisma.inventoryMovement.deleteMany();
   await prisma.notification.deleteMany();
   await prisma.report.deleteMany();
@@ -15,89 +125,225 @@ async function main() {
   await prisma.user.deleteMany();
   await prisma.hospital.deleteMany();
 
-  const [cityHospital, greenHospital, sunrise, valley, northfield] = await Promise.all(
-    [
-      { name: "City Hospital", location: "Kathmandu", type: "General", rating: 4.5 },
-      { name: "Green Hospital", location: "Lalitpur", type: "General", rating: 4.6 },
-      { name: "Sunrise Medical Center", location: "Bhaktapur", type: "Specialty", rating: 4.2 },
-      { name: "Valley Community Clinic", location: "Kathmandu", type: "Clinic", rating: 4.8 },
-      { name: "Northfield Hospital", location: "Kathmandu", type: "General", rating: 4.0 },
-    ].map((data) => prisma.hospital.create({ data }))
+  const passwordHash = await bcrypt.hash("MedBridge@2026", 10);
+  const legacyHash = await bcrypt.hash("password123", 10);
+
+  const hospitalIdByCode = {};
+  const accountByCode = Object.fromEntries(
+    accountsCsv.map((a) => [a.hospital_id, a])
   );
 
-  const passwordHash = await bcrypt.hash("password123", 10);
-  await prisma.user.create({
-    data: {
-      name: "Dr. Sarah Johnson",
-      email: "sarah.johnson@cityhospital.org",
-      passwordHash,
-      role: "ADMIN",
-      hospitalId: cityHospital.id,
-      avatarUrl:
-        "https://images.unsplash.com/photo-1594824476967-48c8b964273f?q=80&w=200&auto=format&fit=crop",
-    },
-  });
-  console.log("Demo login -> sarah.johnson@cityhospital.org / password123");
+  console.log(`Creating ${demoHospitals.length} demo hospitals + admins…`);
+  for (const h of demoHospitals) {
+    const code = h.hospital_id;
+    const hospital = await prisma.hospital.create({
+      data: {
+        externalCode: code,
+        name: h.hospital_name,
+        location: [h.municipality, h.district, h.province].filter(Boolean).join(", "),
+        type: facilityTypeLabel(h.facility_type),
+        province: h.province || null,
+        district: h.district || null,
+        ecoregion: h.ecoregion || null,
+        rating: 4.5,
+      },
+    });
+    hospitalIdByCode[code] = hospital.id;
 
-  const medicines = await Promise.all(
-    [
-      { name: "Amoxicillin 500mg", category: "Antibiotics", batch: "AMX-2405", quantity: 150, unit: "boxes", unitPrice: 12, expiry: "2026-08-25", status: "LOW_STOCK" },
-      { name: "Paracetamol 650mg", category: "Pain Relief", batch: "PCM-1187", quantity: 300, unit: "boxes", unitPrice: 4, expiry: "2026-09-01", status: "IN_STOCK" },
-      { name: "Cetirizine 10mg", category: "Antihistamine", batch: "CTZ-0932", quantity: 200, unit: "boxes", unitPrice: 5, expiry: "2026-09-07", status: "IN_STOCK" },
-      { name: "Vitamin C 500mg", category: "Vitamins", batch: "VTC-4471", quantity: 100, unit: "boxes", unitPrice: 6, expiry: "2026-10-15", status: "IN_STOCK" },
-      { name: "Insulin Glargine", category: "Hormones", batch: "INS-7723", quantity: 40, unit: "vials", unitPrice: 35, expiry: "2026-11-02", status: "CRITICAL" },
-      { name: "Ibuprofen 400mg", category: "Pain Relief", batch: "IBU-3391", quantity: 260, unit: "boxes", unitPrice: 5.5, expiry: "2026-12-18", status: "IN_STOCK" },
-    ].map((data) =>
-      prisma.medicine.create({ data: { ...data, expiry: new Date(data.expiry), hospitalId: cityHospital.id } })
-    )
-  );
+    const acc = accountByCode[code] || {};
+    const username = acc.demo_username || code.toLowerCase().replace("-", "_");
+    const email = `admin@${code.toLowerCase()}.medbridge.local`;
 
-  // 7 days of stock movements for the dashboard trend chart.
+    await prisma.user.create({
+      data: {
+        name: `${h.hospital_name} Admin`,
+        email,
+        passwordHash,
+        role: "ADMIN",
+        hospitalId: hospital.id,
+      },
+    });
+    console.log(`  ${code}  login: ${email} / MedBridge@2026  (${username})`);
+  }
+
+  // Legacy single login used by older frontend docs → DEMO-01
+  if (hospitalIdByCode["DEMO-01"]) {
+    await prisma.user.create({
+      data: {
+        name: "Dr. Sarah Johnson",
+        email: "sarah.johnson@cityhospital.org",
+        passwordHash: legacyHash,
+        role: "ADMIN",
+        hospitalId: hospitalIdByCode["DEMO-01"],
+        avatarUrl:
+          "https://images.unsplash.com/photo-1594824476967-48c8b964273f?q=80&w=200&auto=format&fit=crop",
+      },
+    });
+    console.log("  Legacy login: sarah.johnson@cityhospital.org / password123 → DEMO-01");
+  }
+
+  // Inventory batches for demo hospitals only (aggregate by hospital+medicine+batch)
+  const demoCodes = new Set(Object.keys(hospitalIdByCode));
+  const invRows = inventoryCsv.filter((r) => demoCodes.has(r.hospital_id));
+  console.log(`Importing ${invRows.length} inventory batches…`);
+
+  let medCreated = 0;
+  const medicineUuidByKey = {}; // hospitalCode|medicineId|batch -> uuid
+
+  for (const row of invRows) {
+    const hospitalDbId = hospitalIdByCode[row.hospital_id];
+    if (!hospitalDbId) continue;
+    const meta = medById[row.medicine_id] || {};
+    const qty = parseInt(row.quantity_units, 10) || 0;
+    const reorder = parseInt(row.reorder_level, 10) || 0;
+    const unitPrice = parseFloat(row.unit_cost_npr || meta.unit_cost_npr || 0) || 0;
+    const expiry = row.expiry_date ? new Date(row.expiry_date) : new Date(Date.now() + 180 * 864e5);
+    const status = mapStockStatus(row.stock_status, qty, reorder);
+    const name = meta.generic_name || row.medicine_id;
+    const category = meta.category || "General";
+    const unit = row.unit || meta.unit || "units";
+    const batch = row.batch_id || `BATCH-${medCreated}`;
+
+    const created = await prisma.medicine.create({
+      data: {
+        medicineCode: row.medicine_id,
+        name,
+        category,
+        batch,
+        quantity: qty,
+        unit,
+        unitPrice,
+        expiry,
+        status,
+        hospitalId: hospitalDbId,
+      },
+    });
+    medicineUuidByKey[`${row.hospital_id}|${row.medicine_id}|${batch}`] = created.id;
+    // also index without batch for movements
+    medicineUuidByKey[`${row.hospital_id}|${row.medicine_id}`] =
+      medicineUuidByKey[`${row.hospital_id}|${row.medicine_id}`] || created.id;
+    medCreated++;
+  }
+  console.log(`  medicines/batches created: ${medCreated}`);
+
+  // Synthetic movements from inventory avg_daily_use for charts
+  console.log("Creating inventory movements for charts…");
   const movementRows = [];
-  for (let i = 6; i >= 0; i--) {
-    const day = new Date();
-    day.setDate(day.getDate() - i);
-    const medicine = medicines[i % medicines.length];
-    movementRows.push({ hospitalId: cityHospital.id, medicineId: medicine.id, type: "IN", quantity: 50 + i * 10, occurredAt: day });
-    movementRows.push({ hospitalId: cityHospital.id, medicineId: medicine.id, type: "OUT", quantity: 20 + i * 6, occurredAt: day });
+  const seenPair = new Set();
+  for (const row of invRows) {
+    const key = `${row.hospital_id}|${row.medicine_id}`;
+    if (seenPair.has(key)) continue;
+    seenPair.add(key);
+    const medicineId = medicineUuidByKey[key];
+    const hospitalId = hospitalIdByCode[row.hospital_id];
+    if (!medicineId || !hospitalId) continue;
+    const daily = Math.max(1, Math.round(parseFloat(row.avg_daily_use) || 5));
+    for (let i = 6; i >= 0; i--) {
+      const day = new Date();
+      day.setDate(day.getDate() - i);
+      movementRows.push({
+        hospitalId,
+        medicineId,
+        type: "OUT",
+        quantity: daily + (i % 3),
+        occurredAt: day,
+      });
+      movementRows.push({
+        hospitalId,
+        medicineId,
+        type: "IN",
+        quantity: Math.round(daily * 1.2),
+        occurredAt: day,
+      });
+    }
+    // monthly OUT for 6 months
+    for (let m = 5; m >= 0; m--) {
+      const day = new Date();
+      day.setMonth(day.getMonth() - m);
+      movementRows.push({
+        hospitalId,
+        medicineId,
+        type: "OUT",
+        quantity: daily * 25 + m * 3,
+        occurredAt: day,
+      });
+    }
   }
-  // 6 months of movements for the demand forecast page.
-  for (let m = 5; m >= 0; m--) {
-    const day = new Date();
-    day.setMonth(day.getMonth() - m);
-    const medicine = medicines[m % medicines.length];
-    movementRows.push({ hospitalId: cityHospital.id, medicineId: medicine.id, type: "OUT", quantity: 450 + m * 20, occurredAt: day });
+  // insert in chunks
+  const chunk = 1000;
+  for (let i = 0; i < movementRows.length; i += chunk) {
+    await prisma.inventoryMovement.createMany({ data: movementRows.slice(i, i + chunk) });
   }
-  await prisma.inventoryMovement.createMany({ data: movementRows });
+  console.log(`  movements: ${movementRows.length}`);
 
-  await prisma.exchangeRequest.createMany({
-    data: [
-      { medicine: "Amoxicillin 500mg", quantity: 60, unit: "boxes", status: "PENDING", fromHospitalId: greenHospital.id, toHospitalId: cityHospital.id },
-      { medicine: "Vitamin C 500mg", quantity: 40, unit: "boxes", status: "APPROVED", fromHospitalId: cityHospital.id, toHospitalId: sunrise.id },
-      { medicine: "Insulin Glargine", quantity: 15, unit: "vials", status: "IN_TRANSIT", fromHospitalId: valley.id, toHospitalId: cityHospital.id },
-      { medicine: "Ibuprofen 400mg", quantity: 80, unit: "boxes", status: "COMPLETED", fromHospitalId: cityHospital.id, toHospitalId: northfield.id },
-      { medicine: "Cetirizine 10mg", quantity: 50, unit: "boxes", status: "DECLINED", fromHospitalId: greenHospital.id, toHospitalId: cityHospital.id },
-    ],
-  });
+  // Exchange log among demo hospitals
+  const demoExchanges = exchangeCsv.filter(
+    (e) => demoCodes.has(e.from_hospital_id) && demoCodes.has(e.to_hospital_id)
+  );
+  let exCount = 0;
+  for (const e of demoExchanges.slice(0, 80)) {
+    const fromId = hospitalIdByCode[e.from_hospital_id];
+    const toId = hospitalIdByCode[e.to_hospital_id];
+    if (!fromId || !toId || fromId === toId) continue;
+    const meta = medById[e.medicine_id] || {};
+    await prisma.exchangeRequest.create({
+      data: {
+        medicine: meta.generic_name || e.medicine_id,
+        quantity: parseInt(e.quantity_units, 10) || 10,
+        unit: meta.unit || "units",
+        status: mapExchangeStatus(e.status),
+        requestedOn: e.request_date ? new Date(e.request_date) : new Date(),
+        fromHospitalId: fromId,
+        toHospitalId: toId,
+      },
+    });
+    exCount++;
+  }
+  console.log(`  exchange requests: ${exCount}`);
 
-  await prisma.notification.createMany({
-    data: [
-      { hospitalId: cityHospital.id, title: "Insulin Glargine is critically low", body: "Only 40 vials left. Consider requesting an exchange.", type: "CRITICAL", read: false },
-      { hospitalId: cityHospital.id, title: "New exchange request", body: "Green Hospital requested 60 boxes of Amoxicillin 500mg.", type: "EXCHANGE", read: false },
-      { hospitalId: cityHospital.id, title: "Shipment in transit", body: "Insulin Glargine from Valley Community Clinic is on its way.", type: "INFO", read: false },
-      { hospitalId: cityHospital.id, title: "Exchange completed", body: "Ibuprofen 400mg exchange with Northfield Hospital is complete.", type: "SUCCESS", read: true },
-    ],
-  });
+  // Notifications per hospital from low/near-expiry stock
+  for (const code of demoCodes) {
+    const hospitalId = hospitalIdByCode[code];
+    const critical = await prisma.medicine.findMany({
+      where: { hospitalId, status: { in: ["CRITICAL", "LOW_STOCK"] } },
+      take: 3,
+      orderBy: { quantity: "asc" },
+    });
+    const notes = critical.map((m) => ({
+      hospitalId,
+      title: `${m.name} is low`,
+      body: `Only ${m.quantity} ${m.unit} left (batch ${m.batch}). Consider exchange or procurement.`,
+      type: m.status === "CRITICAL" ? "CRITICAL" : "INFO",
+      read: false,
+    }));
+    notes.push({
+      hospitalId,
+      title: "XGBoost forecast ready",
+      body: "Open Demand Forecast to see AI-predicted weekly medicine needs for your facility.",
+      type: "SUCCESS",
+      read: false,
+    });
+    if (notes.length) await prisma.notification.createMany({ data: notes });
 
-  await prisma.report.createMany({
-    data: [
-      { hospitalId: cityHospital.id, name: "Monthly Inventory Summary", period: "Jun 2026", type: "INVENTORY" },
-      { hospitalId: cityHospital.id, name: "Exchange Activity Report", period: "Q2 2026", type: "EXCHANGE" },
-      { hospitalId: cityHospital.id, name: "Expiry Risk Report", period: "Jun 2026", type: "COMPLIANCE" },
-    ],
-  });
+    await prisma.report.createMany({
+      data: [
+        { hospitalId, name: "Monthly Inventory Summary", period: "Jun 2026", type: "INVENTORY" },
+        { hospitalId, name: "Exchange Activity Report", period: "Q2 2026", type: "EXCHANGE" },
+        { hospitalId, name: "Expiry Risk Report", period: "Jun 2026", type: "COMPLIANCE" },
+      ],
+    });
+  }
 
-  console.log("Seed complete.");
+  console.log("\nSeed complete.");
+  console.log("────────────────────────────────────────────");
+  console.log("8 demo hospital logins (password: MedBridge@2026)");
+  for (const code of Object.keys(hospitalIdByCode).sort()) {
+    console.log(`  admin@${code.toLowerCase()}.medbridge.local`);
+  }
+  console.log("Legacy: sarah.johnson@cityhospital.org / password123");
+  console.log("────────────────────────────────────────────");
+  console.log("Start ML:  cd apps/ml-service && uvicorn app.api.server:app --port 8000");
+  console.log("Start API: cd apps/backend && npm run dev");
 }
 
 main()
