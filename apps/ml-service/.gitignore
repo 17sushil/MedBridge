@@ -1,0 +1,4 @@
+data/processed/
+artifacts/models/
+artifacts/metrics/
+database/

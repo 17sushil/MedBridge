@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from app.services.inventory_service import (
+from app.services.inventory_services import (
     load_hospitals,
     load_inventory,
     load_medicines,
