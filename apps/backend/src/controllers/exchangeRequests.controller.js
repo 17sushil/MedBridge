@@ -13,7 +13,7 @@ const create = asyncHandler(async (req, res) => {
 });
 
 const updateStatus = asyncHandler(async (req, res) => {
-  const request = await service.updateStatus(req.user.hospitalId, req.params.id, req.body.status);
+  const request = await service.updateStatus(req.user.hospitalId, req.user.role, req.params.id, req.body.status);
   res.json(request);
 });
 

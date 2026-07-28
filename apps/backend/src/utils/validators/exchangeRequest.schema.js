@@ -1,9 +1,9 @@
 const { z } = require("zod");
 
 const createExchangeRequestSchema = z.object({
-  medicine: z.string().min(2),
+  medicine: z.string().trim().min(2).max(160),
   quantity: z.number().int().min(1),
-  unit: z.string().min(1),
+  unit: z.string().trim().min(1).max(32),
   toHospitalId: z.string().uuid(),
 });
 

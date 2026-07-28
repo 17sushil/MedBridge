@@ -47,7 +47,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    loadSession();
+    queueMicrotask(() => void loadSession());
   }, [loadSession]);
 
   // A 401 from ANY request (not just the initial session check) means the

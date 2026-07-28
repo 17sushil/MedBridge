@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import { Bell, ChevronDown, Menu, Search } from "lucide-react";
 import { useApp } from "../../context/AppContext";
 import { useAuth } from "../../context/AuthContext";
+import { api } from "../../services/api";
 import "./Topbar.css";
 
 export default function Topbar() {
@@ -11,11 +12,57 @@ export default function Topbar() {
   const { logout } = useAuth();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [searchError, setSearchError] = useState("");
 
   const handleLogout = () => {
     logout();
     navigate("/login", { replace: true });
   };
+  useEffect(() => {
+    const term = query.trim();
+    if (term.length < 2) return undefined;
+
+    let active = true;
+    const timer = window.setTimeout(async () => {
+      setLoading(true);
+      setSearchError("");
+      try {
+        const medicines = await api.searchMedicines(term);
+        if (active) setResults(medicines.slice(0, 5));
+      } catch (error) {
+        if (active) {
+          setResults([]);
+          setSearchError(error.message || "Unable to search medicines.");
+        }
+      } finally {
+        if (active) setLoading(false);
+      }
+    }, 300);
+
+    return () => {
+      active = false;
+      window.clearTimeout(timer);
+    };
+  }, [query]);
+
+  const handleSearchChange = (event) => {
+    const nextQuery = event.target.value;
+    setQuery(nextQuery);
+    if (nextQuery.trim().length < 2) {
+      setResults([]);
+      setSearchError("");
+    }
+  };
+
+  const viewAllResults = () => {
+    const term = query.trim();
+    if (term) navigate(`/inventory?search=${encodeURIComponent(term)}`);
+    setResults([]);
+  };
+
 
   return (
     <header className="topbar">
@@ -26,10 +73,44 @@ export default function Topbar() {
       <div className="topbar-search-wrap">
         <Search className="topbar-search-icon" size={16} />
         <input
-          type="text"
-          placeholder="Search medicines, hospitals..."
+          type="search"
+          value={query}
+          onChange={handleSearchChange}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              viewAllResults();
+            }
+          }}
+          placeholder="Search medicines…"
+          aria-label="Search your hospital medicines"
           className="topbar-search-input"
         />
+        {query.trim().length >= 2 && (
+          <div className="topbar-search-results" role="listbox">
+            {loading && <div className="topbar-search-message">Searching…</div>}
+            {!loading && searchError && <div className="topbar-search-message topbar-search-error">{searchError}</div>}
+            {!loading && !searchError && results.length === 0 && (
+              <div className="topbar-search-message">No medicines found.</div>
+            )}
+            {!loading && results.map((medicine) => (
+              <button
+                key={medicine.id}
+                type="button"
+                className="topbar-search-result"
+                onClick={viewAllResults}
+              >
+                <span>{medicine.name}</span>
+                <small>{medicine.quantity} {medicine.unit} · {medicine.batch}</small>
+              </button>
+            ))}
+            {!loading && results.length > 0 && (
+              <button type="button" className="topbar-search-all" onClick={viewAllResults}>
+                View all matching medicines
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="topbar-spacer" />

@@ -1,49 +1,67 @@
 const prisma = require("../config/db");
+const ml = require("./mlClient");
 
-// NOTE: this is a naive placeholder (trailing average), not a real
-// forecasting model. It exists so the /demand-forecast endpoint and
-// chart have real numbers to render. Swap the `forecast` calculation
-// for a real model/service later — the response shape can stay the same.
-async function getForecast(hospitalId, months = 6) {
+async function resolveHospitalCode(hospitalId) {
+  const hospital = await prisma.hospital.findUnique({
+    where: { id: hospitalId },
+    select: { externalCode: true },
+  });
+  return hospital?.externalCode || null;
+}
+
+async function fallbackForecast(hospitalId, months = 6) {
   const since = new Date();
   since.setMonth(since.getMonth() - months);
-
   const movements = await prisma.inventoryMovement.findMany({
     where: { hospitalId, type: "OUT", occurredAt: { gte: since } },
   });
 
-  const byMonth = {};
-  for (const m of movements) {
-    const key = `${m.occurredAt.getFullYear()}-${m.occurredAt.getMonth()}`;
-    byMonth[key] = (byMonth[key] || 0) + m.quantity;
+  const byMonth = new Map();
+  for (const movement of movements) {
+    const key = `${movement.occurredAt.getFullYear()}-${movement.occurredAt.getMonth()}`;
+    byMonth.set(key, (byMonth.get(key) || 0) + movement.quantity);
   }
 
-  const result = [];
   const now = new Date();
+  const history = [];
   for (let i = months - 1; i >= 0; i--) {
-    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-    const key = `${d.getFullYear()}-${d.getMonth()}`;
-    result.push({
-      month: d.toLocaleDateString("en-US", { month: "short" }),
-      actual: byMonth[key] || 0,
+    const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const key = `${date.getFullYear()}-${date.getMonth()}`;
+    history.push({
+      month: date.toLocaleDateString("en-US", { month: "short" }),
+      actual: byMonth.get(key) || 0,
     });
   }
 
-  // Naive forecast: trailing 3-month average, projected 2 months forward.
-  const lastValues = result.slice(-3).map((r) => r.actual);
-  const avg = lastValues.reduce((a, b) => a + b, 0) / (lastValues.length || 1);
-
-  const withForecast = result.map((r) => ({ ...r, forecast: Math.round(r.actual) }));
+  const average = history.slice(-3).reduce((sum, row) => sum + row.actual, 0) / 3;
+  const result = history.map((row) => ({ ...row, forecast: Math.round(row.actual) }));
   for (let i = 1; i <= 2; i++) {
-    const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
-    withForecast.push({
-      month: d.toLocaleDateString("en-US", { month: "short" }),
+    const date = new Date(now.getFullYear(), now.getMonth() + i, 1);
+    result.push({
+      month: date.toLocaleDateString("en-US", { month: "short" }),
       actual: null,
-      forecast: Math.round(avg * (1 + 0.05 * i)),
+      forecast: Math.round(average * (1 + 0.05 * i)),
     });
   }
-
-  return withForecast;
+  return result;
 }
 
-module.exports = { getForecast };
+// Uses the model for hospitals that are linked to an ML dataset. The existing
+// database-derived calculation remains a graceful fallback for new hospitals
+// and when the ML service is unavailable.
+async function getForecast(hospitalId, months = 6) {
+  const hospitalCode = await resolveHospitalCode(hospitalId);
+  if (hospitalCode) {
+    try {
+      const forecast = await ml.getForecastChart(hospitalCode, months);
+      if (Array.isArray(forecast.series) && forecast.series.length) return forecast.series;
+    } catch (error) {
+      // The forecast screen must stay usable if a separately deployed ML
+      // service is starting up or temporarily unavailable.
+      console.warn(`ML forecast unavailable for ${hospitalCode}: ${error.message}`);
+    }
+  }
+  return fallbackForecast(hospitalId, months);
+}
+
+module.exports = { getForecast, fallbackForecast, resolveHospitalCode };

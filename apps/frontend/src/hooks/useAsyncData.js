@@ -9,7 +9,7 @@ import { useCallback, useEffect, useState } from "react";
 //     () => api.getMedicines({ status, search }),
 //     [status, search]
 //   );
-export function useAsyncData(fetcher, deps = []) {
+export function useAsyncData(fetcher) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -33,10 +33,11 @@ export function useAsyncData(fetcher, deps = []) {
     return () => {
       cancelled = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, deps);
+  }, [fetcher]);
 
-  useEffect(() => load(), [load]);
+  useEffect(() => {
+    queueMicrotask(load);
+  }, [load]);
 
   return { data, loading, error, reload: load };
 }

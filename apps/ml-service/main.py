@@ -40,10 +40,10 @@ def _load_module_from_path(module_name: str, file_path: Path) -> ModuleType:
 def import_forecast_service() -> ModuleType:
     """Import forecast service via package path, else direct file."""
     try:
-        from app.services import forecast_service as mod  # type: ignore
+        from app.services import forecast_services as mod  # type: ignore
         return mod
     except Exception as pkg_err:
-        path = ROOT / "app" / "services" / "forecast_service.py"
+        path = ROOT / "app" / "services" / "forecast_services.py"
         try:
             return _load_module_from_path("medbridge_forecast_service", path)
         except Exception as file_err:
@@ -60,19 +60,19 @@ def import_forecast_service() -> ModuleType:
 
 def import_inventory_service() -> ModuleType:
     try:
-        from app.services import inventory_service as mod  # type: ignore
+        from app.services import inventory_services as mod  # type: ignore
         return mod
     except Exception:
-        path = ROOT / "app" / "services" / "inventory_service.py"
+        path = ROOT / "app" / "services" / "inventory_services.py"
         return _load_module_from_path("medbridge_inventory_service", path)
 
 
 def import_exchange_service() -> ModuleType:
     try:
-        from app.services import exchange_service as mod  # type: ignore
+        from app.services import exchange_services as mod  # type: ignore
         return mod
     except Exception:
-        path = ROOT / "app" / "services" / "exchange_service.py"
+        path = ROOT / "app" / "services" / "exchange_services.py"
         return _load_module_from_path("medbridge_exchange_service", path)
 
 
@@ -83,9 +83,9 @@ def cmd_doctor(_: argparse.Namespace) -> None:
     files = [
         ROOT / "app" / "__init__.py",
         ROOT / "app" / "services" / "__init__.py",
-        ROOT / "app" / "services" / "forecast_service.py",
-        ROOT / "app" / "services" / "inventory_service.py",
-        ROOT / "app" / "services" / "exchange_service.py",
+        ROOT / "app" / "services" / "forecast_services.py",
+        ROOT / "app" / "services" / "inventory_services.py",
+        ROOT / "app" / "services" / "exchange_services.py",
         ROOT / "data" / "processed" / "demand_features.csv",
         ROOT / "artifacts" / "models" / "xgb_demand_model.joblib",
     ]
@@ -99,7 +99,7 @@ def cmd_doctor(_: argparse.Namespace) -> None:
 
     try:
         mod = import_forecast_service()
-        print("\nImport forecast_service: OK")
+        print("\nImport forecast_services: OK")
         print("  module file:", getattr(mod, "__file__", "?"))
         print("  batch_forecast:", hasattr(mod, "batch_forecast"))
     except SystemExit:
@@ -111,7 +111,7 @@ def cmd_doctor(_: argparse.Namespace) -> None:
     print("\nIf data/model missing, run:")
     print("  python training/generate_synthetic_data.py")
     print("  python training/train_xgb.py")
-    print("\n✅ doctor import check passed")
+    print("\nDoctor import check passed")
 
 
 def cmd_metrics(_: argparse.Namespace) -> None:

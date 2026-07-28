@@ -63,6 +63,10 @@ export const api = {
     );
   },
 
+  async searchMedicines(search) {
+    return this.getMedicines({ search });
+  },
+
   async deleteMedicine(id) {
     return request(`/medicines/${id}`, { method: "DELETE" });
   },

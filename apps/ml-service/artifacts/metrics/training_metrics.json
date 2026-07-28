@@ -5,34 +5,34 @@
   "n_features": 74,
   "best_iteration": 1199,
   "train_metrics": {
-    "MAE": 2.1777,
-    "RMSE": 10.5824,
-    "R2": 0.999109,
-    "sMAPE_pct": 9.6119,
-    "MAPE_nonzero_pct": 1.0808,
+    "MAE": 2.1847,
+    "RMSE": 10.7926,
+    "R2": 0.999112,
+    "sMAPE_pct": 9.5143,
+    "MAPE_nonzero_pct": 1.079,
     "n": 428040,
-    "mean_actual": 161.7038,
-    "mean_pred": 161.6374
+    "mean_actual": 164.0047,
+    "mean_pred": 163.9387
   },
   "valid_metrics": {
-    "MAE": 2.1773,
-    "RMSE": 12.5525,
-    "R2": 0.998241,
-    "sMAPE_pct": 9.5717,
-    "MAPE_nonzero_pct": 1.1393,
+    "MAE": 2.4382,
+    "RMSE": 16.3837,
+    "R2": 0.997125,
+    "sMAPE_pct": 10.0682,
+    "MAPE_nonzero_pct": 1.1987,
     "n": 38376,
-    "mean_actual": 145.4495,
-    "mean_pred": 145.2368
+    "mean_actual": 148.137,
+    "mean_pred": 148.0466
   },
   "test_metrics": {
-    "MAE": 3.2689,
-    "RMSE": 23.0656,
-    "R2": 0.995705,
-    "sMAPE_pct": 9.7649,
-    "MAPE_nonzero_pct": 1.2003,
+    "MAE": 2.7468,
+    "RMSE": 19.4845,
+    "R2": 0.996668,
+    "sMAPE_pct": 9.2209,
+    "MAPE_nonzero_pct": 1.1637,
     "n": 38376,
-    "mean_actual": 160.6648,
-    "mean_pred": 160.5927
+    "mean_actual": 156.6942,
+    "mean_pred": 156.7442
   },
   "split": {
     "train": "week_start <= 2025-12-29",

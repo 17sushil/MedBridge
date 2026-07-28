@@ -2,7 +2,8 @@ const { asyncHandler } = require("../utils/asyncHandler");
 const service = require("../services/medicines.service");
 
 const list = asyncHandler(async (req, res) => {
-  const { search, status } = req.query;
+  const search = String(req.query.search || "").trim().slice(0, 100);
+  const { status } = req.query;
   const medicines = await service.listMedicines(req.user.hospitalId, { search, status });
   res.json(medicines);
 });
