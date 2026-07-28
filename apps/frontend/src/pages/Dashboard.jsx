@@ -24,32 +24,20 @@ import { statusTone } from "../utils/expiry";
 import "./Dashboard.css";
 
 const getRecentMedicines = () => api.getMedicines().then((m) => m.slice(0, 4));
+// const getRecentMedicines = () =>api.getMedicines({ search: searchQuery })
+const getDashboardStats = () => api.getDashboardStats();
+const getInventoryOverview = () => api.getInventoryOverview();
+const getMedicineCategories = () => api.getMedicineCategories();
+const getExpiryAlerts = () => api.getExpiryAlerts();
+const getRecentActivity = () => api.getRecentActivity();
 
 export default function Dashboard() {
-  const { data: stats, error: statsError, reload: reloadStats } = useAsyncData(
-    () => api.getDashboardStats(),
-    []
-  );
-  const { data: overview, error: overviewError, reload: reloadOverview } = useAsyncData(
-    () => api.getInventoryOverview(),
-    []
-  );
-  const { data: categories, error: categoriesError, reload: reloadCategories } = useAsyncData(
-    () => api.getMedicineCategories(),
-    []
-  );
-  const { data: medicines, error: medicinesError, reload: reloadMedicines } = useAsyncData(
-    getRecentMedicines,
-    []
-  );
-  const { data: alerts, error: alertsError, reload: reloadAlerts } = useAsyncData(
-    () => api.getExpiryAlerts(),
-    []
-  );
-  const { data: activity, error: activityError, reload: reloadActivity } = useAsyncData(
-    () => api.getRecentActivity(),
-    []
-  );
+  const { data: stats, error: statsError, reload: reloadStats } = useAsyncData(getDashboardStats);
+  const { data: overview, error: overviewError, reload: reloadOverview } = useAsyncData(getInventoryOverview);
+  const { data: categories, error: categoriesError, reload: reloadCategories } = useAsyncData(getMedicineCategories);
+  const { data: medicines, error: medicinesError, reload: reloadMedicines } = useAsyncData(getRecentMedicines);
+  const { data: alerts, error: alertsError, reload: reloadAlerts } = useAsyncData(getExpiryAlerts);
+  const { data: activity, error: activityError, reload: reloadActivity } = useAsyncData(getRecentActivity);
 
   const forecastFetcher = useCallback(() => aiService.getForecastInsight(), []);
 

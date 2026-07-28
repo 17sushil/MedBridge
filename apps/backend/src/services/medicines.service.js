@@ -10,6 +10,8 @@ async function listMedicines(hospitalId, { search, status } = {}) {
         ? [
             { name: { contains: search, mode: "insensitive" } },
             { category: { contains: search, mode: "insensitive" } },
+            { batch: { contains: search, mode: "insensitive" } },
+            { medicineCode: { contains: search, mode: "insensitive" } },
           ]
         : undefined,
     },

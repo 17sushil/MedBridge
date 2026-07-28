@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import clsx from "clsx";
 import { Plus, Search, Pill, SlidersHorizontal, Pencil, Trash2 } from "lucide-react";
 import { api } from "../services/api";
@@ -17,30 +18,36 @@ const FILTERS = ["All", "In Stock", "Low Stock", "Critical"];
 
 export default function Inventory() {
   const [medicines, setMedicines] = useState(null);
-  const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("All");
   const [modal, setModal] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get("search") || "";
 
   const loadMedicines = useCallback(() => {
     setMedicines(null);
-    api.getMedicines().then(setMedicines);
-  }, []);
+    api.getMedicines({ search: query }).then(setMedicines).catch(() => setMedicines([]));
+  }, [query]);
 
   useEffect(() => {
-    loadMedicines();
+    queueMicrotask(loadMedicines);
   }, [loadMedicines]);
 
   const filtered = useMemo(() => {
     if (!medicines) return [];
     return medicines.filter((m) => {
-      const matchesQuery =
-        m.name.toLowerCase().includes(query.toLowerCase()) ||
-        m.category.toLowerCase().includes(query.toLowerCase());
-      const matchesFilter = filter === "All" || m.status === filter;
-      return matchesQuery && matchesFilter;
+      return filter === "All" || m.status === filter;
     });
-  }, [medicines, query, filter]);
+  }, [medicines, filter]);
+
+  const setSearch = (value) => {
+    setSearchParams((current) => {
+      const next = new URLSearchParams(current);
+      if (value.trim()) next.set("search", value);
+      else next.delete("search");
+      return next;
+    });
+  };
 
   const handleSave = async (data) => {
     if (modal?.mode === "edit") {
@@ -82,8 +89,8 @@ export default function Inventory() {
             <Search className="inv-search-icon" size={16} />
             <input
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search by name or category…"
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search by name, category, batch, or code…"
               className="inv-search-input"
             />
           </div>
@@ -119,7 +126,7 @@ export default function Inventory() {
                 variant="outline"
                 size="sm"
                 onClick={() => {
-                  setQuery("");
+                  setSearch("");
                   setFilter("All");
                 }}
               >

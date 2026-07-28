@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Modal from "./Modal";
 import Button from "../ui/Button";
 
@@ -15,28 +15,29 @@ const EMPTY = {
   status: "In Stock",
 };
 
+function medicineToForm(medicine) {
+  if (!medicine) return EMPTY;
+  return {
+    name: medicine.name,
+    category: medicine.category,
+    batch: medicine.batch,
+    quantity: String(medicine.quantity),
+    unit: medicine.unit,
+    unitPrice: String(medicine.unitPrice ?? ""),
+    expiry: medicine.expiry?.slice?.(0, 10) || new Date(medicine.expiry).toISOString().slice(0, 10),
+    status: medicine.status,
+  };
+}
+
 export default function MedicineFormModal({ medicine, onClose, onSave }) {
-  const [form, setForm] = useState(EMPTY);
+  return <MedicineForm key={medicine?.id || "new"} medicine={medicine} onClose={onClose} onSave={onSave} />;
+}
+
+function MedicineForm({ medicine, onClose, onSave }) {
+  const [form, setForm] = useState(() => medicineToForm(medicine));
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const isEdit = Boolean(medicine);
-
-  useEffect(() => {
-    if (medicine) {
-      setForm({
-        name: medicine.name,
-        category: medicine.category,
-        batch: medicine.batch,
-        quantity: String(medicine.quantity),
-        unit: medicine.unit,
-        unitPrice: String(medicine.unitPrice ?? ""),
-        expiry: medicine.expiry?.slice?.(0, 10) || new Date(medicine.expiry).toISOString().slice(0, 10),
-        status: medicine.status,
-      });
-    } else {
-      setForm(EMPTY);
-    }
-  }, [medicine]);
 
   const update = (field) => (e) => setForm((prev) => ({ ...prev, [field]: e.target.value }));
 

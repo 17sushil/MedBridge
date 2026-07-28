@@ -1,6 +1,3 @@
-// MedBridge database schema.
-// Run `npm run prisma:migrate` after editing this file to apply changes.
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,6 +5,117 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model Hospital {
+  id               String              @id @default(uuid())
+  /// Links to ML dataset hospital_id (e.g. DEMO-01) for XGBoost forecasts
+  externalCode     String?             @unique
+  name             String
+  location         String
+  type             String
+  province         String?
+  district         String?
+  ecoregion        String?
+  rating           Float               @default(4.5)
+  createdAt        DateTime            @default(now())
+  outgoingRequests ExchangeRequest[]   @relation("FromHospital")
+  incomingRequests ExchangeRequest[]   @relation("ToHospital")
+  movements        InventoryMovement[]
+  medicines        Medicine[]
+  notifications    Notification[]
+  reports          Report[]
+  users            User[]
+}
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         Role     @default(STAFF)
+  avatarUrl    String?
+  createdAt    DateTime @default(now())
+  hospitalId   String
+  hospital     Hospital @relation(fields: [hospitalId], references: [id])
+}
+
+model Medicine {
+  id           String              @id @default(uuid())
+  /// Links to ML dataset medicine_id (e.g. MED-001)
+  medicineCode String?
+  name         String
+  category     String
+  batch        String
+  quantity     Int
+  unit         String
+  unitPrice    Float               @default(0)
+  expiry       DateTime
+  status       MedicineStatus      @default(IN_STOCK)
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+  hospitalId   String
+  movements    InventoryMovement[]
+  hospital     Hospital            @relation(fields: [hospitalId], references: [id])
+
+  @@index([hospitalId])
+  @@index([medicineCode])
+}
+
+model InventoryMovement {
+  id         String       @id @default(uuid())
+  type       MovementType
+  quantity   Int
+  occurredAt DateTime     @default(now())
+  hospitalId String
+  medicineId String
+  hospital   Hospital     @relation(fields: [hospitalId], references: [id])
+  medicine   Medicine     @relation(fields: [medicineId], references: [id])
+
+  @@index([hospitalId])
+  @@index([medicineId])
+}
+
+model ExchangeRequest {
+  id             String         @id @default(uuid())
+  medicine       String
+  quantity       Int
+  unit           String
+  status         ExchangeStatus @default(PENDING)
+  requestedOn    DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  fromHospitalId String
+  toHospitalId   String
+  fromHospital   Hospital       @relation("FromHospital", fields: [fromHospitalId], references: [id])
+  toHospital     Hospital       @relation("ToHospital", fields: [toHospitalId], references: [id])
+
+  @@index([fromHospitalId])
+  @@index([toHospitalId])
+}
+
+model Notification {
+  id         String           @id @default(uuid())
+  title      String
+  body       String
+  type       NotificationType @default(INFO)
+  read       Boolean          @default(false)
+  createdAt  DateTime         @default(now())
+  hospitalId String
+  hospital   Hospital         @relation(fields: [hospitalId], references: [id])
+
+  @@index([hospitalId])
+}
+
+model Report {
+  id          String     @id @default(uuid())
+  name        String
+  period      String
+  type        ReportType
+  generatedOn DateTime   @default(now())
+  hospitalId  String
+  hospital    Hospital   @relation(fields: [hospitalId], references: [id])
+
+  @@index([hospitalId])
 }
 
 enum Role {
@@ -43,127 +151,7 @@ enum ReportType {
   COMPLIANCE
 }
 
-model Hospital {
-  id           String   @id @default(uuid())
-  /// Links to ML dataset hospital_id (e.g. DEMO-01) for XGBoost forecasts
-  externalCode String?  @unique
-  name         String
-  location     String
-  type         String // General, Specialty, Clinic, Cancer_Hospital, ...
-  province     String?
-  district     String?
-  ecoregion    String?
-  rating       Float    @default(4.5)
-  createdAt    DateTime @default(now())
-
-  users             User[]
-  medicines         Medicine[]
-  movements         InventoryMovement[]
-  notifications     Notification[]
-  reports           Report[]
-  outgoingRequests  ExchangeRequest[] @relation("FromHospital")
-  incomingRequests  ExchangeRequest[] @relation("ToHospital")
-}
-
-model User {
-  id           String   @id @default(uuid())
-  name         String
-  email        String   @unique
-  passwordHash String
-  role         Role     @default(STAFF)
-  avatarUrl    String?
-  createdAt    DateTime @default(now())
-
-  hospitalId String
-  hospital   Hospital @relation(fields: [hospitalId], references: [id])
-}
-
-model Medicine {
-  id           String         @id @default(uuid())
-  /// Links to ML dataset medicine_id (e.g. MED-001)
-  medicineCode String?
-  name         String
-  category     String
-  batch        String
-  quantity     Int
-  unit         String // boxes, vials, etc.
-  unitPrice    Float          @default(0)
-  expiry       DateTime
-  status       MedicineStatus @default(IN_STOCK)
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-
-  hospitalId String
-  hospital   Hospital @relation(fields: [hospitalId], references: [id])
-  movements  InventoryMovement[]
-
-  @@index([hospitalId])
-  @@index([medicineCode])
-}
-
 enum MovementType {
   IN
   OUT
-}
-
-model InventoryMovement {
-  id         String       @id @default(uuid())
-  type       MovementType
-  quantity   Int
-  occurredAt DateTime     @default(now())
-
-  hospitalId String
-  hospital   Hospital @relation(fields: [hospitalId], references: [id])
-
-  medicineId String
-  medicine   Medicine @relation(fields: [medicineId], references: [id])
-
-  @@index([hospitalId])
-  @@index([medicineId])
-}
-
-model ExchangeRequest {
-  id          String         @id @default(uuid())
-  medicine    String
-  quantity    Int
-  unit        String
-  status      ExchangeStatus @default(PENDING)
-  requestedOn DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
-
-  fromHospitalId String
-  fromHospital   Hospital @relation("FromHospital", fields: [fromHospitalId], references: [id])
-
-  toHospitalId String
-  toHospital   Hospital @relation("ToHospital", fields: [toHospitalId], references: [id])
-
-  @@index([fromHospitalId])
-  @@index([toHospitalId])
-}
-
-model Notification {
-  id        String           @id @default(uuid())
-  title     String
-  body      String
-  type      NotificationType @default(INFO)
-  read      Boolean          @default(false)
-  createdAt DateTime         @default(now())
-
-  hospitalId String
-  hospital   Hospital @relation(fields: [hospitalId], references: [id])
-
-  @@index([hospitalId])
-}
-
-model Report {
-  id          String     @id @default(uuid())
-  name        String
-  period      String
-  type        ReportType
-  generatedOn DateTime   @default(now())
-
-  hospitalId String
-  hospital   Hospital @relation(fields: [hospitalId], references: [id])
-
-  @@index([hospitalId])
 }

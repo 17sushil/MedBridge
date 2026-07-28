@@ -1,3 +1,8 @@
+require("dotenv").config({
+  path: require("path").resolve(__dirname, "../.env"),
+});
+
+
 /**
  * Seed MedBridge DB from ML synthetic CSVs (8 demo hospital logins).
  *

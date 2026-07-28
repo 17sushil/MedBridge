@@ -12,7 +12,7 @@ export function AppProvider({ children }) {
 
   useEffect(() => {
     if (!user) {
-      setNotifications([]);
+      queueMicrotask(() => setNotifications([]));
       return;
     }
     api.getNotifications().then(setNotifications).catch(() => setNotifications([]));

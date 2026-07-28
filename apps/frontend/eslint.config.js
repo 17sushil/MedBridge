@@ -17,5 +17,10 @@ export default defineConfig([
       globals: globals.browser,
       parserOptions: { ecmaFeatures: { jsx: true } },
     },
+    rules: {
+      // These modules intentionally export route metadata and context hooks
+      // alongside components. They are not Fast Refresh boundaries.
+      'react-refresh/only-export-components': 'off',
+    },
   },
 ])

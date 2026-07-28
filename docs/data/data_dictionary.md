@@ -25,8 +25,8 @@
 | medicines | 72 |
 | demand_history | 540216 |
 | demand_features | 504792 |
-| inventory_snapshots | 5707 |
-| resource_exchange_log | 470 |
+| inventory_snapshots | 5660 |
+| resource_exchange_log | 472 |
 | emergency_requests | 200 |
 
 ## Facility coverage
