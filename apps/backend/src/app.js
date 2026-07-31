@@ -40,7 +40,6 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/demand-forecast", demandForecastRoutes);
 app.use("/api/ai", aiRoutes);
 
-app.use(notFoundHandler);
-app.use(errorHandler);
-
 module.exports = app;
+module.exports.notFoundHandler = notFoundHandler;
+module.exports.errorHandler = errorHandler;

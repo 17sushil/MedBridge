@@ -1,0 +1,473 @@
+exchange_id,request_date,from_hospital_id,to_hospital_id,medicine_id,quantity_units,priority,status,distance_km,estimated_lead_days,same_province,reason,involves_demo
+EX-00001,2026-04-21,DEMO-02,DEMO-06,MED-038,98,Normal,Completed,239.4,2,0,Routine balancing,1
+EX-00002,2026-03-21,HOSP-GD-004,HOSP-GD-003,MED-072,5,Emergency,Completed,72.8,2,1,Routine balancing,0
+EX-00003,2026-03-31,HOSP-KR-003,HOSP-BG-017,MED-032,5,Normal,Rejected,304.8,5,0,Chemo cycle demand,0
+EX-00004,2026-01-07,DEMO-08,DEMO-06,MED-009,33,Normal,Approved,590.4,7,0,Postpartum hemorrhage kit,1
+EX-00005,2026-05-24,HOSP-GD-005,DEMO-06,MED-061,180,High,Completed,380.2,5,0,Outbreak response,1
+EX-00006,2026-03-19,DEMO-08,HOSP-MD-004,MED-010,21,Emergency,Completed,364.3,4,0,Chemo cycle demand,1
+EX-00007,2026-03-25,HOSP-BG-019,DEMO-06,MED-071,63,High,Completed,240.3,5,0,Chemo cycle demand,1
+EX-00008,2026-02-25,DEMO-08,DEMO-06,MED-003,28,Normal,Completed,590.4,9,0,Near-expiry redistribution,1
+EX-00009,2026-06-12,DEMO-04,HOSP-KR-001,MED-027,170,Normal,In_Transit,376.7,5,0,Monsoon surge,1
+EX-00010,2026-03-18,DEMO-02,DEMO-07,MED-043,34,Normal,Rejected,142.1,1,0,Postpartum hemorrhage kit,1
+EX-00011,2026-06-25,HOSP-SP-003,HOSP-BG-018,MED-032,22,Normal,Completed,453.8,5,0,Low stock,0
+EX-00012,2026-06-19,DEMO-07,DEMO-05,MED-015,65,Emergency,Completed,143.2,1,0,Postpartum hemorrhage kit,1
+EX-00013,2026-02-18,DEMO-07,HOSP-GD-004,MED-062,117,Normal,Rejected,45.9,1,1,Pediatric surge,1
+EX-00014,2026-06-05,HOSP-BG-012,HOSP-KP-003,MED-052,160,High,Completed,303.2,4,0,Emergency case load,0
+EX-00015,2026-05-12,DEMO-01,DEMO-02,MED-032,192,Normal,Rejected,3.8,1,1,Surgical camp,1
+EX-00016,2026-05-13,DEMO-04,DEMO-06,MED-029,141,Normal,Completed,239.3,3,0,Near-expiry redistribution,1
+EX-00017,2026-04-22,HOSP-KP-004,HOSP-MD-001,MED-056,5,High,Completed,87.0,3,0,Monsoon surge,0
+EX-00019,2026-05-25,HOSP-BG-016,DEMO-02,MED-054,112,Normal,Completed,45.1,1,1,Near-expiry redistribution,1
+EX-00020,2026-03-18,DEMO-02,DEMO-07,MED-047,25,Normal,Completed,142.1,1,0,Surgical camp,1
+EX-00021,2026-03-24,DEMO-08,DEMO-01,MED-033,42,High,Rejected,352.2,5,0,Surgical camp,1
+EX-00022,2026-05-22,HOSP-SP-003,HOSP-LB-002,MED-009,11,Emergency,Completed,171.6,3,0,Pediatric surge,0
+EX-00023,2026-05-19,DEMO-08,HOSP-GD-002,MED-004,17,High,Completed,176.8,4,0,Low stock,1
+EX-00024,2026-05-24,DEMO-08,DEMO-05,MED-052,49,Emergency,Completed,353.6,4,0,Low stock,1
+EX-00025,2026-03-31,HOSP-BG-012,HOSP-MD-003,MED-060,128,Emergency,Completed,104.4,2,0,Pediatric surge,0
+EX-00026,2026-03-24,DEMO-08,HOSP-BG-018,MED-004,17,Emergency,Requested,355.3,6,0,Near-expiry redistribution,1
+EX-00027,2026-01-13,DEMO-07,HOSP-LB-004,MED-007,247,Normal,Completed,110.0,1,0,Chemo cycle demand,1
+EX-00028,2026-03-11,DEMO-08,DEMO-05,MED-016,55,Normal,Completed,353.6,5,0,Pediatric surge,1
+EX-00029,2026-03-28,DEMO-08,DEMO-06,MED-043,42,Normal,Completed,590.4,8,0,Emergency case load,1
+EX-00030,2026-04-11,DEMO-08,DEMO-04,MED-055,5,High,Completed,351.9,4,0,Routine balancing,1
+EX-00031,2026-04-18,DEMO-02,HOSP-KP-004,MED-039,61,Normal,Completed,124.8,2,0,Outbreak response,1
+EX-00032,2026-01-08,HOSP-BG-015,HOSP-KR-001,MED-017,63,High,Completed,400.2,7,0,Near-expiry redistribution,0
+EX-00034,2026-05-27,DEMO-08,DEMO-07,MED-012,33,Normal,Completed,211.9,3,0,Chemo cycle demand,1
+EX-00035,2026-01-07,HOSP-SP-003,HOSP-LB-002,MED-066,5,Normal,Rejected,171.6,3,0,Near-expiry redistribution,0
+EX-00036,2026-01-13,DEMO-08,DEMO-06,MED-053,32,Emergency,Requested,590.4,9,0,Low stock,1
+EX-00037,2026-01-28,DEMO-02,HOSP-BG-017,MED-052,246,Emergency,Completed,38.3,2,1,Emergency case load,1
+EX-00038,2026-04-21,DEMO-02,DEMO-03,MED-064,18,High,Approved,11.9,1,1,Routine balancing,1
+EX-00039,2026-01-29,DEMO-02,DEMO-04,MED-025,144,Normal,Requested,0.3,1,1,Routine balancing,1
+EX-00040,2026-04-23,HOSP-GD-004,HOSP-LB-001,MED-002,5,High,In_Transit,122.9,3,0,Emergency case load,0
+EX-00041,2026-01-07,DEMO-03,DEMO-04,MED-060,5,Normal,Completed,11.9,1,1,Chemo cycle demand,1
+EX-00042,2026-04-21,HOSP-SP-004,HOSP-LB-002,MED-013,29,Normal,Requested,171.9,2,0,Routine balancing,0
+EX-00043,2026-04-16,DEMO-04,HOSP-LB-003,MED-007,108,High,Completed,281.8,4,0,Near-expiry redistribution,1
+EX-00044,2026-06-21,DEMO-08,HOSP-BG-012,MED-007,20,High,Completed,352.9,6,0,Pediatric surge,1
+EX-00045,2026-06-11,DEMO-08,HOSP-MD-002,MED-007,23,Normal,Completed,364.8,6,0,Outbreak response,1
+EX-00046,2026-02-14,DEMO-08,DEMO-07,MED-037,5,Emergency,Completed,211.9,3,0,Postpartum hemorrhage kit,1
+EX-00048,2026-01-22,DEMO-08,DEMO-04,MED-050,12,High,Completed,351.9,5,0,Chemo cycle demand,1
+EX-00049,2026-06-19,DEMO-08,DEMO-03,MED-066,5,Normal,Completed,363.7,5,0,Monsoon surge,1
+EX-00050,2026-06-02,DEMO-07,HOSP-SP-001,MED-010,105,Emergency,Requested,333.2,4,0,Surgical camp,1
+EX-00051,2026-02-20,DEMO-08,DEMO-06,MED-058,5,Normal,Completed,590.4,9,0,Monsoon surge,1
+EX-00052,2026-06-13,HOSP-BG-019,HOSP-LB-005,MED-014,11,High,Completed,175.9,4,0,Pediatric surge,0
+EX-00053,2026-05-10,DEMO-05,HOSP-BG-012,MED-012,96,High,In_Transit,1.3,1,1,Pediatric surge,1
+EX-00054,2026-01-04,HOSP-KR-004,DEMO-06,MED-007,12,Normal,In_Transit,533.4,6,0,Outbreak response,1
+EX-00055,2025-12-26,DEMO-02,DEMO-06,MED-037,34,Normal,Completed,239.4,2,0,Emergency case load,1
+EX-00057,2026-02-24,DEMO-08,DEMO-06,MED-063,5,High,Completed,590.4,9,0,Chemo cycle demand,1
+EX-00058,2026-06-26,DEMO-02,DEMO-07,MED-067,213,High,Completed,142.1,2,0,Emergency case load,1
+EX-00059,2026-06-13,HOSP-GD-004,HOSP-SP-001,MED-035,5,High,In_Transit,353.6,6,0,Routine balancing,0
+EX-00060,2026-06-15,DEMO-08,DEMO-06,MED-044,5,Normal,Completed,590.4,9,0,Routine balancing,1
+EX-00061,2026-05-11,HOSP-BG-018,HOSP-MD-004,MED-016,5,Normal,Completed,84.2,2,0,Postpartum hemorrhage kit,0
+EX-00062,2026-03-14,HOSP-GD-002,HOSP-GD-003,MED-058,5,High,Completed,106.6,2,1,Near-expiry redistribution,0
+EX-00063,2026-02-12,DEMO-04,HOSP-BG-011,MED-030,116,Normal,Completed,3.9,2,1,Near-expiry redistribution,1
+EX-00065,2026-01-02,DEMO-08,DEMO-06,MED-044,42,Normal,Completed,590.4,7,0,Monsoon surge,1
+EX-00066,2026-06-21,HOSP-LB-005,HOSP-SP-001,MED-049,69,Normal,In_Transit,300.5,3,0,Outbreak response,0
+EX-00067,2026-04-26,DEMO-01,DEMO-06,MED-040,172,Normal,In_Transit,238.7,4,0,Chemo cycle demand,1
+EX-00068,2026-02-16,DEMO-07,HOSP-LB-002,MED-038,16,Normal,Completed,233.0,3,0,Surgical camp,1
+EX-00069,2026-06-03,DEMO-02,DEMO-06,MED-067,98,Normal,In_Transit,239.4,4,0,Pediatric surge,1
+EX-00070,2026-06-09,DEMO-08,DEMO-05,MED-003,56,Normal,Requested,353.6,4,0,Routine balancing,1
+EX-00071,2026-05-25,HOSP-GD-002,HOSP-BG-016,MED-037,30,Normal,Completed,169.9,4,0,Emergency case load,0
+EX-00072,2026-04-03,HOSP-BG-011,HOSP-GD-003,MED-060,5,Normal,Completed,77.6,1,0,Near-expiry redistribution,0
+EX-00073,2026-02-08,DEMO-08,DEMO-06,MED-022,42,Normal,Completed,590.4,7,0,Surgical camp,1
+EX-00074,2026-05-02,HOSP-KR-004,HOSP-MD-003,MED-043,5,Normal,In_Transit,347.2,6,0,Surgical camp,0
+EX-00075,2026-02-04,HOSP-LB-005,HOSP-BG-017,MED-072,73,High,In_Transit,213.6,2,0,Monsoon surge,0
+EX-00076,2026-03-30,DEMO-03,DEMO-01,MED-025,17,Normal,Completed,11.8,1,1,Surgical camp,1
+EX-00077,2026-06-11,DEMO-03,DEMO-06,MED-055,6,Normal,Approved,227.5,4,0,Pediatric surge,1
+EX-00078,2026-02-08,HOSP-SP-003,HOSP-KR-001,MED-047,19,High,Completed,113.1,1,0,Chemo cycle demand,0
+EX-00079,2026-01-30,HOSP-SP-003,HOSP-LB-002,MED-009,11,Normal,Completed,171.6,3,0,Low stock,0
+EX-00080,2026-04-02,HOSP-KR-004,HOSP-SP-002,MED-037,5,Normal,Requested,224.4,3,0,Surgical camp,0
+EX-00081,2026-02-13,HOSP-BG-018,HOSP-SP-003,MED-056,9,Normal,Completed,453.8,7,0,Outbreak response,0
+EX-00082,2026-01-03,HOSP-SP-004,HOSP-BG-013,MED-045,5,Emergency,Completed,497.7,6,0,Outbreak response,0
+EX-00083,2026-06-23,DEMO-08,DEMO-01,MED-070,47,Emergency,Completed,352.2,6,0,Pediatric surge,1
+EX-00084,2025-12-23,HOSP-GD-004,HOSP-KR-003,MED-026,5,Normal,Completed,137.9,3,0,Chemo cycle demand,0
+EX-00085,2026-01-02,DEMO-04,HOSP-SP-003,MED-007,64,Normal,Completed,450.7,6,0,Chemo cycle demand,1
+EX-00086,2026-01-15,DEMO-06,HOSP-LB-005,MED-048,187,Emergency,Completed,400.7,6,0,Routine balancing,1
+EX-00087,2026-06-03,DEMO-08,HOSP-BG-011,MED-003,56,Normal,Completed,355.1,6,0,Outbreak response,1
+EX-00088,2026-01-21,DEMO-08,DEMO-04,MED-014,33,Normal,Completed,351.9,6,0,Surgical camp,1
+EX-00089,2026-03-16,HOSP-GD-005,HOSP-GD-002,MED-067,70,Normal,Completed,39.3,1,1,Postpartum hemorrhage kit,0
+EX-00090,2026-02-03,DEMO-08,HOSP-KP-004,MED-035,5,Normal,Completed,475.7,6,0,Routine balancing,1
+EX-00092,2026-05-24,HOSP-BG-013,HOSP-KP-003,MED-002,122,Emergency,Completed,301.5,5,0,Outbreak response,0
+EX-00093,2026-04-10,DEMO-02,DEMO-07,MED-043,34,Emergency,Completed,142.1,1,0,Chemo cycle demand,1
+EX-00094,2026-05-19,HOSP-GD-002,HOSP-BG-012,MED-038,29,Emergency,Completed,181.2,2,0,Emergency case load,0
+EX-00095,2026-05-17,HOSP-BG-017,HOSP-LB-003,MED-070,10,Normal,Completed,318.8,3,0,Routine balancing,0
+EX-00096,2026-02-05,DEMO-04,DEMO-06,MED-018,175,Normal,Completed,239.3,3,0,Monsoon surge,1
+EX-00097,2026-05-22,HOSP-MD-001,HOSP-GD-005,MED-003,65,Normal,In_Transit,254.3,4,0,Monsoon surge,0
+EX-00098,2026-06-03,DEMO-02,HOSP-BG-019,MED-039,130,Emergency,Approved,1.6,2,1,Monsoon surge,1
+EX-00099,2025-12-30,DEMO-01,DEMO-07,MED-029,57,Emergency,Completed,142.0,1,0,Pediatric surge,1
+EX-00100,2026-03-28,HOSP-GD-005,DEMO-01,MED-067,62,Normal,Completed,143.0,2,0,Monsoon surge,1
+EX-00101,2026-01-27,DEMO-08,HOSP-KR-001,MED-066,5,Normal,Completed,93.1,1,1,Near-expiry redistribution,1
+EX-00102,2026-01-05,DEMO-07,HOSP-MD-004,MED-017,99,Normal,Completed,158.9,3,0,Surgical camp,1
+EX-00103,2026-03-16,HOSP-BG-016,HOSP-KP-004,MED-063,147,Normal,Completed,145.9,1,0,Monsoon surge,0
+EX-00104,2026-03-06,HOSP-SP-003,HOSP-BG-011,MED-055,5,High,Completed,453.8,7,0,Outbreak response,0
+EX-00105,2026-04-01,DEMO-05,HOSP-LB-004,MED-019,223,Normal,Completed,245.0,5,0,Emergency case load,1
+EX-00106,2026-04-17,DEMO-08,DEMO-03,MED-014,6,Emergency,Completed,363.7,6,0,Routine balancing,1
+EX-00107,2025-12-23,HOSP-BG-017,HOSP-BG-011,MED-034,26,Normal,Approved,37.1,2,1,Pediatric surge,0
+EX-00108,2026-04-06,DEMO-03,HOSP-LB-003,MED-052,21,Emergency,Completed,292.2,3,0,Chemo cycle demand,1
+EX-00109,2026-01-13,DEMO-01,DEMO-07,MED-005,225,High,Rejected,142.0,2,0,Pediatric surge,1
+EX-00110,2025-12-23,HOSP-GD-002,HOSP-KR-001,MED-028,63,Normal,Approved,196.5,3,0,Surgical camp,0
+EX-00111,2026-06-20,DEMO-07,DEMO-01,MED-017,99,High,Completed,142.0,1,0,Near-expiry redistribution,1
+EX-00112,2026-06-29,HOSP-BG-019,HOSP-LB-005,MED-066,31,Normal,Completed,175.9,3,0,Postpartum hemorrhage kit,0
+EX-00113,2026-04-13,DEMO-08,HOSP-BG-019,MED-055,5,Emergency,Completed,351.1,5,0,Monsoon surge,1
+EX-00114,2026-06-10,HOSP-GD-004,HOSP-GD-005,MED-035,5,High,Completed,42.9,1,1,Low stock,0
+EX-00115,2025-12-14,DEMO-08,HOSP-SP-002,MED-041,5,Normal,Completed,197.5,4,0,Near-expiry redistribution,1
+EX-00116,2026-06-29,HOSP-SP-002,HOSP-KP-001,MED-014,17,High,Requested,738.4,11,0,Monsoon surge,0
+EX-00117,2026-01-03,DEMO-08,HOSP-BG-017,MED-061,5,Normal,Completed,383.1,6,0,Surgical camp,1
+EX-00118,2025-12-17,DEMO-01,HOSP-LB-001,MED-053,88,High,In_Transit,183.7,2,0,Chemo cycle demand,1
+EX-00119,2026-02-04,DEMO-08,HOSP-KR-001,MED-041,5,High,Approved,93.1,3,1,Outbreak response,1
+EX-00120,2026-05-23,DEMO-02,DEMO-01,MED-043,34,Emergency,Completed,3.8,1,1,Routine balancing,1
+EX-00121,2025-12-23,DEMO-06,HOSP-BG-015,MED-045,54,High,Approved,214.9,2,0,Postpartum hemorrhage kit,1
+EX-00122,2026-03-09,HOSP-GD-002,HOSP-BG-010,MED-026,106,Normal,In_Transit,106.1,3,0,Surgical camp,0
+EX-00124,2026-02-23,HOSP-SP-004,HOSP-MD-004,MED-013,12,Emergency,Completed,491.8,6,0,Emergency case load,0
+EX-00125,2026-06-26,DEMO-05,DEMO-08,MED-043,7,Emergency,Completed,353.6,6,0,Emergency case load,1
+EX-00126,2026-02-08,DEMO-02,DEMO-05,MED-050,70,Normal,Approved,5.2,1,1,Low stock,1
+EX-00127,2026-04-19,DEMO-08,DEMO-05,MED-001,18,High,Completed,353.6,6,0,Monsoon surge,1
+EX-00128,2025-12-29,HOSP-GD-004,DEMO-05,MED-056,5,High,In_Transit,143.1,2,0,Low stock,1
+EX-00129,2026-03-18,DEMO-03,DEMO-07,MED-025,62,Emergency,Completed,153.7,2,0,Chemo cycle demand,1
+EX-00130,2026-01-18,HOSP-KR-001,HOSP-KP-003,MED-038,54,Normal,In_Transit,678.1,10,0,Emergency case load,0
+EX-00131,2026-05-07,HOSP-SP-003,HOSP-KP-003,MED-027,19,Emergency,Completed,754.4,10,0,Monsoon surge,0
+EX-00132,2026-02-12,HOSP-BG-013,HOSP-GD-005,MED-036,180,High,Completed,145.5,3,0,Emergency case load,0
+EX-00133,2026-03-11,HOSP-SP-003,HOSP-LB-003,MED-029,18,Emergency,Completed,209.5,4,0,Near-expiry redistribution,0
+EX-00134,2026-03-02,DEMO-01,DEMO-07,MED-043,31,High,Completed,142.0,2,0,Postpartum hemorrhage kit,1
+EX-00135,2026-01-24,HOSP-BG-011,HOSP-SP-003,MED-043,5,Normal,Completed,453.8,5,0,Surgical camp,0
+EX-00136,2026-01-24,DEMO-08,DEMO-05,MED-012,33,Normal,Requested,353.6,4,0,Surgical camp,1
+EX-00137,2026-06-07,DEMO-03,DEMO-04,MED-006,23,Normal,Completed,11.9,1,1,Pediatric surge,1
+EX-00138,2026-03-19,DEMO-08,DEMO-06,MED-033,45,Normal,Requested,590.4,7,0,Postpartum hemorrhage kit,1
+EX-00139,2026-02-23,HOSP-BG-012,HOSP-LB-003,MED-034,39,Normal,Completed,281.2,3,0,Low stock,0
+EX-00140,2026-05-27,DEMO-02,HOSP-BG-011,MED-051,233,Normal,Completed,3.9,2,1,Monsoon surge,1
+EX-00141,2026-05-20,DEMO-07,DEMO-06,MED-017,99,High,Completed,378.9,6,0,Emergency case load,1
+EX-00142,2025-12-13,DEMO-06,HOSP-BG-018,MED-058,67,Normal,Completed,235.4,4,0,Surgical camp,1
+EX-00143,2026-06-25,DEMO-05,DEMO-01,MED-006,51,Normal,Completed,1.8,1,1,Monsoon surge,1
+EX-00144,2026-02-21,DEMO-07,DEMO-03,MED-017,66,Normal,Completed,153.7,1,0,Low stock,1
+EX-00145,2026-06-20,DEMO-02,HOSP-BG-019,MED-045,18,High,In_Transit,1.6,1,1,Pediatric surge,1
+EX-00146,2026-02-04,DEMO-08,DEMO-04,MED-065,5,Emergency,Completed,351.9,5,0,Monsoon surge,1
+EX-00147,2026-01-23,HOSP-BG-019,HOSP-LB-002,MED-066,31,High,Rejected,366.5,6,0,Outbreak response,0
+EX-00148,2026-04-07,DEMO-01,HOSP-BG-016,MED-010,87,Normal,Requested,41.5,2,1,Postpartum hemorrhage kit,1
+EX-00149,2026-02-18,DEMO-08,DEMO-05,MED-044,5,Emergency,Completed,353.6,4,0,Pediatric surge,1
+EX-00150,2026-01-03,DEMO-02,DEMO-01,MED-021,139,High,Approved,3.8,1,1,Outbreak response,1
+EX-00151,2026-03-21,DEMO-02,DEMO-01,MED-019,199,Normal,Completed,3.8,2,1,Chemo cycle demand,1
+EX-00152,2026-02-24,DEMO-05,DEMO-06,MED-040,154,Normal,Approved,237.2,2,0,Routine balancing,1
+EX-00153,2026-04-14,DEMO-01,DEMO-04,MED-040,137,Normal,Completed,4.0,1,1,Surgical camp,1
+EX-00154,2026-03-18,HOSP-KR-004,HOSP-BG-018,MED-043,5,High,Completed,301.5,4,0,Outbreak response,0
+EX-00155,2026-01-03,HOSP-GD-002,HOSP-SP-004,MED-054,24,High,Completed,314.9,4,0,Postpartum hemorrhage kit,0
+EX-00156,2026-06-26,HOSP-KR-004,HOSP-KP-003,MED-007,12,Normal,Rejected,602.6,7,0,Outbreak response,0
+EX-00157,2025-12-22,DEMO-07,HOSP-SP-003,MED-070,185,High,Completed,309.5,3,0,Routine balancing,1
+EX-00158,2025-12-27,HOSP-BG-018,HOSP-GD-002,MED-066,5,Normal,Completed,183.1,3,0,Pediatric surge,0
+EX-00159,2026-03-17,DEMO-04,DEMO-08,MED-007,205,High,Completed,351.9,4,0,Outbreak response,1
+EX-00160,2026-04-15,DEMO-08,HOSP-KR-004,MED-012,55,High,Completed,76.2,2,1,Low stock,1
+EX-00161,2026-03-28,DEMO-03,DEMO-06,MED-010,167,Normal,Completed,227.5,4,0,Monsoon surge,1
+EX-00162,2026-01-12,DEMO-02,HOSP-MD-003,MED-014,29,Normal,Completed,108.2,1,0,Monsoon surge,1
+EX-00163,2026-01-21,DEMO-08,DEMO-04,MED-066,5,Normal,Completed,351.9,6,0,Pediatric surge,1
+EX-00164,2026-01-30,HOSP-KP-004,HOSP-BG-010,MED-061,5,Emergency,Approved,208.3,2,0,Near-expiry redistribution,0
+EX-00165,2026-02-24,HOSP-KR-003,HOSP-LB-004,MED-060,5,Normal,Approved,94.6,2,0,Near-expiry redistribution,0
+EX-00166,2026-05-31,DEMO-08,HOSP-KP-003,MED-016,5,High,Completed,655.2,8,0,Monsoon surge,1
+EX-00167,2026-04-21,DEMO-08,HOSP-BG-019,MED-055,5,Normal,In_Transit,351.1,4,0,Monsoon surge,1
+EX-00168,2026-02-15,DEMO-08,HOSP-KP-001,MED-066,5,High,Completed,570.8,7,0,Low stock,1
+EX-00169,2026-06-03,HOSP-GD-003,HOSP-BG-016,MED-015,5,Normal,Requested,74.8,1,0,Low stock,0
+EX-00170,2026-05-30,DEMO-05,DEMO-06,MED-056,153,High,Completed,237.2,4,0,Low stock,1
+EX-00171,2026-04-30,HOSP-KP-001,HOSP-LB-002,MED-014,36,Normal,Completed,576.2,9,0,Routine balancing,0
+EX-00172,2026-06-04,HOSP-GD-003,HOSP-MD-004,MED-053,16,Normal,Completed,111.7,3,0,Low stock,0
+EX-00173,2026-01-25,HOSP-KR-003,DEMO-06,MED-027,5,High,Requested,512.1,6,0,Routine balancing,1
+EX-00174,2026-05-03,DEMO-05,DEMO-01,MED-006,73,Emergency,Completed,1.8,1,1,Chemo cycle demand,1
+EX-00175,2026-05-08,DEMO-02,HOSP-KP-004,MED-058,121,Normal,Completed,124.8,1,0,Low stock,1
+EX-00176,2026-02-26,HOSP-GD-003,DEMO-06,MED-040,5,Normal,Completed,312.5,4,0,Emergency case load,1
+EX-00177,2025-12-30,HOSP-BG-016,HOSP-LB-003,MED-005,151,Normal,Completed,259.7,4,0,Near-expiry redistribution,0
+EX-00178,2026-05-19,HOSP-GD-002,DEMO-06,MED-050,21,High,Completed,416.0,5,0,Chemo cycle demand,1
+EX-00179,2025-12-19,DEMO-01,DEMO-04,MED-005,220,Normal,Completed,4.0,1,1,Chemo cycle demand,1
+EX-00180,2026-06-28,HOSP-BG-011,HOSP-LB-003,MED-046,18,Normal,Completed,283.9,4,0,Pediatric surge,0
+EX-00181,2025-12-22,HOSP-KR-004,HOSP-GD-004,MED-037,5,Normal,Approved,175.1,2,0,Near-expiry redistribution,0
+EX-00182,2026-01-10,DEMO-08,DEMO-04,MED-002,14,Emergency,Completed,351.9,6,0,Postpartum hemorrhage kit,1
+EX-00183,2026-03-09,DEMO-01,HOSP-KR-001,MED-054,26,Emergency,Completed,375.9,4,0,Emergency case load,1
+EX-00184,2026-05-25,DEMO-02,HOSP-LB-003,MED-028,131,High,Rejected,281.6,5,0,Surgical camp,1
+EX-00185,2026-02-24,HOSP-BG-016,HOSP-SP-001,MED-033,159,Normal,Rejected,454.8,6,0,Pediatric surge,0
+EX-00186,2026-01-29,HOSP-SP-003,HOSP-LB-003,MED-062,5,Normal,Approved,209.5,4,0,Monsoon surge,0
+EX-00187,2026-01-02,DEMO-02,DEMO-08,MED-059,87,High,Completed,351.8,4,0,Chemo cycle demand,1
+EX-00188,2026-04-22,HOSP-GD-005,HOSP-BG-017,MED-067,26,Normal,Completed,177.1,4,0,Emergency case load,0
+EX-00189,2025-12-29,HOSP-KP-004,DEMO-02,MED-040,27,Normal,Completed,124.8,1,0,Near-expiry redistribution,1
+EX-00190,2026-04-27,HOSP-KR-003,HOSP-BG-011,MED-006,5,High,Completed,276.7,4,0,Postpartum hemorrhage kit,0
+EX-00191,2026-03-13,HOSP-GD-003,HOSP-KP-003,MED-017,5,Normal,Approved,378.4,5,0,Low stock,0
+EX-00192,2026-06-18,HOSP-GD-004,HOSP-LB-003,MED-012,5,Normal,Completed,181.2,2,0,Surgical camp,0
+EX-00194,2025-12-21,HOSP-BG-016,HOSP-MD-001,MED-033,166,Emergency,Completed,117.7,1,0,Low stock,0
+EX-00195,2026-04-28,HOSP-GD-004,HOSP-KP-001,MED-017,5,High,In_Transit,357.3,4,0,Near-expiry redistribution,0
+EX-00196,2025-12-23,HOSP-KP-004,HOSP-MD-003,MED-065,9,Emergency,Completed,136.1,2,0,Postpartum hemorrhage kit,0
+EX-00197,2026-03-15,HOSP-BG-011,HOSP-KR-003,MED-064,20,High,Completed,276.7,5,0,Near-expiry redistribution,0
+EX-00198,2026-05-17,DEMO-02,DEMO-05,MED-055,136,Normal,Approved,5.2,2,1,Chemo cycle demand,1
+EX-00199,2026-02-13,DEMO-01,DEMO-08,MED-042,26,High,Completed,352.2,6,0,Monsoon surge,1
+EX-00200,2026-03-25,DEMO-02,DEMO-04,MED-067,53,Normal,Approved,0.3,2,1,Low stock,1
+EX-00201,2026-02-06,DEMO-07,HOSP-GD-002,MED-062,117,High,Approved,39.3,1,1,Low stock,1
+EX-00202,2026-03-13,DEMO-03,DEMO-05,MED-063,10,Normal,Completed,10.8,1,1,Chemo cycle demand,1
+EX-00203,2026-03-23,HOSP-KR-003,HOSP-LB-002,MED-006,5,Normal,Completed,160.5,4,0,Emergency case load,0
+EX-00204,2026-02-02,DEMO-03,DEMO-07,MED-027,43,Emergency,In_Transit,153.7,1,0,Low stock,1
+EX-00205,2025-12-13,HOSP-SP-004,HOSP-BG-011,MED-028,21,High,Completed,498.5,8,0,Surgical camp,0
+EX-00206,2026-01-05,DEMO-08,DEMO-02,MED-024,32,High,Completed,351.8,5,0,Routine balancing,1
+EX-00207,2025-12-17,HOSP-KR-004,DEMO-02,MED-007,12,Normal,Completed,299.3,3,0,Monsoon surge,1
+EX-00208,2026-03-16,DEMO-02,DEMO-03,MED-059,87,Normal,Completed,11.9,1,1,Postpartum hemorrhage kit,1
+EX-00209,2026-05-11,DEMO-07,DEMO-05,MED-027,117,Emergency,Completed,143.2,1,0,Routine balancing,1
+EX-00210,2026-06-01,HOSP-KP-004,DEMO-07,MED-069,5,High,Completed,267.0,4,0,Pediatric surge,1
+EX-00212,2026-03-12,HOSP-BG-012,HOSP-LB-003,MED-045,24,Emergency,Completed,281.2,4,0,Routine balancing,0
+EX-00213,2025-12-29,HOSP-SP-003,HOSP-KP-004,MED-042,5,Normal,In_Transit,574.9,8,0,Low stock,0
+EX-00214,2026-01-11,DEMO-01,HOSP-KP-003,MED-048,27,Emergency,Requested,303.9,4,0,Emergency case load,1
+EX-00215,2025-12-15,DEMO-08,DEMO-02,MED-069,5,Normal,Completed,351.8,6,0,Routine balancing,1
+EX-00217,2026-02-01,DEMO-03,HOSP-BG-011,MED-027,50,High,Requested,8.6,1,1,Emergency case load,1
+EX-00218,2026-04-26,DEMO-05,HOSP-BG-012,MED-004,124,Emergency,Approved,1.3,1,1,Routine balancing,1
+EX-00219,2026-01-31,DEMO-05,HOSP-LB-003,MED-046,5,High,In_Transit,281.4,3,0,Pediatric surge,1
+EX-00220,2025-12-29,DEMO-01,DEMO-08,MED-005,147,Emergency,Requested,352.2,6,0,Emergency case load,1
+EX-00221,2026-06-24,HOSP-BG-015,HOSP-SP-004,MED-017,63,Normal,Completed,519.8,6,0,Pediatric surge,0
+EX-00222,2026-01-10,DEMO-08,HOSP-LB-003,MED-033,45,Normal,Completed,140.3,1,0,Emergency case load,1
+EX-00223,2026-06-23,DEMO-04,DEMO-08,MED-066,37,High,Completed,351.9,5,0,Surgical camp,1
+EX-00224,2025-12-28,HOSP-BG-012,HOSP-MD-001,MED-015,226,Normal,Completed,123.7,2,0,Postpartum hemorrhage kit,0
+EX-00225,2026-01-21,HOSP-GD-002,HOSP-GD-005,MED-026,45,High,Completed,39.3,2,1,Chemo cycle demand,0
+EX-00226,2026-05-20,DEMO-08,DEMO-01,MED-016,22,Normal,Completed,352.2,4,0,Pediatric surge,1
+EX-00228,2026-03-08,DEMO-03,HOSP-GD-002,MED-024,10,Normal,Completed,192.3,3,0,Postpartum hemorrhage kit,1
+EX-00229,2026-03-28,DEMO-03,DEMO-02,MED-015,73,Normal,Completed,11.9,1,1,Low stock,1
+EX-00230,2026-05-15,DEMO-02,DEMO-01,MED-045,104,Normal,Approved,3.8,1,1,Emergency case load,1
+EX-00231,2026-03-19,HOSP-KR-004,HOSP-KP-004,MED-017,5,High,Completed,424.0,5,0,Pediatric surge,0
+EX-00232,2026-03-25,HOSP-LB-001,HOSP-MD-002,MED-020,141,Normal,Completed,160.6,2,0,Pediatric surge,0
+EX-00233,2026-02-06,DEMO-03,DEMO-05,MED-063,10,Normal,Completed,10.8,1,1,Surgical camp,1
+EX-00234,2026-02-24,DEMO-06,DEMO-08,MED-067,166,High,Completed,590.4,8,0,Near-expiry redistribution,1
+EX-00235,2026-01-20,HOSP-BG-011,HOSP-BG-018,MED-060,5,Normal,Approved,4.9,1,1,Monsoon surge,0
+EX-00236,2026-02-03,DEMO-08,DEMO-06,MED-031,42,Normal,Completed,590.4,7,0,Pediatric surge,1
+EX-00238,2026-03-22,DEMO-08,HOSP-KP-001,MED-045,45,Normal,In_Transit,570.8,7,0,Monsoon surge,1
+EX-00239,2026-03-18,DEMO-08,DEMO-05,MED-038,13,High,Completed,353.6,6,0,Routine balancing,1
+EX-00240,2026-04-21,HOSP-GD-004,DEMO-06,MED-012,5,Normal,Completed,379.5,6,0,Near-expiry redistribution,1
+EX-00241,2026-01-26,DEMO-08,HOSP-BG-014,MED-064,10,Emergency,Completed,355.4,4,0,Outbreak response,1
+EX-00242,2026-01-13,HOSP-SP-003,DEMO-05,MED-027,5,Normal,In_Transit,452.2,5,0,Monsoon surge,1
+EX-00243,2026-01-13,DEMO-02,DEMO-08,MED-064,65,Normal,Completed,351.8,4,0,Outbreak response,1
+EX-00244,2026-04-25,HOSP-LB-005,HOSP-MD-002,MED-037,176,High,Completed,162.2,4,0,Emergency case load,0
+EX-00245,2026-01-25,HOSP-KR-004,DEMO-03,MED-054,5,Emergency,Completed,310.7,3,0,Outbreak response,1
+EX-00246,2025-12-29,DEMO-02,DEMO-01,MED-052,172,High,Completed,3.8,1,1,Postpartum hemorrhage kit,1
+EX-00247,2025-12-31,HOSP-BG-012,HOSP-SP-004,MED-052,160,Normal,Approved,496.0,8,0,Emergency case load,0
+EX-00248,2026-02-20,HOSP-KR-003,HOSP-BG-014,MED-032,5,Emergency,Rejected,277.0,3,0,Chemo cycle demand,0
+EX-00249,2026-05-20,HOSP-LB-004,HOSP-MD-003,MED-013,15,Normal,Completed,280.3,4,0,Surgical camp,0
+EX-00250,2026-02-12,HOSP-GD-003,HOSP-SP-002,MED-053,16,Normal,Rejected,448.3,7,0,Routine balancing,0
+EX-00251,2026-05-27,DEMO-08,DEMO-05,MED-069,5,Normal,Completed,353.6,5,0,Monsoon surge,1
+EX-00252,2026-01-04,HOSP-GD-002,HOSP-LB-004,MED-012,37,Normal,Completed,73.1,1,0,Near-expiry redistribution,0
+EX-00253,2026-05-22,DEMO-02,DEMO-04,MED-019,197,Normal,In_Transit,0.3,1,1,Low stock,1
+EX-00254,2026-02-09,HOSP-KP-004,DEMO-07,MED-056,5,High,Completed,267.0,3,0,Emergency case load,1
+EX-00255,2026-04-21,HOSP-BG-016,HOSP-SP-001,MED-005,237,Normal,Completed,454.8,6,0,Outbreak response,0
+EX-00256,2025-12-17,HOSP-BG-016,DEMO-01,MED-039,44,Normal,Completed,41.5,1,1,Monsoon surge,1
+EX-00257,2026-01-31,DEMO-05,DEMO-03,MED-059,16,Normal,Rejected,10.8,1,1,Chemo cycle demand,1
+EX-00258,2026-05-01,DEMO-08,DEMO-04,MED-009,5,Normal,Completed,351.9,6,0,Monsoon surge,1
+EX-00259,2026-02-25,HOSP-GD-003,HOSP-BG-011,MED-014,46,High,In_Transit,77.6,1,0,Low stock,0
+EX-00260,2026-01-05,HOSP-SP-004,HOSP-GD-004,MED-069,29,High,Approved,365.8,5,0,Routine balancing,0
+EX-00261,2026-05-22,HOSP-GD-004,HOSP-BG-014,MED-061,5,Normal,Completed,144.6,1,0,Outbreak response,0
+EX-00262,2026-05-12,HOSP-KR-003,DEMO-01,MED-030,5,Normal,Completed,273.8,5,0,Postpartum hemorrhage kit,1
+EX-00263,2026-03-05,DEMO-02,DEMO-03,MED-034,68,Normal,In_Transit,11.9,2,1,Near-expiry redistribution,1
+EX-00264,2026-05-22,HOSP-BG-019,HOSP-MD-002,MED-066,31,Normal,Completed,93.6,2,0,Chemo cycle demand,0
+EX-00265,2026-05-17,HOSP-KR-003,DEMO-01,MED-022,5,High,Completed,273.8,3,0,Pediatric surge,1
+EX-00267,2026-06-12,DEMO-01,HOSP-BG-012,MED-028,66,Normal,Completed,0.7,1,1,Chemo cycle demand,1
+EX-00268,2026-02-11,HOSP-LB-005,HOSP-KR-004,MED-057,86,High,Completed,136.8,1,0,Emergency case load,0
+EX-00269,2026-05-11,DEMO-05,DEMO-08,MED-019,143,High,Completed,353.6,5,0,Low stock,1
+EX-00270,2026-01-02,HOSP-SP-004,HOSP-BG-015,MED-021,36,Normal,Approved,519.8,7,0,Routine balancing,0
+EX-00271,2025-12-14,DEMO-01,DEMO-08,MED-029,34,Normal,Completed,352.2,6,0,Monsoon surge,1
+EX-00272,2026-04-10,DEMO-08,DEMO-03,MED-066,5,Normal,Approved,363.7,6,0,Routine balancing,1
+EX-00273,2026-06-15,DEMO-03,DEMO-07,MED-027,111,High,Completed,153.7,2,0,Monsoon surge,1
+EX-00274,2026-03-24,DEMO-02,DEMO-08,MED-060,22,Normal,Completed,351.8,5,0,Emergency case load,1
+EX-00275,2026-01-27,DEMO-04,HOSP-LB-004,MED-019,221,Normal,Completed,245.2,3,0,Monsoon surge,1
+EX-00276,2026-04-06,HOSP-GD-004,HOSP-SP-002,MED-006,5,Normal,Completed,398.5,5,0,Emergency case load,0
+EX-00277,2026-01-15,HOSP-KP-001,HOSP-LB-002,MED-070,205,High,In_Transit,576.2,8,0,Routine balancing,0
+EX-00278,2026-04-23,DEMO-02,DEMO-08,MED-020,91,Normal,Completed,351.8,6,0,Outbreak response,1
+EX-00279,2026-05-27,HOSP-GD-004,DEMO-07,MED-035,5,High,Completed,45.9,2,1,Low stock,1
+EX-00280,2026-05-24,DEMO-08,HOSP-LB-002,MED-040,17,High,Completed,146.9,1,0,Outbreak response,1
+EX-00281,2026-04-10,HOSP-BG-013,HOSP-BG-012,MED-036,197,Normal,Approved,3.8,1,1,Routine balancing,0
+EX-00282,2026-05-10,HOSP-SP-004,HOSP-BG-016,MED-059,5,Normal,Completed,482.7,6,0,Near-expiry redistribution,0
+EX-00283,2026-06-23,DEMO-08,DEMO-01,MED-070,11,High,In_Transit,352.2,6,0,Outbreak response,1
+EX-00284,2026-04-13,DEMO-01,DEMO-04,MED-063,73,High,In_Transit,4.0,2,1,Surgical camp,1
+EX-00285,2026-03-07,DEMO-01,DEMO-03,MED-058,64,High,Completed,11.8,1,1,Low stock,1
+EX-00286,2026-01-21,DEMO-04,DEMO-01,MED-001,74,Normal,Completed,4.0,2,1,Monsoon surge,1
+EX-00287,2026-05-15,DEMO-08,DEMO-02,MED-003,25,High,Completed,351.8,5,0,Emergency case load,1
+EX-00289,2026-03-29,DEMO-02,DEMO-03,MED-019,112,High,Completed,11.9,1,1,Chemo cycle demand,1
+EX-00290,2026-03-20,HOSP-SP-003,HOSP-GD-004,MED-044,5,Normal,Completed,315.6,3,0,Low stock,0
+EX-00291,2026-05-29,DEMO-02,DEMO-04,MED-062,99,High,Completed,0.3,1,1,Emergency case load,1
+EX-00292,2026-03-06,DEMO-08,HOSP-GD-005,MED-037,6,High,Completed,210.3,4,0,Routine balancing,1
+EX-00293,2026-05-10,HOSP-GD-005,HOSP-LB-003,MED-021,39,Normal,Rejected,149.2,1,0,Surgical camp,0
+EX-00294,2026-04-06,HOSP-BG-019,HOSP-SP-003,MED-006,108,Normal,Completed,449.9,5,0,Low stock,0
+EX-00295,2026-05-15,DEMO-04,DEMO-05,MED-030,14,Normal,Completed,5.4,1,1,Monsoon surge,1
+EX-00296,2026-02-09,DEMO-01,DEMO-04,MED-028,48,High,Completed,4.0,1,1,Emergency case load,1
+EX-00297,2026-06-04,DEMO-08,HOSP-MD-004,MED-022,42,High,Completed,364.3,6,0,Surgical camp,1
+EX-00298,2026-02-16,DEMO-03,HOSP-KP-003,MED-014,132,Normal,Completed,292.2,4,0,Pediatric surge,1
+EX-00299,2025-12-31,HOSP-KR-004,HOSP-KR-001,MED-060,5,Normal,Completed,81.5,1,1,Emergency case load,0
+EX-00300,2026-02-25,DEMO-08,DEMO-06,MED-070,11,High,Completed,590.4,9,0,Pediatric surge,1
+EX-00301,2026-02-06,HOSP-GD-002,HOSP-LB-003,MED-039,20,Normal,Completed,111.3,3,0,Chemo cycle demand,0
+EX-00302,2025-12-23,HOSP-KP-001,HOSP-BG-011,MED-067,136,Normal,Completed,215.9,4,0,Emergency case load,0
+EX-00303,2026-02-01,DEMO-02,HOSP-GD-002,MED-033,240,High,Completed,180.9,4,0,Low stock,1
+EX-00305,2026-06-11,DEMO-07,DEMO-04,MED-033,120,High,Requested,142.3,3,0,Emergency case load,1
+EX-00306,2026-01-10,DEMO-07,HOSP-KR-003,MED-024,172,Normal,Requested,134.2,3,0,Pediatric surge,1
+EX-00307,2026-02-07,DEMO-02,DEMO-06,MED-044,34,Normal,Completed,239.4,3,0,Emergency case load,1
+EX-00308,2026-01-21,DEMO-08,HOSP-LB-002,MED-031,42,Normal,Completed,146.9,3,0,Postpartum hemorrhage kit,1
+EX-00309,2026-01-11,DEMO-06,HOSP-LB-005,MED-058,67,Emergency,Completed,400.7,6,0,Chemo cycle demand,1
+EX-00310,2026-03-23,DEMO-04,DEMO-06,MED-015,219,High,Completed,239.3,4,0,Routine balancing,1
+EX-00311,2026-01-29,DEMO-08,HOSP-BG-013,MED-038,13,Normal,Completed,355.0,4,0,Outbreak response,1
+EX-00312,2026-05-31,DEMO-02,DEMO-03,MED-043,34,High,Completed,11.9,2,1,Routine balancing,1
+EX-00313,2026-06-16,DEMO-07,DEMO-06,MED-010,113,Emergency,Completed,378.9,5,0,Monsoon surge,1
+EX-00314,2026-03-30,DEMO-02,DEMO-04,MED-025,28,Emergency,Requested,0.3,2,1,Emergency case load,1
+EX-00315,2026-06-21,DEMO-06,DEMO-01,MED-048,35,Normal,Completed,238.7,3,0,Chemo cycle demand,1
+EX-00316,2026-06-03,DEMO-03,DEMO-08,MED-035,77,Normal,Completed,363.7,5,0,Pediatric surge,1
+EX-00317,2026-01-02,DEMO-05,DEMO-06,MED-032,48,Normal,Completed,237.2,3,0,Chemo cycle demand,1
+EX-00318,2026-01-20,HOSP-GD-004,HOSP-KP-004,MED-031,5,Normal,Completed,261.6,5,0,Outbreak response,0
+EX-00319,2026-01-17,DEMO-03,DEMO-05,MED-027,23,Normal,Completed,10.8,2,1,Pediatric surge,1
+EX-00320,2026-06-16,DEMO-08,HOSP-LB-002,MED-003,5,Emergency,Approved,146.9,3,0,Monsoon surge,1
+EX-00321,2026-03-21,DEMO-08,DEMO-05,MED-007,19,Emergency,Completed,353.6,4,0,Postpartum hemorrhage kit,1
+EX-00322,2026-05-11,HOSP-GD-002,HOSP-LB-002,MED-009,46,Normal,Completed,195.1,2,0,Pediatric surge,0
+EX-00323,2026-05-25,HOSP-SP-003,HOSP-GD-004,MED-006,15,Emergency,Completed,315.6,4,0,Surgical camp,0
+EX-00324,2026-06-08,HOSP-KP-001,DEMO-07,MED-070,72,High,Approved,360.8,6,0,Outbreak response,1
+EX-00325,2026-05-13,DEMO-08,DEMO-04,MED-012,33,Normal,Completed,351.9,5,0,Routine balancing,1
+EX-00326,2026-02-24,DEMO-08,DEMO-04,MED-052,49,High,Requested,351.9,5,0,Outbreak response,1
+EX-00327,2025-12-17,DEMO-05,HOSP-MD-002,MED-046,70,High,Completed,87.3,2,0,Routine balancing,1
+EX-00328,2026-06-20,DEMO-01,HOSP-LB-003,MED-035,180,High,Completed,280.6,3,0,Surgical camp,1
+EX-00329,2025-12-30,HOSP-GD-003,HOSP-SP-001,MED-044,5,Emergency,Rejected,399.9,6,0,Pediatric surge,0
+EX-00330,2026-06-21,HOSP-SP-002,HOSP-LB-001,MED-033,91,Normal,Completed,349.6,5,0,Surgical camp,0
+EX-00331,2026-02-23,DEMO-08,DEMO-07,MED-012,33,High,In_Transit,211.9,3,0,Emergency case load,1
+EX-00332,2026-04-14,DEMO-08,HOSP-GD-004,MED-031,42,Normal,Completed,215.6,2,0,Near-expiry redistribution,1
+EX-00333,2026-01-16,DEMO-07,DEMO-06,MED-009,103,Normal,Completed,378.9,5,0,Near-expiry redistribution,1
+EX-00334,2026-04-21,HOSP-KP-004,HOSP-KR-004,MED-047,17,Normal,Completed,424.0,7,0,Outbreak response,0
+EX-00335,2026-03-29,DEMO-02,DEMO-06,MED-043,30,Normal,Completed,239.4,4,0,Pediatric surge,1
+EX-00336,2026-03-20,HOSP-BG-011,HOSP-LB-003,MED-057,18,Emergency,Completed,283.9,4,0,Outbreak response,0
+EX-00337,2026-05-04,HOSP-SP-003,HOSP-KP-004,MED-044,5,Normal,Completed,574.9,7,0,Near-expiry redistribution,0
+EX-00338,2026-01-06,HOSP-SP-003,DEMO-04,MED-009,11,High,Requested,450.7,6,0,Pediatric surge,1
+EX-00339,2026-04-30,HOSP-KR-001,HOSP-KP-001,MED-029,131,High,Completed,592.5,9,0,Routine balancing,0
+EX-00341,2026-03-06,HOSP-SP-003,HOSP-GD-005,MED-043,34,Normal,Completed,308.2,5,0,Near-expiry redistribution,0
+EX-00342,2026-01-16,HOSP-KR-001,HOSP-BG-019,MED-025,5,Normal,Completed,376.1,5,0,Surgical camp,0
+EX-00343,2026-05-14,HOSP-SP-004,HOSP-KP-001,MED-015,12,High,Completed,713.8,10,0,Emergency case load,0
+EX-00345,2026-04-02,HOSP-SP-003,HOSP-BG-014,MED-054,5,High,Completed,454.0,5,0,Chemo cycle demand,0
+EX-00346,2026-06-20,DEMO-08,HOSP-BG-013,MED-055,5,Normal,Completed,355.0,6,0,Pediatric surge,1
+EX-00347,2026-05-31,DEMO-05,HOSP-MD-004,MED-032,30,High,Completed,86.2,1,0,Chemo cycle demand,1
+EX-00348,2026-01-06,HOSP-SP-004,HOSP-MD-001,MED-030,12,Normal,Completed,597.4,7,0,Near-expiry redistribution,0
+EX-00349,2025-12-13,DEMO-02,DEMO-03,MED-059,19,High,Completed,11.9,2,1,Outbreak response,1
+EX-00351,2025-12-23,DEMO-02,DEMO-07,MED-042,50,High,Approved,142.1,3,0,Chemo cycle demand,1
+EX-00352,2026-02-27,HOSP-GD-004,HOSP-KR-004,MED-020,5,Normal,Completed,175.1,4,0,Routine balancing,0
+EX-00353,2026-06-08,DEMO-08,HOSP-LB-005,MED-003,47,Normal,Completed,205.4,2,0,Near-expiry redistribution,1
+EX-00354,2026-01-18,HOSP-BG-019,HOSP-BG-018,MED-006,193,Normal,Completed,9.4,1,1,Outbreak response,0
+EX-00355,2025-12-22,DEMO-08,DEMO-04,MED-052,49,Emergency,In_Transit,351.9,6,0,Postpartum hemorrhage kit,1
+EX-00356,2026-03-07,DEMO-08,DEMO-03,MED-018,42,Emergency,Completed,363.7,6,0,Routine balancing,1
+EX-00357,2026-01-04,DEMO-08,HOSP-KP-004,MED-037,5,Normal,Completed,475.7,5,0,Pediatric surge,1
+EX-00358,2026-04-02,HOSP-SP-003,HOSP-LB-004,MED-021,29,Normal,Completed,229.0,4,0,Monsoon surge,0
+EX-00359,2026-03-13,HOSP-BG-019,HOSP-KR-003,MED-061,79,High,Completed,272.7,5,0,Pediatric surge,0
+EX-00360,2026-04-17,DEMO-04,HOSP-BG-011,MED-066,33,Normal,Completed,3.9,2,1,Postpartum hemorrhage kit,1
+EX-00361,2026-06-04,DEMO-08,DEMO-07,MED-004,17,Emergency,Completed,211.9,3,0,Chemo cycle demand,1
+EX-00362,2026-03-20,DEMO-05,DEMO-07,MED-039,172,Normal,Completed,143.2,2,0,Chemo cycle demand,1
+EX-00363,2026-01-15,DEMO-08,HOSP-SP-001,MED-004,17,Normal,Approved,165.5,3,0,Outbreak response,1
+EX-00364,2026-01-14,DEMO-08,DEMO-05,MED-042,5,Emergency,Completed,353.6,5,0,Low stock,1
+EX-00365,2026-01-29,DEMO-08,HOSP-BG-016,MED-051,7,High,Completed,346.2,6,0,Chemo cycle demand,1
+EX-00366,2026-03-01,DEMO-08,HOSP-SP-001,MED-066,5,High,Completed,165.5,3,0,Low stock,1
+EX-00367,2026-02-06,HOSP-SP-004,DEMO-02,MED-044,5,Normal,Completed,495.6,7,0,Routine balancing,1
+EX-00368,2026-06-10,HOSP-BG-017,DEMO-03,MED-001,91,Normal,Requested,30.7,1,1,Outbreak response,1
+EX-00369,2026-03-22,HOSP-GD-003,HOSP-BG-010,MED-012,48,High,Completed,41.8,1,0,Near-expiry redistribution,0
+EX-00370,2025-12-15,DEMO-02,DEMO-04,MED-052,107,Emergency,Requested,0.3,1,1,Monsoon surge,1
+EX-00371,2026-01-03,DEMO-02,DEMO-01,MED-064,87,Normal,Completed,3.8,1,1,Low stock,1
+EX-00372,2026-03-21,DEMO-08,DEMO-05,MED-027,20,Normal,Completed,353.6,6,0,Near-expiry redistribution,1
+EX-00373,2026-03-11,HOSP-KP-004,HOSP-SP-004,MED-065,5,Normal,Completed,620.4,8,0,Postpartum hemorrhage kit,0
+EX-00374,2026-03-24,DEMO-02,DEMO-07,MED-062,95,High,Completed,142.1,3,0,Postpartum hemorrhage kit,1
+EX-00375,2026-05-28,DEMO-02,HOSP-MD-003,MED-014,239,Normal,Completed,108.2,2,0,Routine balancing,1
+EX-00376,2026-05-05,DEMO-04,DEMO-03,MED-054,37,Normal,Requested,11.9,2,1,Near-expiry redistribution,1
+EX-00377,2026-05-16,HOSP-GD-002,HOSP-BG-019,MED-064,41,High,Completed,180.3,4,0,Surgical camp,0
+EX-00378,2026-03-29,DEMO-05,DEMO-02,MED-040,17,Normal,Rejected,5.2,1,1,Postpartum hemorrhage kit,1
+EX-00379,2026-03-29,HOSP-BG-019,HOSP-BG-016,MED-071,31,Normal,In_Transit,46.3,1,1,Outbreak response,0
+EX-00380,2026-01-27,DEMO-06,DEMO-03,MED-048,123,High,Completed,227.5,4,0,Surgical camp,1
+EX-00381,2026-01-17,HOSP-BG-016,DEMO-07,MED-008,81,Emergency,Rejected,134.7,2,0,Pediatric surge,1
+EX-00382,2026-05-13,DEMO-08,DEMO-05,MED-048,20,Normal,Completed,353.6,5,0,Postpartum hemorrhage kit,1
+EX-00383,2026-04-07,HOSP-BG-012,HOSP-BG-017,MED-037,60,Normal,Requested,39.9,1,1,Near-expiry redistribution,0
+EX-00384,2025-12-17,DEMO-08,DEMO-04,MED-024,5,High,Completed,351.9,6,0,Routine balancing,1
+EX-00387,2026-01-18,DEMO-08,HOSP-LB-001,MED-006,30,Emergency,Completed,214.3,4,0,Chemo cycle demand,1
+EX-00388,2026-02-04,DEMO-04,DEMO-01,MED-040,102,High,Completed,4.0,1,1,Postpartum hemorrhage kit,1
+EX-00389,2026-02-18,DEMO-01,DEMO-07,MED-032,168,Emergency,Completed,142.0,1,0,Monsoon surge,1
+EX-00390,2026-04-17,HOSP-BG-019,HOSP-MD-001,MED-067,114,Emergency,Completed,127.9,3,0,Chemo cycle demand,0
+EX-00391,2026-01-25,DEMO-08,HOSP-KP-001,MED-028,5,High,Completed,570.8,7,0,Surgical camp,1
+EX-00392,2026-01-26,HOSP-BG-011,HOSP-MD-001,MED-035,5,Emergency,Requested,122.6,1,0,Routine balancing,0
+EX-00393,2025-12-19,DEMO-08,DEMO-07,MED-004,17,Normal,Completed,211.9,3,0,Emergency case load,1
+EX-00394,2026-06-12,HOSP-GD-004,DEMO-06,MED-056,5,Normal,Completed,379.5,5,0,Near-expiry redistribution,1
+EX-00395,2026-01-09,DEMO-08,DEMO-06,MED-048,22,High,Completed,590.4,7,0,Postpartum hemorrhage kit,1
+EX-00397,2026-03-01,HOSP-KR-003,HOSP-MD-001,MED-015,5,High,Completed,386.6,6,0,Emergency case load,0
+EX-00398,2026-02-26,DEMO-02,DEMO-06,MED-029,34,High,Completed,239.4,4,0,Postpartum hemorrhage kit,1
+EX-00399,2026-05-03,DEMO-07,DEMO-06,MED-002,71,Emergency,Requested,378.9,6,0,Outbreak response,1
+EX-00400,2026-05-09,DEMO-06,DEMO-05,MED-048,162,Normal,Completed,237.2,4,0,Pediatric surge,1
+EX-00401,2026-05-12,HOSP-BG-015,HOSP-BG-019,MED-072,119,Emergency,Completed,25.5,1,1,Chemo cycle demand,0
+EX-00403,2026-02-08,HOSP-KR-001,HOSP-LB-005,MED-051,55,Emergency,Completed,205.9,2,0,Pediatric surge,0
+EX-00404,2026-06-09,HOSP-SP-003,HOSP-SP-004,MED-049,9,Normal,Completed,66.2,1,1,Pediatric surge,0
+EX-00405,2026-06-20,HOSP-GD-005,HOSP-MD-001,MED-044,28,Normal,Completed,254.3,4,0,Outbreak response,0
+EX-00406,2026-03-30,HOSP-BG-015,HOSP-BG-018,MED-072,119,Normal,Approved,22.1,2,1,Monsoon surge,0
+EX-00407,2026-02-07,DEMO-08,DEMO-06,MED-003,47,Emergency,Approved,590.4,8,0,Postpartum hemorrhage kit,1
+EX-00408,2026-06-26,DEMO-03,DEMO-08,MED-055,6,Normal,Completed,363.7,5,0,Postpartum hemorrhage kit,1
+EX-00409,2026-01-28,DEMO-08,DEMO-02,MED-063,5,Emergency,Completed,351.8,5,0,Low stock,1
+EX-00410,2026-02-28,DEMO-02,DEMO-06,MED-064,123,Normal,Completed,239.4,2,0,Emergency case load,1
+EX-00411,2026-02-25,HOSP-KP-001,HOSP-BG-010,MED-007,217,High,In_Transit,298.1,3,0,Monsoon surge,0
+EX-00412,2026-05-02,DEMO-04,DEMO-01,MED-048,37,Emergency,Approved,4.0,1,1,Monsoon surge,1
+EX-00413,2026-04-19,HOSP-BG-019,HOSP-MD-004,MED-072,211,Normal,Completed,92.5,2,0,Chemo cycle demand,0
+EX-00414,2026-04-07,HOSP-KR-001,HOSP-MD-002,MED-033,66,High,Completed,366.2,5,0,Pediatric surge,0
+EX-00415,2026-01-03,DEMO-08,DEMO-05,MED-066,5,Normal,Completed,353.6,4,0,Low stock,1
+EX-00416,2025-12-29,DEMO-06,DEMO-02,MED-068,171,Normal,Completed,239.4,3,0,Monsoon surge,1
+EX-00417,2026-05-14,DEMO-06,DEMO-03,MED-058,67,Normal,Rejected,227.5,2,0,Low stock,1
+EX-00418,2026-06-06,DEMO-08,DEMO-06,MED-056,5,Normal,Completed,590.4,7,0,Postpartum hemorrhage kit,1
+EX-00419,2026-04-18,HOSP-BG-019,HOSP-MD-004,MED-048,82,Normal,Completed,92.5,2,0,Outbreak response,0
+EX-00420,2026-05-21,HOSP-KR-003,DEMO-07,MED-037,5,Emergency,Completed,134.2,1,0,Surgical camp,1
+EX-00421,2025-12-30,DEMO-08,HOSP-KR-001,MED-066,5,High,Completed,93.1,1,1,Monsoon surge,1
+EX-00422,2026-05-06,DEMO-03,HOSP-BG-017,MED-071,5,High,Completed,30.7,1,1,Pediatric surge,1
+EX-00423,2026-03-25,DEMO-08,DEMO-02,MED-040,42,Normal,In_Transit,351.8,4,0,Outbreak response,1
+EX-00425,2026-06-12,HOSP-BG-014,DEMO-06,MED-028,227,High,Requested,235.5,4,0,Chemo cycle demand,1
+EX-00426,2026-04-04,DEMO-02,HOSP-LB-004,MED-019,190,Normal,Rejected,245.1,4,0,Pediatric surge,1
+EX-00427,2026-02-19,DEMO-01,DEMO-04,MED-032,211,Normal,Requested,4.0,1,1,Chemo cycle demand,1
+EX-00428,2026-04-07,DEMO-08,HOSP-KR-003,MED-003,47,Emergency,Completed,78.4,1,1,Outbreak response,1
+EX-00429,2026-02-20,DEMO-08,DEMO-02,MED-071,5,Normal,Approved,351.8,4,0,Surgical camp,1
+EX-00430,2026-03-05,DEMO-08,HOSP-SP-001,MED-024,5,Normal,Completed,165.5,4,0,Monsoon surge,1
+EX-00431,2026-03-23,DEMO-01,DEMO-02,MED-051,181,Emergency,Completed,3.8,2,1,Outbreak response,1
+EX-00432,2026-01-27,HOSP-BG-019,HOSP-BG-016,MED-066,31,Normal,Completed,46.3,2,1,Chemo cycle demand,0
+EX-00433,2026-04-03,HOSP-GD-005,HOSP-MD-001,MED-063,111,Normal,Requested,254.3,5,0,Low stock,0
+EX-00434,2026-03-03,DEMO-08,DEMO-03,MED-012,33,Normal,Completed,363.7,6,0,Surgical camp,1
+EX-00435,2026-01-29,DEMO-02,DEMO-04,MED-043,30,Normal,Completed,0.3,1,1,Near-expiry redistribution,1
+EX-00436,2026-01-11,DEMO-01,DEMO-04,MED-063,73,Normal,Completed,4.0,2,1,Outbreak response,1
+EX-00437,2026-01-18,HOSP-BG-019,DEMO-03,MED-071,63,Normal,Completed,12.9,1,1,Surgical camp,1
+EX-00439,2026-06-05,DEMO-06,HOSP-LB-004,MED-064,99,High,Requested,472.0,6,0,Monsoon surge,1
+EX-00440,2026-04-10,DEMO-08,DEMO-07,MED-013,7,Normal,Requested,211.9,3,0,Routine balancing,1
+EX-00441,2026-02-07,HOSP-BG-011,HOSP-BG-019,MED-064,66,Normal,Completed,5.3,2,1,Monsoon surge,0
+EX-00442,2026-04-05,HOSP-LB-005,HOSP-GD-003,MED-071,75,High,Completed,107.8,3,0,Near-expiry redistribution,0
+EX-00443,2026-04-28,HOSP-BG-011,HOSP-LB-003,MED-042,5,Normal,Completed,283.9,4,0,Postpartum hemorrhage kit,0
+EX-00444,2026-04-24,DEMO-04,DEMO-07,MED-063,15,Normal,Approved,142.3,3,0,Outbreak response,1
+EX-00445,2026-04-21,DEMO-08,HOSP-BG-017,MED-063,5,Emergency,Completed,383.1,5,0,Surgical camp,1
+EX-00446,2026-01-27,DEMO-01,DEMO-02,MED-040,109,Normal,Completed,3.8,1,1,Monsoon surge,1
+EX-00447,2025-12-14,DEMO-02,DEMO-06,MED-013,215,Normal,Completed,239.4,2,0,Near-expiry redistribution,1
+EX-00448,2025-12-16,DEMO-08,DEMO-06,MED-027,55,Emergency,Completed,590.4,9,0,Routine balancing,1
+EX-00449,2026-04-30,DEMO-06,DEMO-04,MED-039,35,Emergency,Requested,239.3,4,0,Routine balancing,1
+EX-00450,2026-04-07,DEMO-02,DEMO-06,MED-047,178,Normal,Completed,239.4,2,0,Low stock,1
+EX-00451,2026-02-07,HOSP-LB-005,HOSP-LB-003,MED-065,69,Normal,In_Transit,106.0,3,1,Outbreak response,0
+EX-00452,2026-05-27,HOSP-BG-012,HOSP-KR-001,MED-052,82,Normal,Completed,376.6,6,0,Emergency case load,0
+EX-00453,2026-04-04,HOSP-KR-001,HOSP-KP-003,MED-038,92,High,Completed,678.1,9,0,Near-expiry redistribution,0
+EX-00454,2026-02-01,HOSP-BG-012,HOSP-GD-004,MED-072,16,Normal,Approved,142.2,2,0,Pediatric surge,0
+EX-00455,2026-06-16,DEMO-08,DEMO-05,MED-058,5,Normal,In_Transit,353.6,4,0,Postpartum hemorrhage kit,1
+EX-00456,2026-06-09,HOSP-BG-018,HOSP-KP-001,MED-033,23,Emergency,Completed,216.1,3,0,Low stock,0
+EX-00457,2026-05-06,HOSP-KP-004,HOSP-BG-011,MED-068,5,Normal,Completed,121.9,2,0,Emergency case load,0
+EX-00458,2026-02-14,DEMO-08,DEMO-02,MED-066,5,High,In_Transit,351.8,4,0,Emergency case load,1
+EX-00459,2026-04-08,HOSP-SP-003,HOSP-KP-004,MED-031,5,Normal,Completed,574.9,9,0,Monsoon surge,0
+EX-00460,2026-03-12,HOSP-KP-004,HOSP-BG-010,MED-071,5,Normal,In_Transit,208.3,4,0,Pediatric surge,0
+EX-00461,2026-02-17,HOSP-KP-004,HOSP-KR-004,MED-055,5,Normal,Completed,424.0,7,0,Postpartum hemorrhage kit,0
+EX-00462,2026-05-25,HOSP-KR-003,HOSP-MD-002,MED-063,5,Normal,Completed,290.2,4,0,Chemo cycle demand,0
+EX-00463,2026-06-12,HOSP-SP-002,DEMO-04,MED-014,162,Normal,Completed,522.4,7,0,Routine balancing,1
+EX-00465,2026-05-25,DEMO-08,DEMO-07,MED-003,47,Normal,In_Transit,211.9,3,0,Routine balancing,1
+EX-00466,2026-02-03,HOSP-LB-003,HOSP-KP-001,MED-008,156,High,In_Transit,493.1,7,0,Surgical camp,0
+EX-00467,2026-04-07,HOSP-BG-019,HOSP-KR-003,MED-057,55,Normal,Completed,272.7,3,0,Chemo cycle demand,0
+EX-00468,2026-05-31,HOSP-SP-003,HOSP-GD-002,MED-021,29,Normal,Completed,272.7,5,0,Near-expiry redistribution,0
+EX-00469,2026-03-05,HOSP-BG-019,HOSP-SP-004,MED-063,204,Normal,Completed,495.0,8,0,Outbreak response,0
+EX-00470,2025-12-16,HOSP-BG-016,HOSP-GD-005,MED-046,5,High,Completed,136.6,3,0,Monsoon surge,0
+EX-00471,2026-05-05,DEMO-07,HOSP-LB-003,MED-002,71,Normal,Completed,148.4,2,0,Chemo cycle demand,1
+EX-00472,2026-06-08,DEMO-08,DEMO-05,MED-065,5,High,Completed,353.6,6,0,Routine balancing,1
+EX-00473,2026-02-17,HOSP-SP-003,DEMO-05,MED-072,5,Normal,Completed,452.2,5,0,Near-expiry redistribution,1
+EX-00474,2026-02-20,HOSP-GD-005,DEMO-04,MED-026,56,Normal,Completed,143.1,3,0,Outbreak response,1
+EX-00475,2026-05-14,DEMO-08,DEMO-05,MED-066,5,High,Completed,353.6,5,0,Emergency case load,1
+EX-00476,2026-05-11,DEMO-02,DEMO-05,MED-014,182,Normal,In_Transit,5.2,1,1,Low stock,1
+EX-00477,2026-04-19,DEMO-07,DEMO-03,MED-001,117,Normal,Approved,153.7,1,0,Emergency case load,1
+EX-00479,2026-03-29,DEMO-02,HOSP-LB-003,MED-053,48,High,Completed,281.6,5,0,Near-expiry redistribution,1
+EX-00480,2026-05-07,DEMO-03,DEMO-02,MED-025,77,Normal,Rejected,11.9,1,1,Outbreak response,1
+EX-00481,2026-03-01,HOSP-GD-004,HOSP-KR-001,MED-028,5,High,Completed,256.4,5,0,Routine balancing,0
+EX-00482,2026-01-09,DEMO-06,DEMO-07,MED-022,126,Emergency,Completed,378.9,4,0,Postpartum hemorrhage kit,1
+EX-00484,2026-01-07,DEMO-05,DEMO-01,MED-032,96,Normal,Completed,1.8,1,1,Pediatric surge,1
+EX-00485,2026-05-06,HOSP-BG-011,HOSP-BG-019,MED-027,85,Normal,Requested,5.3,1,1,Monsoon surge,0
+EX-00486,2026-03-27,DEMO-07,DEMO-05,MED-062,117,High,Approved,143.2,2,0,Surgical camp,1
+EX-00487,2026-04-10,DEMO-04,DEMO-03,MED-020,162,Emergency,Completed,11.9,2,1,Surgical camp,1
+EX-00488,2026-05-28,DEMO-08,DEMO-06,MED-023,55,Emergency,In_Transit,590.4,9,0,Monsoon surge,1
+EX-00489,2026-04-02,DEMO-06,HOSP-SP-003,MED-058,67,Normal,Completed,688.3,10,0,Pediatric surge,1
+EX-00490,2026-03-10,DEMO-08,HOSP-LB-002,MED-066,5,High,Completed,146.9,3,0,Monsoon surge,1
+EX-00491,2026-01-18,DEMO-02,DEMO-01,MED-042,50,Emergency,In_Transit,3.8,2,1,Pediatric surge,1
+EX-00492,2026-03-27,HOSP-GD-003,HOSP-KR-001,MED-017,5,Emergency,Completed,302.8,5,0,Postpartum hemorrhage kit,0
+EX-00493,2026-05-15,HOSP-BG-013,HOSP-BG-016,MED-002,60,High,Rejected,39.1,2,1,Pediatric surge,0
+EX-00494,2026-01-05,DEMO-02,HOSP-BG-014,MED-039,215,Normal,Completed,5.1,1,1,Emergency case load,1
+EX-00495,2026-06-13,HOSP-SP-003,HOSP-SP-001,MED-042,5,Emergency,In_Transit,111.4,3,1,Monsoon surge,0
+EX-00496,2026-05-01,DEMO-08,DEMO-03,MED-058,5,Normal,In_Transit,363.7,6,0,Emergency case load,1
+EX-00497,2026-05-23,HOSP-LB-004,HOSP-SP-001,MED-028,14,High,Requested,229.4,4,0,Emergency case load,0
+EX-00499,2025-12-16,DEMO-08,DEMO-04,MED-058,5,High,Completed,351.9,4,0,Pediatric surge,1
+EX-00500,2026-03-06,DEMO-05,DEMO-02,MED-072,229,High,Completed,5.2,1,1,Near-expiry redistribution,1

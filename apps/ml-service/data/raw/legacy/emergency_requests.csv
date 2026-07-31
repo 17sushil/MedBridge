@@ -1,0 +1,201 @@
+request_id,request_datetime,hospital_id,medicine_id,quantity_requested,severity,cause,status,response_hours
+EMR-0001,2025-12-21T00:00:00Z,DEMO-01,MED-038,186,Medium,Surgical emergency,Fulfilled,11.5
+EMR-0002,2025-10-04T00:00:00Z,HOSP-LB-002,MED-069,88,High,Surgical emergency,Fulfilled,7.5
+EMR-0003,2025-11-22T00:00:00Z,DEMO-01,MED-004,104,Critical,Postpartum hemorrhage,Cancelled,9.7
+EMR-0004,2025-07-05T00:00:00Z,DEMO-04,MED-003,16,Medium,Road traffic accident,Partially_Fulfilled,23.7
+EMR-0005,2025-12-17T00:00:00Z,DEMO-08,MED-041,128,High,Mass casualty,Fulfilled,9.6
+EMR-0006,2026-02-18T00:00:00Z,DEMO-07,MED-022,160,Medium,Neonatal sepsis,Fulfilled,31.3
+EMR-0007,2025-09-28T00:00:00Z,HOSP-MD-003,MED-027,145,Medium,Snake bite,Cancelled,46.8
+EMR-0008,2025-11-08T00:00:00Z,DEMO-01,MED-050,271,Medium,Flood displacement camp,Fulfilled,47.5
+EMR-0009,2026-06-14T00:00:00Z,DEMO-08,MED-017,209,Medium,Chemo stockout,Fulfilled,27.3
+EMR-0010,2026-02-01T00:00:00Z,HOSP-SP-002,MED-022,146,High,Dengue surge,Partially_Fulfilled,13.0
+EMR-0011,2025-10-29T00:00:00Z,HOSP-SP-003,MED-070,287,Critical,Postpartum hemorrhage,Partially_Fulfilled,12.2
+EMR-0012,2026-04-14T00:00:00Z,HOSP-BG-013,MED-069,288,Critical,Pediatric pneumonia surge,Cancelled,1.6
+EMR-0013,2025-12-04T00:00:00Z,DEMO-06,MED-025,197,Medium,Chemo stockout,Fulfilled,11.2
+EMR-0014,2026-03-04T00:00:00Z,DEMO-02,MED-014,151,Medium,Pediatric pneumonia surge,Fulfilled,44.2
+EMR-0015,2025-08-23T00:00:00Z,DEMO-08,MED-025,23,Medium,Pediatric pneumonia surge,Fulfilled,16.8
+EMR-0016,2025-08-21T00:00:00Z,HOSP-BG-013,MED-053,46,Critical,Mass casualty,Fulfilled,10.7
+EMR-0017,2026-03-03T00:00:00Z,HOSP-SP-002,MED-007,221,Medium,Snake bite,Partially_Fulfilled,19.3
+EMR-0018,2025-10-13T00:00:00Z,DEMO-03,MED-030,218,High,Neonatal sepsis,Open,31.7
+EMR-0019,2026-06-27T00:00:00Z,DEMO-08,MED-067,247,Critical,Pediatric pneumonia surge,Open,6.5
+EMR-0020,2025-10-26T00:00:00Z,DEMO-02,MED-014,139,High,Flood displacement camp,Fulfilled,8.5
+EMR-0021,2026-05-25T00:00:00Z,DEMO-06,MED-045,285,Critical,Dengue surge,Partially_Fulfilled,9.1
+EMR-0022,2025-12-12T00:00:00Z,DEMO-01,MED-047,191,Medium,Snake bite,Fulfilled,8.4
+EMR-0023,2026-01-23T00:00:00Z,HOSP-GD-002,MED-017,286,Medium,Mass casualty,Fulfilled,32.8
+EMR-0024,2025-10-17T00:00:00Z,HOSP-GD-004,MED-007,270,Medium,Flood displacement camp,Fulfilled,31.5
+EMR-0025,2025-08-09T00:00:00Z,HOSP-BG-016,MED-015,167,Medium,Chemo stockout,Fulfilled,4.6
+EMR-0026,2026-06-16T00:00:00Z,HOSP-BG-010,MED-050,223,High,COPD exacerbation cluster,Fulfilled,19.4
+EMR-0027,2025-12-01T00:00:00Z,HOSP-BG-017,MED-066,186,High,Flood displacement camp,Fulfilled,7.1
+EMR-0028,2025-09-26T00:00:00Z,DEMO-02,MED-061,196,Medium,COPD exacerbation cluster,Partially_Fulfilled,8.3
+EMR-0029,2026-04-06T00:00:00Z,HOSP-BG-015,MED-045,262,Medium,Flood displacement camp,Partially_Fulfilled,32.3
+EMR-0030,2026-04-03T00:00:00Z,DEMO-01,MED-038,86,Critical,Snake bite,Open,6.0
+EMR-0031,2026-03-09T00:00:00Z,DEMO-06,MED-024,37,Medium,Postpartum hemorrhage,Fulfilled,13.0
+EMR-0032,2026-06-03T00:00:00Z,HOSP-GD-005,MED-019,117,Medium,Chemo stockout,Partially_Fulfilled,41.9
+EMR-0033,2026-04-19T00:00:00Z,DEMO-05,MED-059,282,High,Dengue surge,Fulfilled,30.8
+EMR-0034,2025-09-20T00:00:00Z,DEMO-01,MED-016,16,High,Postpartum hemorrhage,Cancelled,31.3
+EMR-0035,2026-03-23T00:00:00Z,HOSP-BG-019,MED-059,152,Critical,Flood displacement camp,Fulfilled,5.8
+EMR-0036,2026-01-22T00:00:00Z,DEMO-03,MED-045,209,Critical,Pediatric pneumonia surge,Fulfilled,11.0
+EMR-0037,2026-05-12T00:00:00Z,DEMO-02,MED-069,182,High,Dengue surge,Fulfilled,38.4
+EMR-0038,2026-03-29T00:00:00Z,HOSP-MD-001,MED-071,189,Critical,Road traffic accident,Partially_Fulfilled,3.9
+EMR-0039,2026-02-02T00:00:00Z,DEMO-06,MED-024,258,High,Blood shortage,Open,2.8
+EMR-0040,2025-09-26T00:00:00Z,HOSP-SP-002,MED-018,168,High,Chemo stockout,Open,39.8
+EMR-0041,2026-02-04T00:00:00Z,HOSP-KR-001,MED-008,242,Critical,Road traffic accident,Fulfilled,7.7
+EMR-0042,2025-10-22T00:00:00Z,HOSP-LB-005,MED-013,214,Medium,Postpartum hemorrhage,Fulfilled,12.1
+EMR-0043,2025-12-26T00:00:00Z,DEMO-01,MED-007,237,Medium,Surgical emergency,Fulfilled,16.0
+EMR-0044,2026-06-09T00:00:00Z,DEMO-02,MED-041,279,Medium,Mass casualty,Fulfilled,36.7
+EMR-0045,2026-01-12T00:00:00Z,HOSP-LB-004,MED-002,68,Medium,Mass casualty,Open,45.1
+EMR-0046,2025-08-28T00:00:00Z,DEMO-06,MED-067,124,High,Surgical emergency,Partially_Fulfilled,1.7
+EMR-0047,2025-12-13T00:00:00Z,HOSP-BG-011,MED-067,249,Medium,Blood shortage,Fulfilled,22.8
+EMR-0048,2025-09-18T00:00:00Z,HOSP-BG-019,MED-045,207,Medium,Surgical emergency,Fulfilled,34.8
+EMR-0049,2026-06-05T00:00:00Z,HOSP-BG-014,MED-025,234,Medium,Snake bite,Partially_Fulfilled,5.2
+EMR-0050,2026-01-20T00:00:00Z,HOSP-MD-003,MED-068,244,Medium,COPD exacerbation cluster,Fulfilled,8.0
+EMR-0051,2025-07-03T00:00:00Z,HOSP-LB-004,MED-012,231,High,Chemo stockout,Partially_Fulfilled,45.4
+EMR-0052,2026-03-08T00:00:00Z,HOSP-BG-012,MED-024,156,Critical,Chemo stockout,Fulfilled,1.1
+EMR-0053,2025-10-17T00:00:00Z,DEMO-03,MED-065,207,High,Blood shortage,Partially_Fulfilled,26.1
+EMR-0054,2025-12-11T00:00:00Z,DEMO-01,MED-058,290,High,Flood displacement camp,Partially_Fulfilled,2.9
+EMR-0055,2026-05-06T00:00:00Z,DEMO-07,MED-016,256,Medium,Neonatal sepsis,Cancelled,17.0
+EMR-0056,2026-01-12T00:00:00Z,HOSP-GD-002,MED-049,156,Critical,Pediatric pneumonia surge,Fulfilled,1.3
+EMR-0057,2026-03-30T00:00:00Z,DEMO-07,MED-018,215,High,Mass casualty,Cancelled,3.7
+EMR-0058,2026-03-07T00:00:00Z,DEMO-01,MED-021,39,High,Mass casualty,Cancelled,9.1
+EMR-0059,2025-09-04T00:00:00Z,HOSP-GD-002,MED-025,76,Medium,Surgical emergency,Open,1.6
+EMR-0060,2025-11-30T00:00:00Z,DEMO-06,MED-016,290,Critical,Road traffic accident,Fulfilled,7.7
+EMR-0061,2026-05-04T00:00:00Z,DEMO-07,MED-071,186,High,Neonatal sepsis,Fulfilled,36.3
+EMR-0062,2026-01-02T00:00:00Z,HOSP-SP-003,MED-037,179,High,Surgical emergency,Partially_Fulfilled,25.2
+EMR-0063,2026-01-20T00:00:00Z,DEMO-02,MED-002,224,Medium,Blood shortage,Cancelled,44.9
+EMR-0064,2026-03-20T00:00:00Z,HOSP-BG-012,MED-047,244,High,Neonatal sepsis,Fulfilled,15.0
+EMR-0065,2026-04-01T00:00:00Z,DEMO-08,MED-024,185,Medium,Blood shortage,Fulfilled,34.5
+EMR-0066,2025-08-03T00:00:00Z,DEMO-06,MED-070,241,Medium,COPD exacerbation cluster,Fulfilled,23.0
+EMR-0067,2025-08-09T00:00:00Z,HOSP-BG-010,MED-006,189,Medium,Pediatric pneumonia surge,Fulfilled,30.9
+EMR-0068,2025-12-17T00:00:00Z,HOSP-BG-017,MED-046,285,High,Mass casualty,Fulfilled,33.2
+EMR-0069,2026-06-23T00:00:00Z,DEMO-07,MED-019,141,High,Neonatal sepsis,Open,40.5
+EMR-0070,2026-02-24T00:00:00Z,DEMO-07,MED-040,112,Critical,COPD exacerbation cluster,Open,3.4
+EMR-0071,2025-08-06T00:00:00Z,HOSP-BG-018,MED-019,17,High,Pediatric pneumonia surge,Fulfilled,1.7
+EMR-0072,2025-12-18T00:00:00Z,DEMO-02,MED-067,118,High,Chemo stockout,Fulfilled,20.7
+EMR-0073,2025-12-23T00:00:00Z,DEMO-04,MED-049,144,Medium,Postpartum hemorrhage,Cancelled,30.4
+EMR-0074,2025-07-16T00:00:00Z,HOSP-LB-003,MED-019,20,High,Surgical emergency,Open,24.4
+EMR-0075,2026-04-19T00:00:00Z,HOSP-LB-002,MED-037,98,High,COPD exacerbation cluster,Fulfilled,12.4
+EMR-0076,2026-02-25T00:00:00Z,HOSP-MD-001,MED-053,45,High,Postpartum hemorrhage,Partially_Fulfilled,14.9
+EMR-0077,2026-04-08T00:00:00Z,HOSP-SP-003,MED-037,13,Medium,Chemo stockout,Cancelled,10.5
+EMR-0078,2026-06-28T00:00:00Z,DEMO-04,MED-048,150,High,Flood displacement camp,Cancelled,11.7
+EMR-0079,2025-08-05T00:00:00Z,HOSP-KR-001,MED-004,218,Medium,Snake bite,Fulfilled,16.8
+EMR-0080,2025-12-14T00:00:00Z,DEMO-06,MED-037,118,Medium,Postpartum hemorrhage,Fulfilled,3.6
+EMR-0081,2025-11-06T00:00:00Z,HOSP-BG-015,MED-061,37,High,Surgical emergency,Fulfilled,1.1
+EMR-0082,2025-12-23T00:00:00Z,DEMO-04,MED-062,120,High,Pediatric pneumonia surge,Fulfilled,34.9
+EMR-0083,2025-07-05T00:00:00Z,HOSP-LB-002,MED-008,87,High,Chemo stockout,Fulfilled,5.5
+EMR-0084,2026-06-15T00:00:00Z,HOSP-KP-001,MED-069,240,Critical,Pediatric pneumonia surge,Partially_Fulfilled,4.7
+EMR-0085,2025-09-05T00:00:00Z,HOSP-KP-004,MED-024,286,High,Postpartum hemorrhage,Fulfilled,45.6
+EMR-0086,2026-04-27T00:00:00Z,DEMO-07,MED-060,245,High,Neonatal sepsis,Partially_Fulfilled,46.8
+EMR-0087,2025-12-22T00:00:00Z,DEMO-01,MED-034,222,High,Chemo stockout,Fulfilled,19.6
+EMR-0088,2026-04-12T00:00:00Z,HOSP-KR-003,MED-071,259,High,Postpartum hemorrhage,Fulfilled,35.2
+EMR-0089,2026-04-27T00:00:00Z,HOSP-GD-003,MED-022,227,Medium,Chemo stockout,Fulfilled,20.5
+EMR-0090,2025-10-15T00:00:00Z,DEMO-05,MED-072,15,Critical,Chemo stockout,Fulfilled,5.2
+EMR-0091,2026-06-29T00:00:00Z,DEMO-02,MED-028,155,Medium,Chemo stockout,Open,29.1
+EMR-0092,2026-05-24T00:00:00Z,HOSP-KR-003,MED-004,59,High,Flood displacement camp,Partially_Fulfilled,40.3
+EMR-0093,2026-01-04T00:00:00Z,DEMO-04,MED-064,25,Critical,Pediatric pneumonia surge,Fulfilled,1.9
+EMR-0094,2026-03-10T00:00:00Z,HOSP-BG-013,MED-010,111,High,Flood displacement camp,Open,39.6
+EMR-0095,2026-01-24T00:00:00Z,HOSP-LB-001,MED-032,225,High,COPD exacerbation cluster,Fulfilled,25.7
+EMR-0096,2025-12-10T00:00:00Z,DEMO-06,MED-038,297,Critical,Neonatal sepsis,Open,11.7
+EMR-0097,2025-12-02T00:00:00Z,DEMO-01,MED-005,73,Medium,Pediatric pneumonia surge,Fulfilled,3.2
+EMR-0098,2025-10-09T00:00:00Z,DEMO-07,MED-064,76,High,Chemo stockout,Cancelled,37.8
+EMR-0099,2025-07-13T00:00:00Z,DEMO-04,MED-059,71,Critical,Mass casualty,Fulfilled,16.6
+EMR-0100,2025-10-27T00:00:00Z,HOSP-LB-005,MED-052,28,Medium,Mass casualty,Fulfilled,33.9
+EMR-0101,2026-04-13T00:00:00Z,HOSP-GD-005,MED-069,177,High,Postpartum hemorrhage,Fulfilled,36.1
+EMR-0102,2025-10-17T00:00:00Z,DEMO-02,MED-005,48,Critical,Blood shortage,Open,4.9
+EMR-0103,2026-05-28T00:00:00Z,HOSP-GD-004,MED-066,54,High,COPD exacerbation cluster,Partially_Fulfilled,32.3
+EMR-0104,2026-03-15T00:00:00Z,HOSP-BG-016,MED-028,258,Medium,COPD exacerbation cluster,Fulfilled,24.7
+EMR-0105,2026-04-21T00:00:00Z,HOSP-MD-001,MED-028,186,Medium,Road traffic accident,Fulfilled,5.9
+EMR-0106,2025-10-27T00:00:00Z,DEMO-07,MED-020,209,Critical,Neonatal sepsis,Partially_Fulfilled,7.7
+EMR-0107,2026-03-17T00:00:00Z,DEMO-02,MED-022,285,Medium,COPD exacerbation cluster,Fulfilled,41.5
+EMR-0108,2026-04-08T00:00:00Z,HOSP-KR-004,MED-018,210,Critical,Neonatal sepsis,Partially_Fulfilled,8.7
+EMR-0109,2025-12-07T00:00:00Z,DEMO-04,MED-060,36,Medium,Road traffic accident,Partially_Fulfilled,4.9
+EMR-0110,2025-12-12T00:00:00Z,DEMO-05,MED-011,12,High,Blood shortage,Fulfilled,41.8
+EMR-0111,2025-09-14T00:00:00Z,DEMO-08,MED-038,61,Critical,Blood shortage,Fulfilled,8.3
+EMR-0112,2025-11-05T00:00:00Z,DEMO-05,MED-058,231,High,Surgical emergency,Fulfilled,21.8
+EMR-0113,2025-12-18T00:00:00Z,DEMO-03,MED-056,228,Medium,Postpartum hemorrhage,Fulfilled,30.6
+EMR-0114,2026-05-10T00:00:00Z,HOSP-MD-004,MED-045,229,High,Road traffic accident,Fulfilled,3.3
+EMR-0115,2025-12-09T00:00:00Z,HOSP-LB-005,MED-002,27,Medium,Neonatal sepsis,Open,9.5
+EMR-0116,2025-10-26T00:00:00Z,DEMO-05,MED-019,266,High,Neonatal sepsis,Fulfilled,38.0
+EMR-0117,2026-04-22T00:00:00Z,DEMO-05,MED-035,294,Medium,Mass casualty,Open,19.6
+EMR-0118,2026-05-13T00:00:00Z,DEMO-08,MED-023,17,High,Chemo stockout,Partially_Fulfilled,2.3
+EMR-0119,2026-01-14T00:00:00Z,HOSP-KR-001,MED-063,288,High,Flood displacement camp,Fulfilled,46.1
+EMR-0120,2025-11-23T00:00:00Z,DEMO-06,MED-023,249,Critical,Pediatric pneumonia surge,Fulfilled,3.7
+EMR-0121,2025-12-09T00:00:00Z,DEMO-01,MED-042,273,High,Surgical emergency,Partially_Fulfilled,17.9
+EMR-0122,2025-10-12T00:00:00Z,HOSP-MD-004,MED-029,157,Critical,Mass casualty,Fulfilled,11.7
+EMR-0123,2025-09-29T00:00:00Z,DEMO-07,MED-030,107,Critical,Surgical emergency,Fulfilled,10.0
+EMR-0124,2026-05-05T00:00:00Z,HOSP-SP-001,MED-067,54,Critical,Postpartum hemorrhage,Cancelled,2.6
+EMR-0125,2025-07-06T00:00:00Z,HOSP-GD-005,MED-072,84,Medium,Neonatal sepsis,Fulfilled,39.0
+EMR-0126,2026-05-23T00:00:00Z,HOSP-KP-003,MED-024,111,High,Blood shortage,Fulfilled,13.3
+EMR-0127,2026-03-13T00:00:00Z,HOSP-MD-004,MED-051,162,Critical,Blood shortage,Fulfilled,3.5
+EMR-0128,2026-06-15T00:00:00Z,DEMO-08,MED-019,15,Critical,Road traffic accident,Open,16.7
+EMR-0129,2026-03-03T00:00:00Z,HOSP-GD-004,MED-054,183,Medium,Surgical emergency,Fulfilled,46.4
+EMR-0130,2026-04-20T00:00:00Z,HOSP-SP-004,MED-023,265,High,Road traffic accident,Cancelled,8.1
+EMR-0131,2025-12-23T00:00:00Z,DEMO-08,MED-001,128,High,Snake bite,Open,34.7
+EMR-0132,2026-02-23T00:00:00Z,HOSP-LB-003,MED-032,155,Medium,Postpartum hemorrhage,Fulfilled,16.6
+EMR-0133,2026-01-02T00:00:00Z,DEMO-04,MED-060,163,High,Surgical emergency,Cancelled,11.2
+EMR-0134,2025-08-23T00:00:00Z,DEMO-07,MED-049,12,High,Snake bite,Fulfilled,47.0
+EMR-0135,2026-05-30T00:00:00Z,HOSP-SP-003,MED-037,235,High,Postpartum hemorrhage,Cancelled,39.4
+EMR-0136,2026-06-18T00:00:00Z,DEMO-04,MED-049,172,High,Surgical emergency,Fulfilled,15.0
+EMR-0137,2025-09-30T00:00:00Z,HOSP-SP-001,MED-040,50,High,Chemo stockout,Open,41.9
+EMR-0138,2026-05-09T00:00:00Z,DEMO-01,MED-032,187,Critical,Pediatric pneumonia surge,Partially_Fulfilled,1.1
+EMR-0139,2026-02-21T00:00:00Z,DEMO-08,MED-013,156,Medium,Postpartum hemorrhage,Fulfilled,23.3
+EMR-0140,2025-09-30T00:00:00Z,HOSP-GD-003,MED-035,148,Medium,Chemo stockout,Partially_Fulfilled,31.1
+EMR-0141,2026-03-30T00:00:00Z,DEMO-07,MED-022,205,High,Postpartum hemorrhage,Fulfilled,26.6
+EMR-0142,2026-03-07T00:00:00Z,DEMO-05,MED-070,17,High,Flood displacement camp,Fulfilled,35.0
+EMR-0143,2025-12-10T00:00:00Z,DEMO-02,MED-066,41,High,Neonatal sepsis,Fulfilled,35.8
+EMR-0144,2025-11-13T00:00:00Z,DEMO-04,MED-029,201,High,Mass casualty,Fulfilled,35.5
+EMR-0145,2025-12-13T00:00:00Z,HOSP-BG-019,MED-034,275,High,Mass casualty,Cancelled,28.8
+EMR-0146,2025-11-21T00:00:00Z,HOSP-GD-003,MED-018,122,High,Road traffic accident,Fulfilled,6.7
+EMR-0147,2026-04-22T00:00:00Z,DEMO-08,MED-047,240,Critical,Road traffic accident,Fulfilled,14.9
+EMR-0148,2025-07-24T00:00:00Z,DEMO-01,MED-047,192,Critical,Pediatric pneumonia surge,Cancelled,2.3
+EMR-0149,2026-04-10T00:00:00Z,HOSP-GD-005,MED-062,42,High,Pediatric pneumonia surge,Cancelled,39.8
+EMR-0150,2026-04-28T00:00:00Z,DEMO-02,MED-062,242,Medium,Surgical emergency,Fulfilled,5.2
+EMR-0151,2025-10-21T00:00:00Z,HOSP-LB-004,MED-047,259,Medium,Pediatric pneumonia surge,Fulfilled,23.5
+EMR-0152,2026-05-26T00:00:00Z,DEMO-02,MED-069,205,Critical,Neonatal sepsis,Fulfilled,4.2
+EMR-0153,2025-08-12T00:00:00Z,HOSP-BG-011,MED-039,121,Medium,Dengue surge,Fulfilled,23.9
+EMR-0154,2026-03-17T00:00:00Z,HOSP-BG-014,MED-008,248,Medium,Snake bite,Fulfilled,2.2
+EMR-0155,2026-04-28T00:00:00Z,HOSP-MD-002,MED-072,40,Critical,Postpartum hemorrhage,Partially_Fulfilled,13.7
+EMR-0156,2025-08-24T00:00:00Z,HOSP-LB-003,MED-056,266,High,Postpartum hemorrhage,Fulfilled,35.1
+EMR-0157,2025-12-28T00:00:00Z,DEMO-07,MED-043,100,High,Snake bite,Fulfilled,26.5
+EMR-0158,2026-03-09T00:00:00Z,DEMO-01,MED-006,91,Critical,Road traffic accident,Partially_Fulfilled,9.0
+EMR-0159,2025-08-26T00:00:00Z,HOSP-SP-003,MED-025,17,High,COPD exacerbation cluster,Fulfilled,17.0
+EMR-0160,2026-04-24T00:00:00Z,DEMO-01,MED-062,62,High,Chemo stockout,Partially_Fulfilled,47.4
+EMR-0161,2025-12-03T00:00:00Z,DEMO-08,MED-045,90,Medium,COPD exacerbation cluster,Fulfilled,17.0
+EMR-0162,2026-01-08T00:00:00Z,HOSP-GD-002,MED-022,36,High,Snake bite,Partially_Fulfilled,26.9
+EMR-0163,2026-03-06T00:00:00Z,HOSP-KP-001,MED-003,260,Critical,Snake bite,Fulfilled,1.4
+EMR-0164,2026-06-21T00:00:00Z,HOSP-GD-002,MED-035,91,Medium,Dengue surge,Partially_Fulfilled,36.2
+EMR-0165,2026-05-21T00:00:00Z,DEMO-08,MED-040,82,High,Pediatric pneumonia surge,Partially_Fulfilled,17.9
+EMR-0166,2025-11-29T00:00:00Z,DEMO-07,MED-066,95,Critical,Blood shortage,Fulfilled,16.4
+EMR-0167,2025-10-25T00:00:00Z,DEMO-07,MED-072,10,High,Road traffic accident,Partially_Fulfilled,43.5
+EMR-0168,2025-08-12T00:00:00Z,DEMO-02,MED-021,156,High,Neonatal sepsis,Fulfilled,38.9
+EMR-0169,2026-04-04T00:00:00Z,HOSP-SP-003,MED-005,22,High,Flood displacement camp,Fulfilled,27.2
+EMR-0170,2026-05-07T00:00:00Z,DEMO-07,MED-048,37,Medium,Snake bite,Partially_Fulfilled,26.6
+EMR-0171,2025-07-04T00:00:00Z,DEMO-02,MED-070,145,Medium,Pediatric pneumonia surge,Fulfilled,29.5
+EMR-0172,2025-12-28T00:00:00Z,HOSP-KR-004,MED-056,104,High,Snake bite,Fulfilled,32.1
+EMR-0173,2026-02-08T00:00:00Z,HOSP-LB-002,MED-030,144,Medium,Dengue surge,Open,25.8
+EMR-0174,2025-08-04T00:00:00Z,DEMO-01,MED-052,167,Medium,COPD exacerbation cluster,Cancelled,23.6
+EMR-0175,2025-12-07T00:00:00Z,DEMO-08,MED-024,40,High,Chemo stockout,Fulfilled,24.7
+EMR-0176,2026-05-30T00:00:00Z,HOSP-KR-004,MED-040,104,Medium,Snake bite,Fulfilled,25.2
+EMR-0177,2026-03-20T00:00:00Z,HOSP-BG-013,MED-008,157,High,Snake bite,Fulfilled,12.9
+EMR-0178,2026-05-08T00:00:00Z,DEMO-05,MED-013,94,High,Surgical emergency,Fulfilled,12.0
+EMR-0179,2026-05-14T00:00:00Z,HOSP-LB-005,MED-010,174,High,Surgical emergency,Fulfilled,45.1
+EMR-0180,2026-06-29T00:00:00Z,DEMO-04,MED-020,280,Medium,Dengue surge,Partially_Fulfilled,7.4
+EMR-0181,2025-09-27T00:00:00Z,DEMO-07,MED-022,64,Critical,Neonatal sepsis,Fulfilled,3.5
+EMR-0182,2026-01-15T00:00:00Z,HOSP-SP-004,MED-057,249,Medium,Dengue surge,Open,9.2
+EMR-0183,2025-09-06T00:00:00Z,HOSP-BG-019,MED-041,103,High,Chemo stockout,Fulfilled,22.6
+EMR-0184,2026-05-09T00:00:00Z,HOSP-MD-001,MED-044,206,Critical,Mass casualty,Fulfilled,14.2
+EMR-0185,2025-08-10T00:00:00Z,DEMO-01,MED-049,258,High,Dengue surge,Fulfilled,19.0
+EMR-0186,2026-01-17T00:00:00Z,DEMO-03,MED-045,191,Medium,Pediatric pneumonia surge,Fulfilled,20.7
+EMR-0187,2025-08-01T00:00:00Z,DEMO-06,MED-026,88,High,Postpartum hemorrhage,Partially_Fulfilled,42.0
+EMR-0188,2026-04-16T00:00:00Z,DEMO-04,MED-065,288,Critical,Blood shortage,Fulfilled,2.5
+EMR-0189,2026-02-23T00:00:00Z,DEMO-01,MED-044,286,High,Snake bite,Cancelled,29.5
+EMR-0190,2026-02-05T00:00:00Z,HOSP-GD-003,MED-071,178,High,Surgical emergency,Fulfilled,10.2
+EMR-0191,2026-03-18T00:00:00Z,DEMO-06,MED-040,123,Critical,Dengue surge,Fulfilled,8.3
+EMR-0192,2025-07-07T00:00:00Z,DEMO-02,MED-060,121,High,Pediatric pneumonia surge,Partially_Fulfilled,36.1
+EMR-0193,2026-05-27T00:00:00Z,DEMO-06,MED-041,227,High,Neonatal sepsis,Fulfilled,36.2
+EMR-0194,2026-01-27T00:00:00Z,HOSP-KR-004,MED-064,206,High,Blood shortage,Partially_Fulfilled,38.2
+EMR-0195,2026-03-13T00:00:00Z,HOSP-BG-016,MED-040,267,Medium,Blood shortage,Fulfilled,42.8
+EMR-0196,2025-11-18T00:00:00Z,HOSP-GD-002,MED-030,65,High,Flood displacement camp,Fulfilled,17.9
+EMR-0197,2026-04-26T00:00:00Z,HOSP-KR-001,MED-072,29,High,Flood displacement camp,Partially_Fulfilled,12.1
+EMR-0198,2025-12-31T00:00:00Z,HOSP-BG-011,MED-048,152,Medium,Chemo stockout,Partially_Fulfilled,34.5
+EMR-0199,2025-07-22T00:00:00Z,HOSP-GD-005,MED-016,25,High,Snake bite,Fulfilled,31.2
+EMR-0200,2026-06-23T00:00:00Z,DEMO-01,MED-048,187,Medium,Postpartum hemorrhage,Partially_Fulfilled,27.9
