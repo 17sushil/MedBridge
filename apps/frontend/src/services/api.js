@@ -19,12 +19,21 @@ export const api = {
     return mapUser(user);
   },
 
+  async updateProfile(data) {
+    const user = await request("/auth/me", {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    });
+    return mapUser(user);
+  },
+
   async getDashboardStats() {
     return request("/dashboard/stats");
   },
 
-  async getInventoryOverview() {
-    return request("/dashboard/inventory-overview");
+  async getInventoryOverview(period = "week") {
+    const qs = new URLSearchParams({ period });
+    return request(`/dashboard/inventory-overview?${qs}`);
   },
 
   async getMedicineCategories() {
@@ -83,6 +92,10 @@ export const api = {
 
   async getHospitals() {
     return request("/hospitals");
+  },
+
+  async getHospital(id) {
+    return request(`/hospitals/${id}`);
   },
 
   async getExchangeRequests(params = {}) {

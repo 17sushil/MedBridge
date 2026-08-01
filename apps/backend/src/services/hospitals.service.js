@@ -9,6 +9,8 @@ async function listHospitals() {
         select: {
           outgoingRequests: { where: { status: { in: ["PENDING", "APPROVED", "IN_TRANSIT"] } } },
           incomingRequests: { where: { status: { in: ["PENDING", "APPROVED", "IN_TRANSIT"] } } },
+          medicines: true,
+          users: true,
         },
       },
     },
@@ -16,7 +18,23 @@ async function listHospitals() {
 }
 
 async function getHospital(id) {
-  const hospital = await prisma.hospital.findUnique({ where: { id } });
+  const hospital = await prisma.hospital.findUnique({
+    where: { id },
+    include: {
+      _count: {
+        select: {
+          outgoingRequests: { where: { status: { in: ["PENDING", "APPROVED", "IN_TRANSIT"] } } },
+          incomingRequests: { where: { status: { in: ["PENDING", "APPROVED", "IN_TRANSIT"] } } },
+          medicines: true,
+          users: true,
+        },
+      },
+      medicines: {
+        take: 5,
+        orderBy: { updatedAt: "desc" },
+      },
+    },
+  });
   if (!hospital) throw new ApiError(404, "Hospital not found");
   return hospital;
 }

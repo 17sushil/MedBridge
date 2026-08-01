@@ -76,4 +76,25 @@ async function getProfile(userId) {
   return toPublicUser(user);
 }
 
-module.exports = { registerHospitalAndAdmin, registerStaff, login, getProfile, toPublicUser };
+async function updateProfile(userId, { name, email }) {
+  const existing = await prisma.user.findUnique({ where: { id: userId } });
+  if (!existing) throw new ApiError(404, "User not found");
+
+  if (email && email !== existing.email) {
+    const emailTaken = await prisma.user.findUnique({ where: { email } });
+    if (emailTaken) throw new ApiError(409, "Email already in use");
+  }
+
+  const updated = await prisma.user.update({
+    where: { id: userId },
+    data: {
+      name: name || undefined,
+      email: email || undefined,
+    },
+    include: { hospital: true },
+  });
+
+  return toPublicUser(updated);
+}
+
+module.exports = { registerHospitalAndAdmin, registerStaff, login, getProfile, updateProfile, toPublicUser };

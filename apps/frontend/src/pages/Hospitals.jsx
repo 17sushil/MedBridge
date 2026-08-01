@@ -5,16 +5,32 @@ import PageHeader from "../components/ui/PageHeader";
 import Card from "../components/ui/Card";
 import Skeleton from "../components/ui/Skeleton";
 import Button from "../components/ui/Button";
+import ExchangeRequestModal from "../components/modals/ExchangeRequestModal";
+import HospitalProfileModal from "../components/modals/HospitalProfileModal";
 import { useApp } from "../context/AppContext";
 import "./Hospitals.css";
 
 export default function Hospitals() {
   const [hospitals, setHospitals] = useState(null);
-  const { activeHospital, setActiveHospital } = useApp();
+  const [selectedHospitalId, setSelectedHospitalId] = useState(null);
+  const [showRequestModal, setShowRequestModal] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [profileHospitalId, setProfileHospitalId] = useState(null);
+  const { activeHospital, refreshNotifications } = useApp();
 
   useEffect(() => {
-    api.getHospitals().then(setHospitals);
+    api.getHospitals().then(setHospitals).catch(() => setHospitals([]));
   }, []);
+
+  const handleRequestStock = (hospitalId) => {
+    setSelectedHospitalId(hospitalId);
+    setShowRequestModal(true);
+  };
+
+  const handleViewProfile = (hospitalId) => {
+    setProfileHospitalId(hospitalId);
+    setShowProfileModal(true);
+  };
 
   return (
     <div>
@@ -56,21 +72,46 @@ export default function Hospitals() {
                 </div>
 
                 <div className="hosp-actions">
-                  <Button size="sm" variant="outline" className="hosp-actions-btn">
+                  <Button size="sm" variant="outline" className="hosp-actions-btn" onClick={() => handleViewProfile(h.id)}>
                     View Profile
                   </Button>
                   <Button
                     size="sm"
-                    variant={activeHospital === h.name ? "teal" : "outline"}
+                    variant="teal"
                     className="hosp-actions-btn"
-                    onClick={() => setActiveHospital(h.name)}
+                    onClick={() => handleRequestStock(h.id)}
+                    disabled={activeHospital === h.name}
+                    title={activeHospital === h.name ? "This is your hospital" : `Request stock from ${h.name}`}
                   >
-                    Request Stock
+                    {activeHospital === h.name ? "Your Hospital" : "Request Stock"}
                   </Button>
                 </div>
               </Card>
             ))}
       </div>
+
+      {showRequestModal && (
+        <ExchangeRequestModal
+          preselectedHospitalId={selectedHospitalId}
+          onClose={() => {
+            setShowRequestModal(false);
+            setSelectedHospitalId(null);
+          }}
+          onCreated={async () => {
+            await refreshNotifications().catch(() => {});
+          }}
+        />
+      )}
+
+      {showProfileModal && profileHospitalId && (
+        <HospitalProfileModal
+          hospitalId={profileHospitalId}
+          onClose={() => {
+            setShowProfileModal(false);
+            setProfileHospitalId(null);
+          }}
+        />
+      )}
     </div>
   );
 }
