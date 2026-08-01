@@ -5,25 +5,18 @@ const prisma = require("../../config/db");
  * Distinguishes between general medical knowledge and real system data
  */
 class InventoryContext {
-  /**
-   * Get relevant inventory context based on user query
-   * @param {string} query - User question
-   * @param {string} hospitalId - Current user's hospital
-   * @param {string} userId - Current user
-   * @returns {Promise<string>} Formatted context string
-   */
   static async getContextForQuery(query, hospitalId, userId) {
     if (!query) return "";
     const q = query.toLowerCase();
 
     try {
-      // Determine what data to fetch based on intent
       const needs = {
-        inventory: q.includes("inventory") || q.includes("medicines") || q.includes("stock") || q.includes("medicine") || q.includes("drug") || q.includes("available") || q.includes("have"),
+        inventory: q.includes("inventory") || q.includes("medicines") || q.includes("stock") || q.includes("medicine") || q.includes("drug") || q.includes("available") || q.includes("have") || q.includes("cost") || q.includes("price") || q.includes("how much"),
         expiring: q.includes("expir"),
         lowStock: q.includes("low") || q.includes("critical"),
         exchange: q.includes("exchange") || q.includes("request"),
         hospitals: q.includes("hospital"),
+        cost: q.includes("cost") || q.includes("price") || q.includes("how much") || q.includes("pricing"),
         specificMedicine: this.extractMedicineName(query),
       };
 
@@ -49,14 +42,12 @@ class InventoryContext {
         contexts.push(hospitals);
       }
 
-      // If specific medicine mentioned or general inventory request
-      if (needs.inventory || needs.specificMedicine) {
-        const inventory = await this.getInventoryForMedicine(hospitalId, needs.specificMedicine);
+      if (needs.inventory || needs.specificMedicine || needs.cost) {
+        const inventory = await this.getInventoryForMedicine(hospitalId, needs.specificMedicine, needs.cost);
         contexts.push(inventory);
       }
 
-      // If nothing specific, but query seems to need inventory
-      if (contexts.length === 0 && (q.includes("show") || q.includes("list") || q.includes("do we have") || q.includes("available"))) {
+      if (contexts.length === 0 && (q.includes("show") || q.includes("list") || q.includes("do we have") || q.includes("available") || q.includes("cost") || q.includes("price"))) {
         const inventory = await this.getGeneralInventory(hospitalId);
         contexts.push(inventory);
       }
@@ -70,16 +61,32 @@ class InventoryContext {
   }
 
   static extractMedicineName(query) {
-    // Simple extraction - look for capitalized words or common medicine suffixes
     const q = query.toLowerCase();
-    // Common medicines list (could be expanded)
-    const common = ["insulin", "paracetamol", "amoxicillin", "ibuprofen", "ceftriaxone", "azithromycin", "metformin", "atorvastatin", "omeprazole", "salbutamol", "ciprofloxacin", "diclofenac"];
+    const common = [
+      "paracetamol", "acetaminophen",
+      "insulin", "amoxicillin", "ibuprofen", "ceftriaxone", "azithromycin",
+      "metformin", "atorvastatin", "omeprazole", "salbutamol", "ciprofloxacin",
+      "diclofenac", "cephalexin", "doxycycline", "levothyroxine",
+      "losartan", "amlodipine", "cetirizine", "pantoprazole", "montelukast",
+      "tramadol", "vitamin", "metronidazole", "ors", "iron"
+    ];
     for (const med of common) {
       if (q.includes(med)) return med;
     }
-    // Try to extract after "have" or "available"
-    const match = query.match(/(?:have|available|show)\s+([a-zA-Z]+)/i);
-    if (match) return match[1];
+    const patterns = [
+      /(?:have|available|show|cost|price|does|about|for)\s+(?:an?\s+)?([a-zA-Z]+)/i,
+      /how much.*?(?:is|does)?\s+(?:an?\s+)?([a-zA-Z]+)/i,
+      /([a-zA-Z]+)\s+cost/i,
+      /price of\s+(?:an?\s+)?([a-zA-Z]+)/i,
+    ];
+    for (const pat of patterns) {
+      const match = query.match(pat);
+      if (match) {
+        let word = match[1].toLowerCase();
+        const stopWords = ["much", "does", "cost", "price", "the", "an", "a", "is", "of"];
+        if (!stopWords.includes(word) && word.length > 2) return word;
+      }
+    }
     return null;
   }
 
@@ -101,9 +108,7 @@ class InventoryContext {
         `- ${m.name} (${m.batch}): ${m.quantity} ${m.unit}, expires ${m.expiry.toISOString().split("T")[0]}, status ${m.status}`
       ).join("\n");
 
-      return `EXPIRING MEDICINES (next ${days} days) for this hospital:
-${lines}
-Total: ${medicines.length} batches expiring.`;
+      return `EXPIRING MEDICINES (next ${days} days) for this hospital:\n${lines}\nTotal: ${medicines.length} batches expiring.`;
     } catch (e) {
       return `EXPIRING MEDICINES: Error fetching - ${e.message}`;
     }
@@ -125,9 +130,7 @@ Total: ${medicines.length} batches expiring.`;
         `- ${m.name} (${m.batch}): ${m.quantity} ${m.unit} - ${m.status}, category ${m.category}`
       ).join("\n");
 
-      return `LOW STOCK MEDICINES:
-${lines}
-Consider exchange requests for restocking.`;
+      return `LOW STOCK MEDICINES:\n${lines}\nConsider exchange requests for restocking.`;
     } catch (e) {
       return `LOW STOCK: Error - ${e.message}`;
     }
@@ -154,8 +157,7 @@ Consider exchange requests for restocking.`;
         return `- [${r.status}] ${dir}: ${r.medicine} x${r.quantity} ${r.unit} | ${r.fromHospital.name} -> ${r.toHospital.name} | ${r.requestedOn.toISOString().split("T")[0]}`;
       }).join("\n");
 
-      return `ACTIVE EXCHANGE REQUESTS (Pending/Approved/In Transit):
-${lines}`;
+      return `ACTIVE EXCHANGE REQUESTS (Pending/Approved/In Transit):\n${lines}`;
     } catch (e) {
       return `EXCHANGE REQUESTS: Error - ${e.message}`;
     }
@@ -163,12 +165,9 @@ ${lines}`;
 
   static async getHospitalsContext(query) {
     try {
-      const q = query.toLowerCase();
-      // If asking which hospital has X medicine
       const medicineName = this.extractMedicineName(query);
 
       if (medicineName) {
-        // Find hospitals that have this medicine in stock
         const hospitalsWithMed = await prisma.medicine.findMany({
           where: {
             name: { contains: medicineName, mode: "insensitive" },
@@ -194,8 +193,7 @@ ${lines}`;
           `- ${g.hospital.name} (${g.hospital.location}): ${g.total} units total, batches: ${g.batches.join(", ")}`
         ).join("\n");
 
-        return `HOSPITALS WITH ${medicineName.toUpperCase()} IN STOCK:
-${lines}`;
+        return `HOSPITALS WITH ${medicineName.toUpperCase()} IN STOCK:\n${lines}`;
       } else {
         const hospitals = await prisma.hospital.findMany({
           include: {
@@ -209,15 +207,14 @@ ${lines}`;
           `- ${h.name} (${h.location}, ${h.type}): ${h._count.medicines} medicine types, rating ${h.rating}`
         ).join("\n");
 
-        return `PARTNER HOSPITALS:
-${lines}`;
+        return `PARTNER HOSPITALS:\n${lines}`;
       }
     } catch (e) {
       return `HOSPITALS: Error - ${e.message}`;
     }
   }
 
-  static async getInventoryForMedicine(hospitalId, medicineName) {
+  static async getInventoryForMedicine(hospitalId, medicineName, isCostQuery = false) {
     try {
       let where = { hospitalId };
       if (medicineName) {
@@ -232,19 +229,32 @@ ${lines}`;
 
       if (!medicines.length) {
         if (medicineName) {
-          return `INVENTORY SEARCH FOR "${medicineName}": Not found in your hospital's inventory. Quantity 0. You may want to request from partner hospitals.`;
+          return `INVENTORY SEARCH FOR "${medicineName}": Not found in your hospital's inventory. Quantity 0. Unit price unknown for this hospital. You may want to request from partner hospitals.`;
         }
         return "GENERAL INVENTORY: No medicines found in your hospital inventory.";
       }
 
-      const lines = medicines.map(m =>
-        `- ${m.name} | Batch: ${m.batch} | Qty: ${m.quantity} ${m.unit} | Category: ${m.category} | Expiry: ${m.expiry.toISOString().split("T")[0]} | Status: ${m.status} | Price: $${m.unitPrice}`
-      ).join("\n");
+      const lines = medicines.map(m => {
+        const expiryStr = m.expiry ? new Date(m.expiry).toISOString().split("T")[0] : "unknown";
+        if (isCostQuery) {
+          return `- ${m.name} | Batch: ${m.batch} | Unit Price: $${m.unitPrice} per ${m.unit} | Qty: ${m.quantity} ${m.unit} available | Category: ${m.category} | Expiry: ${expiryStr} | Status: ${m.status} | Terminology: generic name=${m.name}, batch=${m.batch}, unit=${m.unit}, unitPrice=$${m.unitPrice}, quantity=${m.quantity}`;
+        }
+        return `- ${m.name} | Batch: ${m.batch} | Qty: ${m.quantity} ${m.unit} | Category: ${m.category} | Expiry: ${expiryStr} | Status: ${m.status} | Price: $${m.unitPrice} per ${m.unit}`;
+      }).join("\n");
 
       const totalQty = medicines.reduce((s, m) => s + m.quantity, 0);
-      const prefix = medicineName ? `INVENTORY FOR "${medicineName}"` : "CURRENT INVENTORY (top 20 by quantity)";
+      const totalValue = medicines.reduce((s, m) => s + (m.quantity * (m.unitPrice || 0)), 0);
+      
+      let prefix;
+      if (isCostQuery) {
+        prefix = medicineName ? `COST/PRICING FOR "${medicineName.toUpperCase()}" - Live inventory pricing` : "CURRENT INVENTORY PRICING";
+      } else {
+        prefix = medicineName ? `INVENTORY FOR "${medicineName}"` : "CURRENT INVENTORY (top 20 by quantity)";
+      }
 
-      return `${prefix} (Total units in result: ${totalQty}):
+      const costSummary = isCostQuery ? `\nTotal inventory value for this result: $${totalValue.toFixed(2)}. Prices are from live hospital inventory system (unitPrice field).` : "";
+
+      return `${prefix} (Total units in result: ${totalQty})${costSummary}:
 ${lines}`;
     } catch (e) {
       return `INVENTORY: Error - ${e.message}`;

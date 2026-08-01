@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect } from "react";
 import clsx from "clsx";
 import {
   Sparkles,
@@ -11,69 +11,56 @@ import {
   User,
   AlertTriangle,
   Loader2,
-  Zap,
   Database,
   Shield,
 } from "lucide-react";
 import PageHeader from "../components/ui/PageHeader";
 import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
-import Badge from "../components/ui/Badge";
 import { aiService } from "../services/aiService";
 import "./AIAssistant.css";
 
 const SAMPLE_PROMPTS = [
   "What does Paracetamol do?",
+  "How much does Paracetamol cost?",
   "Show medicines expiring this month",
   "Do we have Insulin available?",
   "What are side effects of Ibuprofen?",
   "Which hospital has Ceftriaxone?",
-  "Explain hypertension",
-  "Show my exchange requests",
-  "What's running low in inventory?",
 ];
 
-function MarkdownText({ text }) {
-  // Simple markdown rendering without extra dependency
-  // Supports **bold**, *italic, lists, code blocks, headings
-  const renderInline = (str) => {
-    // Escape html? For simplicity we keep raw but handle bold/italic
-    let out = str;
-    // **bold**
-    out = out.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-    // *italic* or _italic_
-    out = out.replace(/\*(.*?)\*/g, "<em>$1</em>");
-    out = out.replace(/_(.*?)_/g, "<em>$1</em>");
-    // `code`
-    out = out.replace(/`(.*?)`/g, "<code style='background:var(--canvas);padding:2px 4px;border-radius:4px;font-size:0.85em'>$1</code>");
-    return out;
-  };
-
-  const lines = text.split("\n");
-  return (
-    <div className="ai-md">
-      {lines.map((line, i) => {
-        const trimmed = line.trim();
-        if (!trimmed) return <div key={i} style={{ height: 8 }} />;
-        if (trimmed.startsWith("### ")) {
-          return <h4 key={i} className="ai-md-h4" dangerouslySetInnerHTML={{ __html: renderInline(trimmed.slice(4)) }} />;
-        }
-        if (trimmed.startsWith("## ")) {
-          return <h3 key={i} className="ai-md-h3" dangerouslySetInnerHTML={{ __html: renderInline(trimmed.slice(3)) }} />;
-        }
-        if (trimmed.startsWith("- ") || trimmed.startsWith("* ")) {
-          return <li key={i} className="ai-md-li" dangerouslySetInnerHTML={{ __html: renderInline(trimmed.slice(2)) }} />;
-        }
-        if (trimmed.startsWith("1. ")) {
-          return <li key={i} className="ai-md-li ordered" dangerouslySetInnerHTML={{ __html: renderInline(trimmed.slice(3)) }} />;
-        }
-        return <p key={i} className="ai-md-p" dangerouslySetInnerHTML={{ __html: renderInline(line) }} />;
-      })}
-    </div>
-  );
+function SimpleMarkdown({ text }) {
+  if (!text) return null;
+  // Very safe rendering: split by paragraphs, handle bold manually without dangerouslySetInnerHTML risks
+  const parts = text.split("\n").map((line, idx) => {
+    if (!line.trim()) return <div key={idx} style={{ height: 8 }} />;
+    // Handle bold **text**
+    const boldSplit = line.split(/(\*\*.*?\*\*)/g);
+    return (
+      <p key={idx} style={{ margin: "4px 0", whiteSpace: "pre-wrap", lineHeight: 1.6 }}>
+        {boldSplit.map((chunk, j) => {
+          if (chunk.startsWith("**") && chunk.endsWith("**")) {
+            return <strong key={j}>{chunk.slice(2, -2)}</strong>;
+          }
+          // Handle `code`
+          if (chunk.includes("`")) {
+            const codeSplit = chunk.split(/(`.*?`)/g);
+            return codeSplit.map((c, k) => {
+              if (c.startsWith("`") && c.endsWith("`")) {
+                return <code key={k} style={{ background: "var(--canvas)", padding: "2px 6px", borderRadius: 4, fontSize: "0.85em" }}>{c.slice(1, -1)}</code>;
+              }
+              return <span key={k}>{c}</span>;
+            });
+          }
+          return <span key={j}>{chunk}</span>;
+        })}
+      </p>
+    );
+  });
+  return <div>{parts}</div>;
 }
 
-function TypingIndicator() {
+function TypingDots() {
   return (
     <div className="ai-typing">
       <span className="ai-typing-dot" />
@@ -88,148 +75,109 @@ export default function AIAssistant() {
     {
       id: "welcome",
       role: "assistant",
-      text: "Hi, I'm **MedBridge AI** — your intelligent healthcare inventory assistant.\n\nI can help with:\n- **Medical info**: medicines, side effects, interactions, diseases, first aid\n- **Live inventory**: expiring meds, low stock, exchange requests, hospital search\n- **Conversation memory**: I remember previous messages, so you can ask follow-ups like \"Can I take it with Ibuprofen?\"\n\n**Safety:** I provide general information only, not diagnosis or prescriptions. Always consult a qualified professional for personal medical decisions.\n\nWhat would you like to know?",
+      text: "Hi, I'm MedBridge AI — your intelligent healthcare inventory assistant.\n\nI can help with:\n- Medical info: medicines, side effects, interactions, diseases, first aid\n- Live inventory: expiring meds, low stock, costs, exchange requests, hospital search\n- Conversation memory: ask follow-ups like 'Can I take it with Ibuprofen?'\n- Costs: ask 'How much does Paracetamol cost?' for live pricing\n\nSafety: I provide general info only, not diagnosis or prescriptions.",
       timestamp: new Date(),
     },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [streaming, setStreaming] = useState(false);
   const [conversationId, setConversationId] = useState(null);
   const [providerInfo, setProviderInfo] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
   const [error, setError] = useState("");
 
-  const messagesEndRef = useRef(null);
-  const messagesContainerRef = useRef(null);
+  const endRef = useRef(null);
 
   useEffect(() => {
-    aiService.getProviderInfo().then(setProviderInfo).catch(() => {});
+    try {
+      if (aiService.getProviderInfo && typeof aiService.getProviderInfo === "function") {
+        aiService.getProviderInfo().then(setProviderInfo).catch(() => setProviderInfo({ provider: "mock", model: "mock-llm" }));
+      } else {
+        setProviderInfo({ provider: "mock", model: "mock-llm" });
+      }
+    } catch {
+      setProviderInfo({ provider: "mock", model: "mock-llm" });
+    }
   }, []);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
   useEffect(() => {
-    scrollToBottom();
-  }, [messages, loading, streaming]);
+    endRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, loading]);
 
-  const send = async (text, options = {}) => {
+  const sendMessage = async (text) => {
     const question = (text ?? input).trim();
     if (!question || loading) return;
 
     setError("");
-    const userMsg = {
-      id: `u_${Date.now()}`,
-      role: "user",
-      text: question,
-      timestamp: new Date(),
-    };
-
+    const userMsg = { id: `u_${Date.now()}`, role: "user", text: question, timestamp: new Date() };
     setMessages((m) => [...m, userMsg]);
     setInput("");
     setLoading(true);
-    setStreaming(false);
 
-    const shouldStream = options.stream !== false;
+    // Show streaming placeholder if stream method exists
+    const canStream = aiService.askAssistantStream && typeof aiService.askAssistantStream === "function";
+    const assistantId = `a_${Date.now()}`;
+    setMessages((m) => [...m, { id: assistantId, role: "assistant", text: "", timestamp: new Date(), streaming: canStream }]);
 
-    if (shouldStream) {
-      // Try streaming first
-      setStreaming(true);
-      let assistantId = `a_${Date.now()}`;
-      let accumulated = "";
-
-      setMessages((m) => [
-        ...m,
-        {
-          id: assistantId,
-          role: "assistant",
-          text: "",
-          timestamp: new Date(),
-          streaming: true,
-        },
-      ]);
-
-      await aiService.askAssistantStream(
-        question,
-        conversationId,
-        (chunk, full) => {
-          accumulated = full;
-          setMessages((prev) =>
-            prev.map((msg) =>
-              msg.id === assistantId ? { ...msg, text: full, streaming: true } : msg
-            )
-          );
-        },
-        (full, convId) => {
-          if (convId) setConversationId(convId);
-          setMessages((prev) =>
-            prev.map((msg) =>
-              msg.id === assistantId ? { ...msg, text: full, streaming: false, timestamp: new Date() } : msg
-            )
-          );
-          setLoading(false);
-          setStreaming(false);
-        },
-        (err) => {
-          // Fallback to non-streaming on error
-          console.warn("Streaming failed, fallback", err);
-          setMessages((prev) => prev.filter((msg) => msg.id !== assistantId));
-          fallbackNonStreaming(question);
-        }
-      );
+    let streamed = false;
+    if (canStream) {
+      try {
+        await aiService.askAssistantStream(
+          question,
+          conversationId,
+          (chunk, full) => {
+            streamed = true;
+            setMessages((prev) => prev.map((msg) => msg.id === assistantId ? { ...msg, text: full, streaming: true } : msg));
+          },
+          (full, convId) => {
+            if (convId) setConversationId(convId);
+            setMessages((prev) => prev.map((msg) => msg.id === assistantId ? { ...msg, text: full, streaming: false, timestamp: new Date() } : msg));
+            setLoading(false);
+          },
+          () => {
+            if (!streamed) {
+              setMessages((prev) => prev.filter((msg) => msg.id !== assistantId));
+              fallback(question);
+            }
+          }
+        );
+        return; // stream handled
+      } catch {
+        setMessages((prev) => prev.filter((msg) => msg.id !== assistantId));
+        // fall through to fallback
+      }
     } else {
-      fallbackNonStreaming(question);
+      // No streaming support in old service, remove placeholder and fallback directly
+      setMessages((prev) => prev.filter((msg) => msg.id !== assistantId));
     }
+
+    await fallback(question);
   };
 
-  const fallbackNonStreaming = async (question) => {
+  const fallback = async (question) => {
     try {
       const res = await aiService.askAssistant(question, conversationId);
       if (res.conversationId) setConversationId(res.conversationId);
-
-      if (!res.available) {
-        setError(res.message);
-        setMessages((m) => [
-          ...m,
-          {
-            id: `a_${Date.now()}`,
-            role: "assistant",
-            text: res.message,
-            timestamp: new Date(),
-            isError: true,
-          },
-        ]);
-      } else {
-        setMessages((m) => [
-          ...m,
-          {
-            id: `a_${Date.now()}`,
-            role: "assistant",
-            text: res.message,
-            timestamp: new Date(),
-            model: res.model,
-            provider: res.provider,
-            contextUsed: res.contextUsed,
-          },
-        ]);
-      }
-    } catch (err) {
-      setError(err.message || "Failed to get response");
-      setMessages((m) => [
-        ...m,
+      setMessages((m) => m.filter((msg) => !msg.streaming).concat([
         {
-          id: `e_${Date.now()}`,
+          id: `a_${Date.now()}`,
           role: "assistant",
-          text: `Sorry, I encountered an error: ${err.message}. Please try again.`,
-          isError: true,
+          text: res.message || "No response",
           timestamp: new Date(),
+          model: res.model,
+          provider: res.provider,
+          contextUsed: res.contextUsed,
+          isError: !res.available,
         },
-      ]);
+      ]));
+      if (!res.available) setError(res.message);
+    } catch (err) {
+      setError(err.message || "Failed");
+      setMessages((m) => m.filter((msg) => !msg.streaming).concat([
+        { id: `e_${Date.now()}`, role: "assistant", text: `Error: ${err.message}`, isError: true, timestamp: new Date() },
+      ]));
     } finally {
       setLoading(false);
-      setStreaming(false);
     }
   };
 
@@ -241,44 +189,25 @@ export default function AIAssistant() {
     } catch {}
   };
 
-  const handleRegenerate = async (userMessageId) => {
-    // Find the user message before the last assistant message
-    const idx = messages.findIndex((m) => m.id === userMessageId);
-    if (idx === -1) return;
-    const userMsg = messages[idx];
-    // Remove all after it
-    setMessages((prev) => prev.slice(0, idx + 1));
-    await send(userMsg.text, { stream: false });
-  };
-
   const handleClear = () => {
     setMessages([
-      {
-        id: "welcome",
-        role: "assistant",
-        text: "Conversation cleared. How can I help you today?",
-        timestamp: new Date(),
-      },
+      { id: "welcome", role: "assistant", text: "Conversation cleared. How can I help?", timestamp: new Date() },
     ]);
     setConversationId(null);
     setError("");
   };
 
-  const lastUserMessage = useMemo(() => {
-    return [...messages].reverse().find((m) => m.role === "user");
-  }, [messages]);
-
   return (
-    <div className="ai-page">
+    <div className="ai-page ai-page-full">
       <PageHeader
         title="AI Assistant"
-        subtitle="MedBridge intelligent healthcare assistant with live inventory RAG & conversation memory"
+        subtitle="MedBridge AI - Full screen, live inventory, pricing, medical knowledge"
         actions={
           <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
             {providerInfo && (
-              <Badge tone="teal" style={{ fontSize: 11 }}>
-                {providerInfo.provider} · {providerInfo.model}
-              </Badge>
+              <span style={{ fontSize: 11, background: "var(--teal-50)", color: "var(--teal-700)", padding: "4px 8px", borderRadius: 999, border: "1px solid var(--teal-100)" }}>
+                {providerInfo.provider} · {providerInfo.model || "mock"}
+              </span>
             )}
             <Button variant="outline" size="sm" onClick={handleClear}>
               <Trash2 size={14} /> Clear
@@ -287,216 +216,76 @@ export default function AIAssistant() {
         }
       />
 
-      <div className="ai-layout">
-        <Card className="ai-chat-card">
-          <div className="ai-chat-head">
-            <div className="ai-chat-head-icon">
-              <Sparkles size={16} color="#8DD3CA" />
-            </div>
-            <div style={{ flex: 1 }}>
-              <div className="ai-chat-head-name">MedBridge AI</div>
-              <div className="ai-chat-head-status">
-                {loading ? (
-                  <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                    <Loader2 size={12} className="spin" /> {streaming ? "Streaming..." : "Thinking..."}
-                  </span>
-                ) : (
-                  <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <span style={{ display: "flex", alignItems: "center", gap: 3 }}>
-                      <Shield size={12} /> Safe & Responsible
-                    </span>
-                    <span style={{ display: "flex", alignItems: "center", gap: 3 }}>
-                      <Database size={12} /> Live Inventory RAG
-                    </span>
-                    <span style={{ display: "flex", alignItems: "center", gap: 3 }}>
-                      <Zap size={12} /> Memory Enabled
-                    </span>
-                  </span>
-                )}
-              </div>
-            </div>
-            {conversationId && (
-              <span style={{ fontSize: 10, color: "var(--ink-faint)" }}>ID: {conversationId.slice(0, 8)}…</span>
-            )}
-          </div>
-
-          <div className="ai-chat-messages" ref={messagesContainerRef}>
-            {messages.map((m) => (
-              <div
-                key={m.id}
-                className={clsx(
-                  "ai-chat-row",
-                  m.role === "user" ? "ai-chat-row-user" : "ai-chat-row-assistant"
-                )}
-              >
-                <div className="ai-chat-avatar">
-                  {m.role === "user" ? <User size={14} /> : <Bot size={14} />}
-                </div>
-                <div
-                  className={clsx(
-                    "ai-chat-bubble",
-                    m.role === "user" ? "ai-chat-bubble-user" : "ai-chat-bubble-assistant",
-                    m.isError && "ai-chat-bubble-error"
-                  )}
-                >
-                  {m.role === "assistant" && m.text === "" && m.streaming ? (
-                    <TypingIndicator />
-                  ) : (
-                    <>
-                      {m.role === "user" ? (
-                        <div className="ai-chat-text">{m.text}</div>
-                      ) : (
-                        <MarkdownText text={m.text} />
-                      )}
-                      <div className="ai-chat-meta">
-                        <span className="ai-chat-time">
-                          {m.timestamp?.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-                        </span>
-                        {m.model && (
-                          <span className="ai-chat-model">
-                            {m.provider} {m.model?.slice(0, 20)}
-                          </span>
-                        )}
-                        {m.contextUsed && m.contextUsed.length > 0 && (
-                          <span className="ai-chat-context">
-                            <Database size={10} /> RAG: {m.contextUsed.join(", ")}
-                          </span>
-                        )}
-                      </div>
-                    </>
-                  )}
-                  {m.role === "assistant" && !m.streaming && m.text && (
-                    <div className="ai-chat-actions">
-                      <button
-                        className="ai-chat-action-btn"
-                        onClick={() => handleCopy(m.id, m.text)}
-                        title="Copy"
-                      >
-                        {copiedId === m.id ? <Check size={12} /> : <Copy size={12} />}
-                      </button>
-                      <button
-                        className="ai-chat-action-btn"
-                        onClick={() => handleRegenerate(messages[messages.findIndex((mm) => mm.id === m.id) - 1]?.id)}
-                        title="Regenerate"
-                      >
-                        <RotateCcw size={12} />
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-            {loading && !streaming && (
-              <div className="ai-chat-row ai-chat-row-assistant">
-                <div className="ai-chat-avatar">
-                  <Bot size={14} />
-                </div>
-                <div className="ai-chat-bubble ai-chat-bubble-assistant">
-                  <TypingIndicator />
-                </div>
-              </div>
-            )}
-            {error && (
-              <div className="ai-error">
-                <AlertTriangle size={14} /> {error}
-              </div>
-            )}
-            <div ref={messagesEndRef} />
-          </div>
-
-          <div className="ai-chat-footer">
-            <div className="ai-chat-prompts">
-              {SAMPLE_PROMPTS.map((p) => (
-                <button key={p} onClick={() => send(p)} className="ai-chat-prompt-btn" disabled={loading}>
-                  {p}
-                </button>
-              ))}
-            </div>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                send();
-              }}
-              className="ai-chat-form"
-            >
-              <input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask about medicines, expiry, low stock, or general health — e.g., 'What does Paracetamol do?'"
-                className="ai-chat-input"
-                disabled={loading}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    send();
-                  }
-                }}
-              />
-              <button type="submit" className="ai-chat-send-btn" disabled={loading || !input.trim()}>
-                {loading ? <Loader2 size={16} className="spin" /> : <Send size={16} />}
-              </button>
-            </form>
-            <div style={{ fontSize: 10, color: "var(--ink-faint)", marginTop: 6, textAlign: "center" }}>
-              MedBridge AI provides general information only, not diagnosis. Always consult a qualified healthcare professional. Conversations are remembered for context.
+      <Card className="ai-chat-card ai-chat-card-full">
+        <div className="ai-chat-head">
+          <div className="ai-chat-head-icon"><Sparkles size={16} color="#8DD3CA" /></div>
+          <div style={{ flex: 1 }}>
+            <div className="ai-chat-head-name">MedBridge AI</div>
+            <div className="ai-chat-head-status">
+              {loading ? (
+                <span style={{ display: "flex", gap: 4, alignItems: "center" }}><Loader2 size={12} className="spin" /> Thinking...</span>
+              ) : (
+                <span style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                  <span style={{ display: "flex", gap: 3, alignItems: "center" }}><Shield size={12} /> Safe</span>
+                  <span style={{ display: "flex", gap: 3, alignItems: "center" }}><Database size={12} /> Live RAG</span>
+                </span>
+              )}
             </div>
           </div>
-        </Card>
-
-        <div className="ai-side">
-          <Card className="ai-side-card">
-            <h4 className="ai-side-title">Tested Scenarios</h4>
-            <div className="ai-side-section">
-              <div className="ai-side-subtitle">Medical Knowledge</div>
-              <ul className="ai-side-list">
-                <li>✓ What does Paracetamol do?</li>
-                <li>✓ Side effects of Ibuprofen?</li>
-                <li>✓ Can Paracetamol + Ibuprofen be taken together?</li>
-                <li>✓ Explain hypertension / diabetes</li>
-                <li>✓ What is an antibiotic?</li>
-              </ul>
-            </div>
-            <div className="ai-side-section">
-              <div className="ai-side-subtitle">Hospital System (RAG)</div>
-              <ul className="ai-side-list">
-                <li>✓ Show available medicines</li>
-                <li>✓ Which medicines expire this month?</li>
-                <li>✓ Show my exchange requests</li>
-                <li>✓ Which hospital has Insulin?</li>
-                <li>✓ What inventory is low?</li>
-              </ul>
-            </div>
-            <div className="ai-side-section">
-              <div className="ai-side-subtitle">Conversation</div>
-              <ul className="ai-side-list">
-                <li>✓ Follow-ups maintain context</li>
-                <li>✓ "it" refers to previous medicine</li>
-                <li>✓ Safety guidance always applied</li>
-              </ul>
-            </div>
-          </Card>
-
-          <Card className="ai-side-card">
-            <h4 className="ai-side-title">How it Works</h4>
-            <div style={{ fontSize: 12, color: "var(--ink-soft)", lineHeight: 1.5 }}>
-              <p>
-                <strong>1. Routing:</strong> Detects if question needs live inventory (keywords like "show", "have", "expir", "hospital")
-              </p>
-              <p>
-                <strong>2. RAG:</strong> Queries DB (Medicine, ExchangeRequest, Hospital) and injects into LLM prompt
-              </p>
-              <p>
-                <strong>3. Memory:</strong> Stores conversation in DB (or memory fallback) and injects last 20 messages
-              </p>
-              <p>
-                <strong>4. Provider:</strong> Abstraction supports OpenAI, Gemini, Claude, Groq, DeepSeek, OpenRouter, Mock
-              </p>
-              <p>
-                <strong>5. Safety:</strong> System prompt enforces no diagnosis, no prescription, disclaimer, emergency advice
-              </p>
-            </div>
-          </Card>
+          {conversationId && <span style={{ fontSize: 10, color: "var(--ink-faint)" }}>{conversationId.slice(0, 8)}…</span>}
         </div>
-      </div>
+
+        <div className="ai-chat-messages">
+          {messages.map((m) => (
+            <div key={m.id} className={clsx("ai-chat-row", m.role === "user" ? "ai-chat-row-user" : "ai-chat-row-assistant")}>
+              <div className="ai-chat-avatar">{m.role === "user" ? <User size={14} /> : <Bot size={14} />}</div>
+              <div className={clsx("ai-chat-bubble", m.role === "user" ? "ai-chat-bubble-user" : "ai-chat-bubble-assistant", m.isError && "ai-chat-bubble-error")}>
+                {m.role === "assistant" && m.text === "" && m.streaming ? <TypingDots /> : (
+                  <>
+                    {m.role === "user" ? <div className="ai-chat-text">{m.text}</div> : <SimpleMarkdown text={m.text} />}
+                    <div className="ai-chat-meta">
+                      <span>{m.timestamp?.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
+                      {m.model && <span>{m.provider} {m.model?.slice(0, 18)}</span>}
+                      {m.contextUsed?.length > 0 && <span>RAG: {m.contextUsed.join(", ")}</span>}
+                    </div>
+                  </>
+                )}
+                {m.role === "assistant" && !m.streaming && m.text && (
+                  <div className="ai-chat-actions">
+                    <button className="ai-chat-action-btn" onClick={() => handleCopy(m.id, m.text)} title="Copy">
+                      {copiedId === m.id ? <Check size={12} /> : <Copy size={12} />}
+                    </button>
+                    <button className="ai-chat-action-btn" onClick={() => {
+                      const idx = messages.findIndex(mm => mm.id === m.id);
+                      const userMsg = idx > 0 ? messages[idx-1] : null;
+                      if (userMsg) sendMessage(userMsg.text);
+                    }} title="Regenerate">
+                      <RotateCcw size={12} />
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+          {loading && <div className="ai-chat-row ai-chat-row-assistant"><div className="ai-chat-avatar"><Bot size={14} /></div><div className="ai-chat-bubble ai-chat-bubble-assistant"><TypingDots /></div></div>}
+          {error && <div className="ai-error"><AlertTriangle size={14} /> {error}</div>}
+          <div ref={endRef} />
+        </div>
+
+        <div className="ai-chat-footer">
+          <div className="ai-chat-prompts">
+            {SAMPLE_PROMPTS.map((p) => (
+              <button key={p} onClick={() => sendMessage(p)} className="ai-chat-prompt-btn" disabled={loading}>{p}</button>
+            ))}
+          </div>
+          <form onSubmit={(e) => { e.preventDefault(); sendMessage(); }} className="ai-chat-form">
+            <input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Ask about cost, expiry, medicines..." className="ai-chat-input" disabled={loading} />
+            <button type="submit" className="ai-chat-send-btn" disabled={loading || !input.trim()}>
+              {loading ? <Loader2 size={16} className="spin" /> : <Send size={16} />}
+            </button>
+          </form>
+        </div>
+      </Card>
     </div>
   );
 }

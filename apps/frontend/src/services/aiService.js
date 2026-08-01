@@ -58,9 +58,11 @@ export const aiService = {
 
   async askAssistant(question, conversationId = null) {
     try {
+      const payload = { question };
+      if (conversationId) payload.conversationId = conversationId;
       const res = await request("/ai/assistant", {
         method: "POST",
-        body: JSON.stringify({ question, conversationId }),
+        body: JSON.stringify(payload),
       });
       return {
         available: res.available !== false,
@@ -86,13 +88,16 @@ export const aiService = {
     const base = import.meta.env.VITE_API_URL || "/api";
 
     try {
+      const payload = { question };
+      if (conversationId) payload.conversationId = conversationId;
+
       const response = await fetch(`${base}/ai/assistant/stream`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: token ? `Bearer ${token}` : "",
         },
-        body: JSON.stringify({ question, conversationId }),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {

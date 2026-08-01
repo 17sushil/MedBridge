@@ -5,7 +5,7 @@
  * Override with ML_SERVICE_URL in .env
  */
 
-const DEFAULT_TIMEOUT_MS = 20000;
+const DEFAULT_TIMEOUT_MS = 6000;
 
 function baseUrl() {
   return (process.env.ML_SERVICE_URL || "http://localhost:8000").replace(/\/$/, "");

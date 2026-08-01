@@ -17,7 +17,8 @@ const askSchema = z.object({
   question: z.string().trim().min(1).max(4000).optional(),
   message: z.string().trim().min(1).max(4000).optional(),
   q: z.string().trim().min(1).max(4000).optional(),
-  conversationId: z.string().optional(),
+  conversationId: z.string().nullable().optional(),
+  conversation_id: z.string().nullable().optional(),
 }).refine(data => data.question || data.message || data.q, {
   message: "question, message, or q is required",
 });
