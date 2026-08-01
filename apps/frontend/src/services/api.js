@@ -23,8 +23,9 @@ export const api = {
     return request("/dashboard/stats");
   },
 
-  async getInventoryOverview() {
-    return request("/dashboard/inventory-overview");
+  async getInventoryOverview(period = "week") {
+    const qs = new URLSearchParams({ period });
+    return request(`/dashboard/inventory-overview?${qs}`);
   },
 
   async getMedicineCategories() {
