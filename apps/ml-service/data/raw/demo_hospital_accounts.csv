@@ -1,9 +1,0 @@
-hospital_id,hospital_name,facility_type,province,district,ecoregion,bed_capacity,demo_username,specialty_focus,demo_password,login_role
-DEMO-01,Bir Hospital,Central_Hospital,Bagmati,Kathmandu,Hill,460,demo_01,General / Emergency / Referral,MedBridge@2026,hospital_admin
-DEMO-02,Tribhuvan University Teaching Hospital (TUTH),Teaching_Hospital,Bagmati,Kathmandu,Hill,700,demo_02,Teaching / Multi-specialty,MedBridge@2026,hospital_admin
-DEMO-03,Bhaktapur Cancer Hospital,Cancer_Hospital,Bagmati,Bhaktapur,Hill,120,demo_03,Oncology / Chemotherapy / Palliative,MedBridge@2026,hospital_admin
-DEMO-04,Kanti Children's Hospital,Children_Hospital,Bagmati,Kathmandu,Hill,350,demo_04,Pediatrics / Neonatal / Vaccines,MedBridge@2026,hospital_admin
-DEMO-05,Paropakar Maternity & Women's Hospital,Maternity_Hospital,Bagmati,Kathmandu,Hill,415,demo_05,OBGYN / Labor / Blood bank,MedBridge@2026,hospital_admin
-DEMO-06,Koshi Hospital,Regional_Hospital,Koshi,Morang,Terai,350,demo_06,Regional general / Monsoon load,MedBridge@2026,hospital_admin
-DEMO-07,Pokhara Academy of Health Sciences,Regional_Hospital,Gandaki,Kaski,Hill,500,demo_07,Regional / Trauma / Tourism corridor,MedBridge@2026,hospital_admin
-DEMO-08,Jumla District Hospital,District_Hospital,Karnali,Jumla,Mountain,50,demo_08,Remote mountain / Access-limited,MedBridge@2026,hospital_admin

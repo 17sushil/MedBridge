@@ -1,7 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 /* ---------------------------------------------------------------------- */
-/* Design tokens — change a value here and it updates everywhere it's used */
+/* Design tokens (light theme = default) — change a value here and it     */
+/* updates everywhere it's used.                                          */
 /* ---------------------------------------------------------------------- */
 :root {
   /* Navy */
@@ -52,13 +53,14 @@
   --amber-800: #54360E;
   --amber-900: #2E1C07;
 
-  /* Neutrals */
+  /* Neutrals — these 6 are the ones that flip between light/dark below */
   --surface: #FFFFFF;
   --canvas: #F5F7FA;
   --ink: #1C2530;
   --ink-soft: #4B5768;
   --ink-faint: #8A94A3;
   --line: #E4E9EE;
+  --topbar-bg: rgba(255, 255, 255, 0.9);
 
   /* Type */
   --font-display: 'Space Grotesk', sans-serif;
@@ -72,6 +74,64 @@
   --radius-full: 9999px;
   --shadow-card: 0 1px 2px rgba(20, 33, 61, 0.04), 0 1px 8px rgba(20, 33, 61, 0.06);
   --shadow-pop: 0 8px 24px rgba(20, 33, 61, 0.12);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Dark theme — overrides only the 7 neutral/surface tokens above. Brand   */
+/* colors (navy/teal/coral/amber) stay identical in both themes, since     */
+/* they're already used as both backgrounds AND accents throughout.       */
+/* ---------------------------------------------------------------------- */
+[data-theme="dark"] {
+  --surface: #161C2B;
+  --canvas: #0E121C;
+  --ink: #E6E9EF;
+  --ink-soft: #A8B0C0;
+  --ink-faint: #6B7386;
+  --line: #262E42;
+  --topbar-bg: rgba(22, 28, 43, 0.9);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 8px rgba(0, 0, 0, 0.35);
+  --shadow-pop: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+/* Forces LIGHT theme regardless of the global setting. Applied via
+   data-theme="light" on Login's root wrapper div, so it's unaffected by
+   the dark toggle no matter what the rest of the app is set to. (Same
+   values as :root above — restated here so a nested element can override
+   whatever an ancestor set.) */
+[data-theme="light"] {
+  --surface: #FFFFFF;
+  --canvas: #F5F7FA;
+  --ink: #1C2530;
+  --ink-soft: #4B5768;
+  --ink-faint: #8A94A3;
+  --line: #E4E9EE;
+  --topbar-bg: rgba(255, 255, 255, 0.9);
+  --shadow-card: 0 1px 2px rgba(20, 33, 61, 0.04), 0 1px 8px rgba(20, 33, 61, 0.06);
+  --shadow-pop: 0 8px 24px rgba(20, 33, 61, 0.12);
+}
+
+/* Headings/values that use --navy-800 directly as a TEXT color (not just
+   as a button/badge background) read as near-invisible on a dark
+   background. This repaints just those known text usages to --ink in dark
+   mode, without touching --navy-800 itself (so buttons/badges/brand mark
+   that rely on it as a background color are unaffected). If a heading
+   still looks dark-on-dark, add its class name to this list. */
+[data-theme="dark"] .page-header-title,
+[data-theme="dark"] .dash-card-title,
+[data-theme="dark"] .dash-categories-title,
+[data-theme="dark"] .dash-panel-title,
+[data-theme="dark"] .stat-card-value,
+[data-theme="dark"] .sidebar-brand-name,
+[data-theme="dark"] .hosp-name,
+[data-theme="dark"] .forecast-chart-title,
+[data-theme="dark"] .forecast-info-title,
+[data-theme="dark"] .set-card-title,
+[data-theme="dark"] .set-notif-title,
+[data-theme="dark"] .empty-state-title,
+[data-theme="dark"] .error-state-title,
+[data-theme="dark"] .ai-chat-head-name,
+[data-theme="dark"] .nf-title {
+  color: var(--ink);
 }
 
 /* ---------------------------------------------------------------------- */

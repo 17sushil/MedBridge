@@ -6,6 +6,7 @@ import { useApp } from "../../context/AppContext";
 import { useAuth } from "../../context/AuthContext";
 import { api } from "../../services/api";
 import "./Topbar.css";
+import ThemeToggle from "../ui/ThemeToggle";
 
 export default function Topbar() {
   const { user, unreadCount, setSidebarMobileOpen } = useApp();
@@ -114,6 +115,9 @@ export default function Topbar() {
       </div>
 
       <div className="topbar-spacer" />
+
+      {/* ADDED: the theme toggle button, placed before the notification bell */}
+      <ThemeToggle />
 
       <Link to="/notifications" className="topbar-icon-btn">
         <Bell size={18} />
