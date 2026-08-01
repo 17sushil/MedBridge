@@ -12,4 +12,3 @@ artifacts/encoders/*columns.json
 .venv/
 __pycache__/
 *.py[cod]
-database/
