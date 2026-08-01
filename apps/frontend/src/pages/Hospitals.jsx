@@ -5,16 +5,24 @@ import PageHeader from "../components/ui/PageHeader";
 import Card from "../components/ui/Card";
 import Skeleton from "../components/ui/Skeleton";
 import Button from "../components/ui/Button";
+import ExchangeRequestModal from "../components/modals/ExchangeRequestModal";
 import { useApp } from "../context/AppContext";
 import "./Hospitals.css";
 
 export default function Hospitals() {
   const [hospitals, setHospitals] = useState(null);
-  const { activeHospital, setActiveHospital } = useApp();
+  const [selectedHospitalId, setSelectedHospitalId] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const { activeHospital, refreshNotifications } = useApp();
 
   useEffect(() => {
-    api.getHospitals().then(setHospitals);
+    api.getHospitals().then(setHospitals).catch(() => setHospitals([]));
   }, []);
+
+  const handleRequestStock = (hospitalId) => {
+    setSelectedHospitalId(hospitalId);
+    setShowModal(true);
+  };
 
   return (
     <div>
@@ -61,16 +69,31 @@ export default function Hospitals() {
                   </Button>
                   <Button
                     size="sm"
-                    variant={activeHospital === h.name ? "teal" : "outline"}
+                    variant="teal"
                     className="hosp-actions-btn"
-                    onClick={() => setActiveHospital(h.name)}
+                    onClick={() => handleRequestStock(h.id)}
+                    disabled={activeHospital === h.name}
+                    title={activeHospital === h.name ? "This is your hospital" : `Request stock from ${h.name}`}
                   >
-                    Request Stock
+                    {activeHospital === h.name ? "Your Hospital" : "Request Stock"}
                   </Button>
                 </div>
               </Card>
             ))}
       </div>
+
+      {showModal && (
+        <ExchangeRequestModal
+          preselectedHospitalId={selectedHospitalId}
+          onClose={() => {
+            setShowModal(false);
+            setSelectedHospitalId(null);
+          }}
+          onCreated={async () => {
+            await refreshNotifications().catch(() => {});
+          }}
+        />
+      )}
     </div>
   );
 }

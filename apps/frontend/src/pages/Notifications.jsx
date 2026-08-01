@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import clsx from "clsx";
 import { AlertTriangle, Bell, CheckCircle2, Repeat2, Info } from "lucide-react";
 import { api } from "../services/api";
@@ -18,12 +18,69 @@ const iconMap = {
 };
 
 export default function Notifications() {
-  const { markAllNotificationsRead } = useApp();
+  const {
+    notifications: contextNotifications,
+    setNotifications: setContextNotifications,
+    refreshNotifications,
+    markAllNotificationsRead: contextMarkAll,
+  } = useApp();
+
   const [items, setItems] = useState(null);
+  const [marking, setMarking] = useState(false);
+  const [error, setError] = useState("");
+
+  const load = useCallback(async () => {
+    try {
+      const data = await api.getNotifications();
+      setItems(data);
+      setContextNotifications(data);
+    } catch (e) {
+      setError(e.message || "Failed to load notifications");
+      setItems([]);
+    }
+  }, [setContextNotifications]);
 
   useEffect(() => {
-    api.getNotifications().then(setItems);
-  }, []);
+    // If context already has data, use it initially to avoid flash
+    if (contextNotifications && contextNotifications.length > 0 && items === null) {
+      setItems(contextNotifications);
+    }
+    load();
+  }, [load]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleMarkAll = async () => {
+    setMarking(true);
+    setError("");
+    try {
+      const updated = await api.markAllNotificationsRead();
+      setItems(updated);
+      setContextNotifications(updated);
+      // also call context method to keep internal sync
+      await contextMarkAll().catch(() => {});
+    } catch (e) {
+      setError(e.message || "Failed to mark all as read");
+      // optimistic fallback
+      setItems((prev) => (prev ? prev.map((n) => ({ ...n, read: true })) : []));
+      setContextNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+    } finally {
+      setMarking(false);
+    }
+  };
+
+  const handleMarkOne = async (id) => {
+    try {
+      await api.markNotificationRead(id);
+      setItems((prev) => (prev ? prev.map((n) => (n.id === id ? { ...n, read: true } : n)) : []));
+      setContextNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
+    } catch {
+      // silent
+    }
+  };
+
+  const handleRefresh = async () => {
+    await load();
+    await refreshNotifications().catch(() => {});
+  };
 
   return (
     <div>
@@ -31,11 +88,22 @@ export default function Notifications() {
         title="Notifications"
         subtitle="Stay on top of low stock, expiries, and exchange updates."
         actions={
-          <Button variant="outline" size="sm" onClick={markAllNotificationsRead}>
-            Mark all as read
-          </Button>
+          <div style={{ display: "flex", gap: 8 }}>
+            <Button variant="outline" size="sm" onClick={handleRefresh}>
+              Refresh
+            </Button>
+            <Button variant="outline" size="sm" onClick={handleMarkAll} disabled={marking}>
+              {marking ? "Marking..." : "Mark all as read"}
+            </Button>
+          </div>
         }
       />
+
+      {error && (
+        <div style={{ marginBottom: 12, color: "#b91c1c", background: "#fef2f2", padding: "8px 12px", borderRadius: 8, fontSize: 13 }}>
+          {error}
+        </div>
+      )}
 
       <Card className="notif-card">
         {items === null ? (
@@ -52,7 +120,13 @@ export default function Notifications() {
               const cfg = iconMap[n.type] || iconMap.info;
               const Icon = cfg.icon;
               return (
-                <div key={n.id} className={clsx("notif-row", !n.read && "notif-row-unread")}>
+                <div
+                  key={n.id}
+                  className={clsx("notif-row", !n.read && "notif-row-unread")}
+                  onClick={() => !n.read && handleMarkOne(n.id)}
+                  style={{ cursor: !n.read ? "pointer" : "default" }}
+                  title={!n.read ? "Click to mark as read" : ""}
+                >
                   <div className={clsx("notif-icon-wrap", cfg.cls)}>
                     <Icon size={18} />
                   </div>
