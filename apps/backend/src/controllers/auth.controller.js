@@ -21,4 +21,9 @@ const me = asyncHandler(async (req, res) => {
   res.json(user);
 });
 
-module.exports = { registerHospital, registerStaff, login, me };
+const updateMe = asyncHandler(async (req, res) => {
+  const user = await authService.updateProfile(req.user.id, req.body);
+  res.json(user);
+});
+
+module.exports = { registerHospital, registerStaff, login, me, updateMe };

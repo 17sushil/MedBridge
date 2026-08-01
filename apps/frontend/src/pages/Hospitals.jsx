@@ -6,13 +6,16 @@ import Card from "../components/ui/Card";
 import Skeleton from "../components/ui/Skeleton";
 import Button from "../components/ui/Button";
 import ExchangeRequestModal from "../components/modals/ExchangeRequestModal";
+import HospitalProfileModal from "../components/modals/HospitalProfileModal";
 import { useApp } from "../context/AppContext";
 import "./Hospitals.css";
 
 export default function Hospitals() {
   const [hospitals, setHospitals] = useState(null);
   const [selectedHospitalId, setSelectedHospitalId] = useState(null);
-  const [showModal, setShowModal] = useState(false);
+  const [showRequestModal, setShowRequestModal] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [profileHospitalId, setProfileHospitalId] = useState(null);
   const { activeHospital, refreshNotifications } = useApp();
 
   useEffect(() => {
@@ -21,7 +24,12 @@ export default function Hospitals() {
 
   const handleRequestStock = (hospitalId) => {
     setSelectedHospitalId(hospitalId);
-    setShowModal(true);
+    setShowRequestModal(true);
+  };
+
+  const handleViewProfile = (hospitalId) => {
+    setProfileHospitalId(hospitalId);
+    setShowProfileModal(true);
   };
 
   return (
@@ -64,7 +72,7 @@ export default function Hospitals() {
                 </div>
 
                 <div className="hosp-actions">
-                  <Button size="sm" variant="outline" className="hosp-actions-btn">
+                  <Button size="sm" variant="outline" className="hosp-actions-btn" onClick={() => handleViewProfile(h.id)}>
                     View Profile
                   </Button>
                   <Button
@@ -82,15 +90,25 @@ export default function Hospitals() {
             ))}
       </div>
 
-      {showModal && (
+      {showRequestModal && (
         <ExchangeRequestModal
           preselectedHospitalId={selectedHospitalId}
           onClose={() => {
-            setShowModal(false);
+            setShowRequestModal(false);
             setSelectedHospitalId(null);
           }}
           onCreated={async () => {
             await refreshNotifications().catch(() => {});
+          }}
+        />
+      )}
+
+      {showProfileModal && profileHospitalId && (
+        <HospitalProfileModal
+          hospitalId={profileHospitalId}
+          onClose={() => {
+            setShowProfileModal(false);
+            setProfileHospitalId(null);
           }}
         />
       )}

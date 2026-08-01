@@ -1,14 +1,25 @@
+import { useEffect, useState } from "react";
 import { useApp } from "../context/AppContext";
+import { useAuth } from "../context/AuthContext";
+import { api } from "../services/api";
 import PageHeader from "../components/ui/PageHeader";
 import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
 import "./Settings.css";
 
-function Field({ label, value, type = "text" }) {
+function Field({ label, value, onChange, type = "text", readOnly = false, placeholder }) {
   return (
     <label className="set-field">
       <span className="set-field-label">{label}</span>
-      <input type={type} defaultValue={value} className="set-field-input" />
+      <input
+        type={type}
+        value={value}
+        onChange={onChange}
+        readOnly={readOnly}
+        placeholder={placeholder}
+        className="set-field-input"
+        style={readOnly ? { background: "var(--line)", opacity: 0.7, cursor: "not-allowed" } : {}}
+      />
     </label>
   );
 }
@@ -31,6 +42,54 @@ function Toggle({ label, description, defaultChecked }) {
 
 export default function Settings() {
   const { user } = useApp();
+  const { refreshUser } = useAuth();
+  const [form, setForm] = useState({ name: "", email: "" });
+  const [original, setOriginal] = useState({ name: "", email: "" });
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState({ type: "", text: "" });
+
+  useEffect(() => {
+    if (user) {
+      const initial = { name: user.name || "", email: user.email || "" };
+      setForm(initial);
+      setOriginal(initial);
+    }
+  }, [user]);
+
+  const hasChanges = form.name !== original.name || form.email !== original.email;
+  const isValid = form.name.trim().length >= 2 && form.email.includes("@");
+
+  const handleChange = (field) => (e) => {
+    setForm((prev) => ({ ...prev, [field]: e.target.value }));
+    setMessage({ type: "", text: "" });
+  };
+
+  const handleSave = async () => {
+    if (!hasChanges) {
+      setMessage({ type: "info", text: "No changes to save." });
+      return;
+    }
+    if (!isValid) {
+      setMessage({ type: "error", text: "Please enter a valid name (min 2 chars) and email." });
+      return;
+    }
+    setSaving(true);
+    setMessage({ type: "", text: "" });
+    try {
+      const updated = await api.updateProfile({
+        name: form.name.trim(),
+        email: form.email.trim(),
+      });
+      setOriginal({ name: updated.name, email: updated.email });
+      setForm({ name: updated.name, email: updated.email });
+      await refreshUser();
+      setMessage({ type: "success", text: "Profile updated successfully!" });
+    } catch (err) {
+      setMessage({ type: "error", text: err.message || "Failed to update profile." });
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
     <div>
@@ -39,14 +98,50 @@ export default function Settings() {
       <div className="set-grid">
         <Card className="set-profile-card">
           <h3 className="set-card-title">Profile</h3>
+
+          {message.text && (
+            <div
+              style={{
+                marginBottom: 12,
+                padding: "8px 12px",
+                borderRadius: 8,
+                fontSize: 13,
+                background:
+                  message.type === "error"
+                    ? "#fef2f2"
+                    : message.type === "success"
+                    ? "#f0fdf4"
+                    : "#eff6ff",
+                color:
+                  message.type === "error"
+                    ? "#b91c1c"
+                    : message.type === "success"
+                    ? "#166534"
+                    : "#1e40af",
+                border: `1px solid ${
+                  message.type === "error"
+                    ? "#fecaca"
+                    : message.type === "success"
+                    ? "#bbf7d0"
+                    : "#bfdbfe"
+                }`,
+              }}
+            >
+              {message.text}
+            </div>
+          )}
+
           <div className="set-field-grid">
-            <Field label="Full name" value={user?.name} />
-            <Field label="Role" value={user?.role} />
-            <Field label="Hospital" value={user?.hospital} />
-            <Field label="Email" value="sarah.johnson@cityhospital.org" type="email" />
+            <Field label="Full name" value={form.name} onChange={handleChange("name")} placeholder="Your full name" />
+            <Field label="Role" value={user?.role || ""} readOnly />
+            <Field label="Hospital" value={user?.hospital || ""} readOnly />
+            <Field label="Email" value={form.email} onChange={handleChange("email")} type="email" placeholder="you@hospital.org" />
           </div>
-          <div className="set-save-row">
-            <Button variant="teal">Save Changes</Button>
+          <div className="set-save-row" style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            <Button variant="teal" onClick={handleSave} disabled={saving || !hasChanges || !isValid}>
+              {saving ? "Saving..." : "Save Changes"}
+            </Button>
+            {hasChanges && <span style={{ fontSize: 12, color: "var(--ink-faint)" }}>You have unsaved changes</span>}
           </div>
         </Card>
 
@@ -63,9 +158,7 @@ export default function Settings() {
 
       <Card className="set-ai-card">
         <h3 className="set-notif-title">AI features</h3>
-        <p className="set-ai-desc">
-          These are placeholders today — they'll activate as AI capabilities are connected.
-        </p>
+        <p className="set-ai-desc">These are placeholders today — they'll activate as AI capabilities are connected.</p>
         <div className="set-divide-list">
           <Toggle label="Demand forecasting" description="Predict shortages before they happen" />
           <Toggle label="Smart exchange matching" description="Suggest the best partner hospital for a request" />
