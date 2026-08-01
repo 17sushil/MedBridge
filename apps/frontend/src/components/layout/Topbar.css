@@ -3,7 +3,7 @@
   top: 0;
   z-index: 30;
   height: 4rem;
-  background: rgba(255, 255, 255, 0.9);
+  background: var(--topbar-bg);
   backdrop-filter: blur(6px);
   border-bottom: 1px solid var(--line);
   display: flex;
@@ -54,6 +54,7 @@
   background: none;
   border: 0;
   font-size: 0.8125rem;
+  color: var(--ink);
 }
 
 .topbar-search-result:hover,
@@ -74,10 +75,16 @@
 .topbar-search-input {
   width: 100%;
   background: var(--canvas);
+  color: var(--ink);
   border: 1px solid var(--line);
   border-radius: 0.5rem;
   padding: 0.5rem 0.75rem 0.5rem 2.25rem;
   font-size: 0.875rem;
+  /* type="search" inputs get native browser chrome (a system-drawn
+     background/clear-button) in Chrome/Safari that ignores your CSS
+     background unless you explicitly opt out of it with these two lines. */
+  -webkit-appearance: none;
+  appearance: none;
 }
 .topbar-search-input::placeholder {
   color: var(--ink-faint);
@@ -86,6 +93,12 @@
   outline: none;
   border-color: var(--teal-300);
   box-shadow: 0 0 0 3px var(--teal-100);
+}
+/* Removes the native circular "clear" (x) button some browsers draw inside
+   search inputs, since it also ignores your theme colors. */
+.topbar-search-input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .topbar-spacer {
