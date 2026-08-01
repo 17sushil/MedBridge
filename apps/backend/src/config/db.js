@@ -15,8 +15,8 @@ try {
     console.warn("[prisma] Failed to initialize PrismaClient, using mock:", e.message);
   }
   prisma = {
-    hospital: { findUnique: async () => null, findMany: async () => [] },
-    user: { findUnique: async () => null },
+    hospital: { findUnique: async () => null, findMany: async () => [], count: async () => 0 },
+    user: { findUnique: async () => null, findMany: async () => [], create: async () => ({}), update: async () => ({}) },
     medicine: {
       findFirst: async () => null,
       findMany: async () => [],
@@ -49,6 +49,24 @@ try {
       deleteMany: async () => {},
     },
     report: { findMany: async () => [], createMany: async () => {}, deleteMany: async () => {} },
+    conversation: {
+      findUnique: async () => null,
+      findFirst: async () => null,
+      findMany: async () => [],
+      create: async () => ({ id: "mem_fallback", messages: [] }),
+      update: async () => ({}),
+      delete: async () => ({}),
+    },
+    aIMessage: {
+      findMany: async () => [],
+      create: async () => ({}),
+      deleteMany: async () => {},
+    },
+    aiMessage: {
+      findMany: async () => [],
+      create: async () => ({}),
+      deleteMany: async () => {},
+    },
     $transaction: async (fn) => {
       const tx = prisma;
       if (typeof fn === "function") return fn(tx);
