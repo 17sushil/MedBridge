@@ -1,6 +1,4 @@
 [
-  "hospital_id",
-  "medicine_id",
   "year",
   "month",
   "week_of_year",

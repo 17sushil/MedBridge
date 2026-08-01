@@ -62,18 +62,28 @@ model Medicine {
   @@index([medicineCode])
 }
 
-model InventoryMovement {
-  id         String       @id @default(uuid())
-  type       MovementType
-  quantity   Int
-  occurredAt DateTime     @default(now())
-  hospitalId String
-  medicineId String
-  hospital   Hospital     @relation(fields: [hospitalId], references: [id])
-  medicine   Medicine     @relation(fields: [medicineId], references: [id])
+enum MovementType {
+  PROCUREMENT
+  CONSUMPTION
+  EXCHANGE_OUT
+  EXCHANGE_IN
+  EXPIRY_WRITEOFF
+}
 
-  @@index([hospitalId])
-  @@index([medicineId])
+model InventoryMovement {
+  id             String       @id @default(uuid())
+  type           MovementType
+  quantity       Int
+  batchNo        String?
+  counterpartyId String?
+  department     String?
+  emergencyFlag  Boolean      @default(false)
+  isSynthetic    Boolean      @default(false)
+  occurredAt     DateTime     @default(now())
+  hospitalId     String
+  medicineId     String
+  hospital       Hospital     @relation(fields: [hospitalId], references: [id])
+  medicine       Medicine     @relation(fields: [medicineId], references: [id])
 }
 
 model ExchangeRequest {

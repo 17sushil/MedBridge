@@ -1,25 +1,40 @@
 #!/usr/bin/env python3
 """
-MedBridge — event-driven inventory ledger simulation, WITH batch-level tracking.
+MedBridge -- event-driven inventory ledger simulation, batch-level, policy-driven.
 
-Produces THREE files (not two — this is the corrected version):
+Every ordering/spoilage/lead-time decision below is driven by a REAL column
+from hospitals.csv / medicines.csv -- nothing is a flat constant applied to
+every pair the same way:
 
-  transactions.csv       — every stock-changing event, one row each, typed:
-                            CONSUMPTION / PROCUREMENT / EXCHANGE_OUT /
-                            EXCHANGE_IN / EXPIRY_WRITEOFF / EMERGENCY_REQUEST
-                            Each row references the batch_no it actually moved.
+  pack_size            -> every order and every safety-stock level is rounded
+                           to a whole number of packs (no "137.4 tablets")
+  abc_class             -> sets safety-stock multiplier AND how aggressively
+                           a hospital re-orders (A = tight/frequent, C = bulk)
+  unit_cost_npr          -> feeds into abc_class already (kept, not re-used
+                           redundantly -- see note in build_pairs)
+  road_access_score     -> sets PROCUREMENT LEAD TIME (0-3 weeks). Orders no
+                           longer materialize the same week they're placed;
+                           they sit in a pending-arrivals queue and land on
+                           the correct future week. Persisted to
+                           pending_arrivals.json so append_weeks.py can
+                           resume without losing in-transit orders.
+  requires_cold_chain   -> combined with road_access_score gives a weekly
+                           spoilage risk on top of normal expiry-date
+                           write-offs (a cold-chain vaccine sitting in a
+                           Mountain district with poor road access can go
+                           bad before its printed expiry date)
 
-  inventory.csv           — CURRENT batch-level snapshot (as of END_DATE),
-                            exactly matching the production `inventory` table:
-                            Hospital_ID, Medicine_ID, Batch_No, Quantity_Available,
-                            Manufacture_Date, Expiry_Date, Last_Updated.
-                            This is what seeds/mirrors the real Postgres
-                            `Medicine` table (batch/expiry fields already exist
-                            there) — the ML model never reads this file.
+Produces THREE files:
+  transactions.csv    -- every stock-changing event, chronologically sorted
+                          by a real event_time (not grouped by hospital).
+                          Types: CONSUMPTION / PROCUREMENT_ORDERED /
+                          PROCUREMENT / EXCHANGE_OUT / EXCHANGE_IN /
+                          EXPIRY_WRITEOFF / EMERGENCY_REQUEST
+  inventory.csv        -- CURRENT batch-level snapshot (as of END_DATE)
+  inventory_state.csv  -- weekly aggregate balance per (hospital, medicine)
 
-  inventory_state.csv     — weekly AGGREGATE balance per (hospital, medicine),
-                            used ONLY to build ML training features. The model
-                            forecasts total demand, not which batch fulfilled it.
+  pending_arrivals.json -- in-transit orders not yet received; resumable
+                            state for append_weeks.py
 
 hospitals.csv and medicines.csv are UNCHANGED.
 
@@ -29,6 +44,7 @@ Run from apps/ml-service/:
 
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 from datetime import date, timedelta
@@ -37,7 +53,7 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from generate_synthetic_data import (  # noqa: E402  (reuse existing, unmodified builders)
+from generate_synthetic_data import (  # noqa: E402
     build_hospitals,
     build_medicines,
     specialty_mult,
@@ -62,6 +78,39 @@ SUPPLIERS = [
     "Local Pharmacy Wholesaler", "BPKMCH Pharmacy Store", "Kanti Central Store",
 ]
 
+# ABC classification -> ordering POLICY, not just a label.
+# A = high value/critical: tight safety stock ceiling relative to reorder
+#     point, but re-orders sooner and in smaller increments (closer to
+#     just-in-time, since holding costly stock is expensive).
+# C = low value/bulk: cheaper to hold, ordered less often but in bigger lots.
+ABC_POLICY = {
+    "A": {"safety_mult": 1.35, "order_target_mult": 1.8},
+    "B": {"safety_mult": 1.00, "order_target_mult": 2.3},
+    "C": {"safety_mult": 0.75, "order_target_mult": 3.0},
+}
+
+
+def round_up_to_pack(qty: float, pack_size: int) -> int:
+    pack_size = max(1, int(pack_size))
+    if qty <= 0:
+        return 0
+    return int(np.ceil(qty / pack_size) * pack_size)
+
+
+def lead_time_weeks_from_access(road_access_score: float) -> int:
+    """Good roads (Terai, score ~0.95) -> same-week delivery.
+    Poor roads (remote Mountain, score ~0.3-0.4) -> up to 3 weeks."""
+    raw = (1.0 - float(road_access_score)) * 3.0
+    return int(np.clip(round(raw), 0, 3))
+
+
+def cold_chain_spoil_prob(requires_cold_chain: int, road_access_score: float) -> float:
+    """Weekly probability of an early (pre-expiry) spoilage event for a
+    cold-chain-dependent item at a poor-road-access facility."""
+    if not requires_cold_chain:
+        return 0.0
+    return float(np.clip(0.05 * (1.0 - float(road_access_score)), 0.0, 0.04))
+
 
 def build_pairs(hospitals: pd.DataFrame, medicines: pd.DataFrame) -> pd.DataFrame:
     h, m = hospitals.copy(), medicines.copy()
@@ -77,8 +126,30 @@ def build_pairs(hospitals: pd.DataFrame, medicines: pd.DataFrame) -> pd.DataFram
         * pairs["load_factor"] * pairs["urban_factor"]
         * pairs["affinity"] * pairs["spec_mult"]
     )
-    pairs["reorder_level"] = np.maximum(3, (pairs["daily_base"] * 10).round().astype(int))
+
+    # --- ABC-policy-driven, pack-size-rounded reorder level (safety stock) ---
+    abc_safety = pairs["abc_class"].map(lambda c: ABC_POLICY.get(c, ABC_POLICY["B"])["safety_mult"])
+    abc_order_target = pairs["abc_class"].map(lambda c: ABC_POLICY.get(c, ABC_POLICY["B"])["order_target_mult"])
+    pairs["abc_safety_mult"] = abc_safety.astype(float)
+    pairs["abc_order_target_mult"] = abc_order_target.astype(float)
+
+    base_reorder = np.maximum(3.0, pairs["daily_base"] * 10.0)
+    pairs["reorder_level"] = [
+        max(1, round_up_to_pack(qty * mult, pack))
+        for qty, mult, pack in zip(base_reorder, pairs["abc_safety_mult"], pairs["pack_size"])
+    ]
+
+    # --- road-access-driven procurement lead time ---
+    pairs["lead_time_weeks"] = pairs["road_access_score"].map(lead_time_weeks_from_access).astype(int)
+
+    # --- cold-chain + poor-access -> weekly spoilage risk ---
+    pairs["cold_spoil_prob"] = [
+        cold_chain_spoil_prob(cc, ras)
+        for cc, ras in zip(pairs["requires_cold_chain"], pairs["road_access_score"])
+    ]
+
     pairs["shelf_life_months"] = pairs["shelf_life_months"].astype(int)
+    pairs["pack_size"] = pairs["pack_size"].astype(int)
     return pairs
 
 
@@ -96,10 +167,13 @@ def weekly_multiplier(week_start: pd.Timestamp, ecoregion: np.ndarray, category:
 
 
 class BatchLedger:
-    """One FIFO batch list per (hospital, medicine) pair, indexed by pair position."""
+    """One FIFO batch list + one pending-arrivals queue per (hospital,
+    medicine) pair, indexed by pair position. Both are the resumable state
+    that append_weeks.py needs to continue a run correctly."""
 
     def __init__(self, n_pairs: int):
         self.batches: list[list[dict]] = [[] for _ in range(n_pairs)]
+        self.pending: list[list[dict]] = [[] for _ in range(n_pairs)]
         self._batch_seq = 0
 
     def new_batch_no(self) -> str:
@@ -113,14 +187,32 @@ class BatchLedger:
         batch_no = self.new_batch_no()
         expiry = manufacture_date + timedelta(days=int(shelf_life_months * 30.44))
         self.batches[i].append({
-            "batch_no": batch_no, "qty": qty,
+            "batch_no": batch_no, "qty": int(qty),
             "manufacture_date": manufacture_date, "expiry_date": expiry,
         })
         return batch_no
 
+    def queue_pending(self, i: int, qty: int, order_date: date, arrival_date: date, shelf_life_months: int):
+        self.pending[i].append({
+            "qty": int(qty), "order_date": order_date, "arrival_date": arrival_date,
+            "shelf_life_months": int(shelf_life_months),
+        })
+
+    def receive_ready(self, i: int, as_of: date) -> list[tuple[str, int]]:
+        """Materializes any pending order whose arrival_date has come, turning
+        it into a real batch. Returns [(batch_no, qty), ...] received."""
+        ready = [p for p in self.pending[i] if p["arrival_date"] <= as_of]
+        if not ready:
+            return []
+        self.pending[i] = [p for p in self.pending[i] if p["arrival_date"] > as_of]
+        received = []
+        for p in ready:
+            manuf = as_of - timedelta(days=int(RNG.integers(0, 3)))
+            batch_no = self.add_batch(i, p["qty"], manuf, p["shelf_life_months"])
+            received.append((batch_no, p["qty"]))
+        return received
+
     def consume_fifo(self, i: int, qty_needed: int):
-        """Draws qty_needed from the oldest batches first. Returns list of
-        (batch_no, qty_taken) actually consumed, and leftover unmet quantity."""
         self.batches[i].sort(key=lambda b: b["manufacture_date"])
         taken = []
         remaining = qty_needed
@@ -134,11 +226,9 @@ class BatchLedger:
             remaining -= take
             taken.append((b["batch_no"], take))
         self.batches[i] = [b for b in self.batches[i] if b["qty"] > 0]
-        return taken, remaining  # remaining > 0 means unmet demand
+        return taken, remaining
 
     def expire_batches(self, i: int, as_of: date):
-        """Removes any batch whose real expiry_date has passed; returns
-        list of (batch_no, qty_written_off)."""
         writeoffs = []
         keep = []
         for b in self.batches[i]:
@@ -148,6 +238,52 @@ class BatchLedger:
                 keep.append(b)
         self.batches[i] = keep
         return writeoffs
+
+    def spoil_batch(self, i: int, fraction: float) -> tuple[str, int] | None:
+        """Removes `fraction` of the OLDEST open batch early (cold-chain
+        failure). Returns (batch_no, qty_lost) or None if nothing to spoil."""
+        if not self.batches[i]:
+            return None
+        self.batches[i].sort(key=lambda b: b["manufacture_date"])
+        b = self.batches[i][0]
+        lost = max(1, int(round(b["qty"] * fraction)))
+        lost = min(lost, b["qty"])
+        b["qty"] -= lost
+        if b["qty"] <= 0:
+            self.batches[i] = [x for x in self.batches[i] if x is not b]
+        return b["batch_no"], lost
+
+    # ---- serialization for pending_arrivals.json (native python types only) ----
+    def pending_to_jsonable(self, pair_ids: list[tuple[str, str]]) -> dict:
+        out = {}
+        for i, plist in enumerate(self.pending):
+            if not plist:
+                continue
+            hid, mid = pair_ids[i]
+            out[f"{hid}|{mid}"] = [
+                {
+                    "qty": int(p["qty"]),
+                    "order_date": p["order_date"].isoformat(),
+                    "arrival_date": p["arrival_date"].isoformat(),
+                    "shelf_life_months": int(p["shelf_life_months"]),
+                }
+                for p in plist
+            ]
+        return out
+
+    def load_pending_from_json(self, data: dict, pair_index: dict[tuple[str, str], int]):
+        for key, plist in data.items():
+            hid, mid = key.split("|", 1)
+            i = pair_index.get((hid, mid))
+            if i is None:
+                continue
+            for p in plist:
+                self.pending[i].append({
+                    "qty": int(p["qty"]),
+                    "order_date": date.fromisoformat(p["order_date"]),
+                    "arrival_date": date.fromisoformat(p["arrival_date"]),
+                    "shelf_life_months": int(p["shelf_life_months"]),
+                })
 
 
 def run_simulation(hospitals: pd.DataFrame, medicines: pd.DataFrame,
@@ -159,7 +295,7 @@ def run_simulation(hospitals: pd.DataFrame, medicines: pd.DataFrame,
     if weeks is None:
         weeks = week_starts(START_DATE, END_DATE)
     print(f"Simulating {n} hospital-medicine pairs across {len(weeks)} weeks "
-          f"({n * len(weeks):,} pair-weeks), batch-level...")
+          f"({n * len(weeks):,} pair-weeks), batch-level, policy-driven...")
 
     ecoregion = pairs["ecoregion"].to_numpy()
     category = pairs["category"].to_numpy()
@@ -171,12 +307,17 @@ def run_simulation(hospitals: pd.DataFrame, medicines: pd.DataFrame,
     daily_base = pairs["daily_base"].to_numpy()
     reorder_level = pairs["reorder_level"].to_numpy()
     shelf_life_months = pairs["shelf_life_months"].to_numpy()
+    pack_size = pairs["pack_size"].to_numpy()
+    order_target_mult = pairs["abc_order_target_mult"].to_numpy()
+    lead_time_weeks = pairs["lead_time_weeks"].to_numpy()
+    cold_spoil_prob = pairs["cold_spoil_prob"].to_numpy()
+    pair_ids = list(zip(pairs["hospital_id"].tolist(), pairs["medicine_id"].tolist()))
 
     if ledger is None:
         ledger = BatchLedger(n)
-        # Seed each pair with 1-2 starting batches so week 1 isn't empty-shelved
         for i in range(n):
             start_qty = max(1, int(daily_base[i] * 7 * RNG.uniform(1.5, 3.5)))
+            start_qty = round_up_to_pack(start_qty, pack_size[i])
             manuf = weeks[0].date() - timedelta(weeks=int(RNG.integers(0, 6)))
             ledger.add_batch(i, start_qty, manuf, int(shelf_life_months[i]))
 
@@ -185,12 +326,13 @@ def run_simulation(hospitals: pd.DataFrame, medicines: pd.DataFrame,
 
     transactions: list[dict] = []
     inventory_rows: list[dict] = []
-    tx_id = start_tx_id
 
-    def next_tx_id():
-        nonlocal tx_id
-        tx_id += 1
-        return f"TX-{tx_id:07d}"
+    def rand_event_time(wk_date: date) -> str:
+        offset_days = int(RNG.integers(0, 7))
+        h = int(RNG.integers(6, 20))
+        mi = int(RNG.integers(0, 60))
+        dt = pd.Timestamp(wk_date) + pd.Timedelta(days=offset_days, hours=h, minutes=mi)
+        return dt.isoformat()
 
     for week_start in weeks:
         wk_date = week_start.date()
@@ -212,17 +354,40 @@ def run_simulation(hospitals: pd.DataFrame, medicines: pd.DataFrame,
 
         unmet = np.zeros(n, dtype=int)
 
-        # --- expiry check FIRST (stock that expired going into this week) ---
+        # --- 0. receive any orders whose lead time has elapsed ---
+        for i in range(n):
+            for batch_no, qty in ledger.receive_ready(i, wk_date):
+                transactions.append({
+                    "event_time": rand_event_time(wk_date), "date": wk_str, "type": "PROCUREMENT",
+                    "hospital_id": hospital_id[i], "medicine_id": medicine_id[i],
+                    "batch_no": batch_no, "counterparty_id": None, "department": None,
+                    "quantity": qty, "emergency_flag": 0, "note": "Order received",
+                })
+
+        # --- 1. expiry check (normal shelf-life expiry) ---
         for i in range(n):
             for batch_no, qty in ledger.expire_batches(i, wk_date):
                 transactions.append({
-                    "transaction_id": next_tx_id(), "date": wk_str, "type": "EXPIRY_WRITEOFF",
+                    "event_time": rand_event_time(wk_date), "date": wk_str, "type": "EXPIRY_WRITEOFF",
                     "hospital_id": hospital_id[i], "medicine_id": medicine_id[i],
                     "batch_no": batch_no, "counterparty_id": None, "department": None,
                     "quantity": -qty, "emergency_flag": 0, "note": "Expired unrotated",
                 })
 
-        # --- consumption, FIFO from real batches ---
+        # --- 1b. cold-chain early spoilage (independent of printed expiry) ---
+        for i in range(n):
+            if cold_spoil_prob[i] > 0 and RNG.random() < cold_spoil_prob[i]:
+                result = ledger.spoil_batch(i, fraction=float(RNG.uniform(0.3, 1.0)))
+                if result:
+                    batch_no, lost = result
+                    transactions.append({
+                        "event_time": rand_event_time(wk_date), "date": wk_str, "type": "EXPIRY_WRITEOFF",
+                        "hospital_id": hospital_id[i], "medicine_id": medicine_id[i],
+                        "batch_no": batch_no, "counterparty_id": None, "department": None,
+                        "quantity": -lost, "emergency_flag": 0, "note": "Cold_chain_spoilage",
+                    })
+
+        # --- 2. consumption, FIFO from real batches ---
         for i in range(n):
             if desired_int[i] <= 0:
                 continue
@@ -231,13 +396,13 @@ def run_simulation(hospitals: pd.DataFrame, medicines: pd.DataFrame,
             dept = str(RNG.choice(["Emergency", "ICU", "OPD", "Pharmacy", "Surgery", "Pediatrics"]))
             for batch_no, qty in taken:
                 transactions.append({
-                    "transaction_id": next_tx_id(), "date": wk_str, "type": "CONSUMPTION",
+                    "event_time": rand_event_time(wk_date), "date": wk_str, "type": "CONSUMPTION",
                     "hospital_id": hospital_id[i], "medicine_id": medicine_id[i],
                     "batch_no": batch_no, "counterparty_id": None, "department": dept,
                     "quantity": -qty, "emergency_flag": 1 if remaining > 0 else 0, "note": None,
                 })
 
-        # --- reorder / exchange / procurement: who is short? ---
+        # --- 3. reorder / exchange / procurement ---
         balances = np.array([ledger.balance(i) for i in range(n)])
         short_idx = np.nonzero((balances < reorder_level) | (unmet > 0))[0]
         surplus_mask = balances > (2.2 * reorder_level)
@@ -247,7 +412,8 @@ def run_simulation(hospitals: pd.DataFrame, medicines: pd.DataFrame,
 
         for i in short_idx:
             urgent = unmet[i] > 0
-            shortfall = int(max(reorder_level[i] * 2.5 - balances[i], reorder_level[i]))
+            order_target = order_target_mult[i] * reorder_level[i]
+            shortfall = int(max(order_target - balances[i], reorder_level[i]))
             matched = False
 
             if urgent:
@@ -260,22 +426,18 @@ def run_simulation(hospitals: pd.DataFrame, medicines: pd.DataFrame,
                     available = max(0, j_balance - int(1.8 * reorder_level[j]))
                     give = min(shortfall, available)
                     if give > 0:
-                        taken, _ = ledger.consume_fifo(j, give)  # pulled OUT of j's real batches
+                        taken, _ = ledger.consume_fifo(j, give)
                         for batch_no, qty in taken:
                             transactions.append({
-                                "transaction_id": next_tx_id(), "date": wk_str, "type": "EXCHANGE_OUT",
+                                "event_time": rand_event_time(wk_date), "date": wk_str, "type": "EXCHANGE_OUT",
                                 "hospital_id": hospital_id[j], "medicine_id": medicine_id[i],
                                 "batch_no": batch_no, "counterparty_id": hospital_id[i],
                                 "department": None, "quantity": -qty, "emergency_flag": 1, "note": None,
                             })
-                        # re-derive expiry from source batches just consumed isn't tracked after
-                        # removal, so create the incoming batch using the medicine's shelf life
-                        # from an assumed recent manufacture date at the source (simplification,
-                        # documented): incoming stock is treated as manufactured ~mid-shelf-life.
                         manuf_est = wk_date - timedelta(weeks=int(RNG.integers(2, 12)))
                         in_batch_no = ledger.add_batch(i, give, manuf_est, int(shelf_life_months[i]))
                         transactions.append({
-                            "transaction_id": next_tx_id(), "date": wk_str, "type": "EXCHANGE_IN",
+                            "event_time": rand_event_time(wk_date), "date": wk_str, "type": "EXCHANGE_IN",
                             "hospital_id": hospital_id[i], "medicine_id": medicine_id[i],
                             "batch_no": in_batch_no, "counterparty_id": hospital_id[j],
                             "department": None, "quantity": give, "emergency_flag": 1, "note": None,
@@ -283,7 +445,7 @@ def run_simulation(hospitals: pd.DataFrame, medicines: pd.DataFrame,
                         matched = True
 
                 transactions.append({
-                    "transaction_id": next_tx_id(), "date": wk_str, "type": "EMERGENCY_REQUEST",
+                    "event_time": rand_event_time(wk_date), "date": wk_str, "type": "EMERGENCY_REQUEST",
                     "hospital_id": hospital_id[i], "medicine_id": medicine_id[i], "batch_no": None,
                     "counterparty_id": None, "department": None,
                     "quantity": int(unmet[i]) if unmet[i] > 0 else shortfall,
@@ -292,14 +454,26 @@ def run_simulation(hospitals: pd.DataFrame, medicines: pd.DataFrame,
                 })
 
             if not matched:
-                order_qty = int(max(shortfall, reorder_level[i]))
-                batch_no = ledger.add_batch(i, order_qty, wk_date, int(shelf_life_months[i]))
-                transactions.append({
-                    "transaction_id": next_tx_id(), "date": wk_str, "type": "PROCUREMENT",
-                    "hospital_id": hospital_id[i], "medicine_id": medicine_id[i],
-                    "batch_no": batch_no, "counterparty_id": str(RNG.choice(SUPPLIERS)),
-                    "department": None, "quantity": order_qty, "emergency_flag": 0, "note": None,
-                })
+                order_qty = round_up_to_pack(max(shortfall, reorder_level[i]), pack_size[i])
+                lt = int(lead_time_weeks[i])
+                if lt == 0:
+                    batch_no = ledger.add_batch(i, order_qty, wk_date, int(shelf_life_months[i]))
+                    transactions.append({
+                        "event_time": rand_event_time(wk_date), "date": wk_str, "type": "PROCUREMENT",
+                        "hospital_id": hospital_id[i], "medicine_id": medicine_id[i],
+                        "batch_no": batch_no, "counterparty_id": str(RNG.choice(SUPPLIERS)),
+                        "department": None, "quantity": order_qty, "emergency_flag": 0, "note": None,
+                    })
+                else:
+                    arrival = wk_date + timedelta(weeks=lt)
+                    ledger.queue_pending(i, order_qty, wk_date, arrival, int(shelf_life_months[i]))
+                    transactions.append({
+                        "event_time": rand_event_time(wk_date), "date": wk_str, "type": "PROCUREMENT_ORDERED",
+                        "hospital_id": hospital_id[i], "medicine_id": medicine_id[i],
+                        "batch_no": None, "counterparty_id": str(RNG.choice(SUPPLIERS)),
+                        "department": None, "quantity": order_qty, "emergency_flag": 0,
+                        "note": f"Lead_time_{lt}w (road_access-driven)",
+                    })
 
         disruption_left = np.maximum(0, disruption_left - 1)
         shock_left = np.maximum(0, shock_left - 1)
@@ -316,15 +490,21 @@ def run_simulation(hospitals: pd.DataFrame, medicines: pd.DataFrame,
                 "avg_daily_use": round(float(avg_recent[i]), 3),
                 "days_of_cover": round(float(days_of_cover[i]), 2) if not np.isnan(days_of_cover[i]) else None,
                 "stock_status": status[i],
+                "pending_orders": len(ledger.pending[i]),
             })
 
         if week_start.week % 20 == 0:
             print(f"  ...{wk_str} done ({len(transactions):,} tx so far)")
 
+    # --- chronological sort + sequential transaction_id (continuing from start_tx_id) ---
     tx_df = pd.DataFrame(transactions)
+    if len(tx_df):
+        tx_df["event_time"] = pd.to_datetime(tx_df["event_time"])
+        tx_df = tx_df.sort_values("event_time", kind="stable").reset_index(drop=True)
+        tx_df.insert(0, "transaction_id", [f"TX-{start_tx_id + i + 1:07d}" for i in range(len(tx_df))])
+
     inv_state_df = pd.DataFrame(inventory_rows)
 
-    # CURRENT batch-level snapshot — this is the actual `inventory` table
     snap_rows = []
     last_date = weeks[-1].date().isoformat()
     for i in range(n):
@@ -340,13 +520,11 @@ def run_simulation(hospitals: pd.DataFrame, medicines: pd.DataFrame,
             })
     inventory_df = pd.DataFrame(snap_rows)
 
-    return tx_df, inv_state_df, inventory_df, ledger
+    return tx_df, inv_state_df, inventory_df, ledger, pair_ids
 
 
 def build_features_from_ledger(tx_df: pd.DataFrame, hospitals: pd.DataFrame,
                                 medicines: pd.DataFrame) -> pd.DataFrame:
-    """Weekly demand + features for ML. Batch_No/Expiry_Date are NOT used
-    here — the model forecasts aggregate demand, not batch fate."""
     print("Building features from the transaction ledger...")
     cons = tx_df[tx_df["type"] == "CONSUMPTION"].copy()
     cons["date"] = pd.to_datetime(cons["date"])
@@ -398,7 +576,7 @@ def build_features_from_ledger(tx_df: pd.DataFrame, hospitals: pd.DataFrame,
     gx = df.groupby(["hospital_id", "medicine_id"], group_keys=False)["had_exchange_in"]
     df["emergency_last_4w"] = ge.transform(lambda s: s.shift(1).rolling(4, min_periods=1).max()).fillna(0)
     df["exchange_in_last_4w"] = gx.transform(lambda s: s.shift(1).rolling(4, min_periods=1).max()).fillna(0)
-    df = df.drop(columns=["had_emergency", "had_exchange_in"])  # same-week -> leakage, drop raw
+    df = df.drop(columns=["had_emergency", "had_exchange_in"])
 
     hcols = ["hospital_id", "facility_type", "province", "district", "ecoregion", "urban_class",
              "bed_capacity", "ownership", "load_factor", "urban_factor", "is_referral",
@@ -422,6 +600,13 @@ def build_features_from_ledger(tx_df: pd.DataFrame, hospitals: pd.DataFrame,
     return df
 
 
+def save_pending_arrivals(ledger: BatchLedger, pair_ids: list[tuple[str, str]], path: Path):
+    data = ledger.pending_to_jsonable(pair_ids)
+    path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+    n_orders = sum(len(v) for v in data.values())
+    print(f"pending_arrivals.json: {n_orders:,} in-transit order(s) across {len(data):,} pair(s)")
+
+
 def main():
     OUT_RAW.mkdir(parents=True, exist_ok=True)
     OUT_PROCESSED.mkdir(parents=True, exist_ok=True)
@@ -429,10 +614,11 @@ def main():
     hospitals = build_hospitals()
     medicines = build_medicines()
 
-    tx_df, inv_state_df, inventory_df, _ = run_simulation(hospitals, medicines)
+    tx_df, inv_state_df, inventory_df, ledger, pair_ids = run_simulation(hospitals, medicines)
     tx_df.to_csv(OUT_RAW / "transactions.csv", index=False)
     inv_state_df.to_csv(OUT_RAW / "inventory_state.csv", index=False)
     inventory_df.to_csv(OUT_RAW / "inventory.csv", index=False)
+    save_pending_arrivals(ledger, pair_ids, OUT_RAW / "pending_arrivals.json")
     print(f"transactions={len(tx_df):,}  inventory_state={len(inv_state_df):,}  "
           f"inventory(current batches)={len(inventory_df):,}")
     print(tx_df["type"].value_counts())
