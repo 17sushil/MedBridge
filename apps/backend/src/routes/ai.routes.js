@@ -4,9 +4,51 @@ const { asyncHandler } = require("../utils/asyncHandler");
 const ml = require("../services/mlClient");
 const { resolveHospitalCode } = require("../services/demandForecast.service");
 const medicinesService = require("../services/medicines.service");
+const assistantController = require("../controllers/assistant.controller");
+const aiRateLimiter = require("../middleware/aiRateLimiter");
+const { validate } = require("../middleware/validate");
+const { z } = require("zod");
 
 const router = express.Router();
 router.use(requireAuth);
+
+// --- Validation schemas ---
+const askSchema = z.object({
+  question: z.string().trim().min(1).max(4000).optional(),
+  message: z.string().trim().min(1).max(4000).optional(),
+  q: z.string().trim().min(1).max(4000).optional(),
+  conversationId: z.string().optional(),
+}).refine(data => data.question || data.message || data.q, {
+  message: "question, message, or q is required",
+});
+
+// --- NEW LLM-Powered Assistant Routes (Production) ---
+
+// Main LLM assistant - replaces old keyword-based logic
+router.post(
+  "/assistant",
+  aiRateLimiter({ maxRequests: 30, windowMs: 60 * 1000 }),
+  validate(askSchema),
+  assistantController.ask
+);
+
+// Streaming version
+router.post(
+  "/assistant/stream",
+  aiRateLimiter({ maxRequests: 20, windowMs: 60 * 1000 }),
+  validate(askSchema),
+  assistantController.askStream
+);
+
+// Conversation management
+router.get("/conversations", assistantController.getConversations);
+router.get("/conversations/:conversationId", assistantController.getHistory);
+router.delete("/conversations/:conversationId", assistantController.deleteConversation);
+
+// Provider info
+router.get("/provider", assistantController.getProviderInfo);
+
+// --- Legacy ML Service Routes (kept for dashboard insights) ---
 
 /**
  * Response shapes match apps/frontend/src/services/aiService.js
@@ -84,8 +126,9 @@ router.get(
   })
 );
 
+// Legacy keyword-based fallback - now points to new LLM but keeps route for backwards compat
 router.post(
-  "/assistant",
+  "/assistant/legacy",
   asyncHandler(async (req, res) => {
     const q = String((req.body && (req.body.question || req.body.q || req.body.message)) || "").trim();
     const hospitalId = req.user.hospitalId;
@@ -160,14 +203,6 @@ router.post(
         }
       }
 
-      if (ql.includes("exchange activity") || ql.includes("summarize") || ql.includes("month")) {
-        return res.json({
-          available: true,
-          message:
-            "Check Exchange Requests for live status. I can also suggest partners — ask “suggest a hospital to request stock from”.",
-        });
-      }
-
       return res.json({
         available: true,
         message:
@@ -187,7 +222,15 @@ router.get(
   asyncHandler(async (_req, res) => {
     try {
       const h = await ml.health();
-      res.json({ available: true, message: "ML service online", mlServiceUrl: ml.baseUrl(), ...h });
+      const providerInfo = (() => {
+        try {
+          const AIService = require("../services/ai/AIService");
+          return { llmProvider: AIService.getProviderInfo ? "loaded" : "unknown" };
+        } catch {
+          return { llmProvider: "error" };
+        }
+      })();
+      res.json({ available: true, message: "ML service online", mlServiceUrl: ml.baseUrl(), ...h, ...providerInfo });
     } catch (err) {
       res.json({ available: false, message: err.message, mlServiceUrl: ml.baseUrl() });
     }
