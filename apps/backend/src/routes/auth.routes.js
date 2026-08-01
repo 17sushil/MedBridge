@@ -6,6 +6,7 @@ const {
   registerHospitalSchema,
   registerStaffSchema,
   loginSchema,
+  updateProfileSchema,
 } = require("../utils/validators/auth.schema");
 
 const router = express.Router();
@@ -19,5 +20,6 @@ router.post("/register", validate(registerStaffSchema), controller.registerStaff
 router.post("/login", validate(loginSchema), controller.login);
 
 router.get("/me", requireAuth, controller.me);
+router.patch("/me", requireAuth, validate(updateProfileSchema), controller.updateMe);
 
 module.exports = router;

@@ -19,6 +19,14 @@ export const api = {
     return mapUser(user);
   },
 
+  async updateProfile(data) {
+    const user = await request("/auth/me", {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    });
+    return mapUser(user);
+  },
+
   async getDashboardStats() {
     return request("/dashboard/stats");
   },
@@ -84,6 +92,10 @@ export const api = {
 
   async getHospitals() {
     return request("/hospitals");
+  },
+
+  async getHospital(id) {
+    return request(`/hospitals/${id}`);
   },
 
   async getExchangeRequests(params = {}) {
