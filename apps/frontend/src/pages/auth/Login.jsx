@@ -27,7 +27,7 @@ export default function Login() {
   };
 
   return (
-    <div className="auth-shell">
+    <div className="auth-shell" data-theme="light">
       <div className="auth-card">
         <div className="auth-brand">
           <div className="auth-brand-icon">M</div>
