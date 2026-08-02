@@ -21,9 +21,14 @@ const loginSchema = z.object({
   password: z.string().min(1),
 });
 
+
 const updateProfileSchema = z.object({
   name: z.string().trim().min(2).max(100).optional(),
   email: z.string().email().optional(),
 });
 
-module.exports = { registerHospitalSchema, registerStaffSchema, loginSchema, updateProfileSchema };
+const deleteAccountSchema = z.object({
+  password: z.string().min(1, "Password is required"),
+});
+
+module.exports = { registerHospitalSchema, registerStaffSchema, loginSchema, updateProfileSchema,deleteAccountSchema };
