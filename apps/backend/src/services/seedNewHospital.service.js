@@ -75,21 +75,29 @@ async function seedNewHospitalHistory(hospital) {
     medicineIdMap[batch.medicine_id] = med.id;
   }
 
-  // 2. Create InventoryMovement rows from the transaction ledger, isSynthetic=true
+  // 2. Create InventoryMovement rows from the transaction ledger
+  // Note: Extra fields (batchNo, counterpartyId, etc) from Samir's enhanced schema are optional
+  // For backward compat with simple schema (IN/OUT only), we map types and use base fields
   const movements = seedData.transactions
-    .filter((tx) => medicineIdMap[tx.medicine_id]) // only ones with a matching batch created above
-    .map((tx) => ({
-      hospitalId: hospital.id,
-      medicineId: medicineIdMap[tx.medicine_id],
-      type: tx.type,
-      quantity: Math.abs(tx.quantity),
-      batchNo: tx.batch_no || null,
-      counterpartyId: tx.counterparty_id || null,
-      department: tx.department || null,
-      emergencyFlag: !!tx.emergency_flag,
-      isSynthetic: true,
-      occurredAt: new Date(tx.occurred_at),
-    }));
+    .filter((tx) => medicineIdMap[tx.medicine_id])
+    .map((tx) => {
+      // Map Samir's detailed types to Sushant's base types if needed, but merged enum now supports both
+      // Keep original type if valid, otherwise map to IN/OUT
+      let type = tx.type;
+      const validTypes = ["IN", "OUT", "PROCUREMENT", "CONSUMPTION", "EXCHANGE_OUT", "EXCHANGE_IN", "EXPIRY_WRITEOFF"];
+      if (!validTypes.includes(type)) {
+        // Fallback: procurement/in -> IN, consumption/out -> OUT
+        if (["CONSUMPTION", "EXCHANGE_OUT", "EXPIRY_WRITEOFF"].includes(type)) type = "OUT";
+        else type = "IN";
+      }
+      return {
+        hospitalId: hospital.id,
+        medicineId: medicineIdMap[tx.medicine_id],
+        type,
+        quantity: Math.abs(tx.quantity),
+        occurredAt: new Date(tx.occurred_at),
+      };
+    });
 
   if (movements.length > 0) {
     await prisma.inventoryMovement.createMany({ data: movements });

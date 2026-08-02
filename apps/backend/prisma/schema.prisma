@@ -63,20 +63,14 @@ model Medicine {
 }
 
 model InventoryMovement {
-  id             String       @id @default(uuid())
-  type           MovementType
-  quantity       Int
-  // Extra fields from Samir branch for richer tracking
-  batchNo        String?
-  counterpartyId String?
-  department     String?
-  emergencyFlag  Boolean      @default(false)
-  isSynthetic    Boolean      @default(false)
-  occurredAt     DateTime     @default(now())
-  hospitalId     String
-  medicineId     String
-  hospital       Hospital     @relation(fields: [hospitalId], references: [id])
-  medicine       Medicine     @relation(fields: [medicineId], references: [id])
+  id         String       @id @default(uuid())
+  type       MovementType
+  quantity   Int
+  occurredAt DateTime     @default(now())
+  hospitalId String
+  medicineId String
+  hospital   Hospital     @relation(fields: [hospitalId], references: [id])
+  medicine   Medicine     @relation(fields: [medicineId], references: [id])
 
   @@index([hospitalId])
   @@index([medicineId])
