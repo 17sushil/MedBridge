@@ -7,6 +7,7 @@ const {
   registerStaffSchema,
   loginSchema,
   updateProfileSchema,
+  deleteAccountSchema,
 } = require("../utils/validators/auth.schema");
 
 const router = express.Router();
@@ -21,5 +22,7 @@ router.post("/login", validate(loginSchema), controller.login);
 
 router.get("/me", requireAuth, controller.me);
 router.patch("/me", requireAuth, validate(updateProfileSchema), controller.updateMe);
+
+router.delete("/me", requireAuth, validate(deleteAccountSchema), controller.deleteAccount);
 
 module.exports = router;
