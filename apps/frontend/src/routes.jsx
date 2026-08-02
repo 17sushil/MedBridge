@@ -62,7 +62,7 @@ export const routes = [
       label: "AI Assistant",
       icon: Sparkles,
       group: "Insights",
-      badge: "Soon",
+
     },
   },
   {
