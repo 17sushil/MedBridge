@@ -360,6 +360,27 @@ def exchange_suggest(
     }
 
 
+from pydantic import BaseModel
+from app.services.seed_service import seed_hospital_history
+
+
+class HospitalOnboardRequest(BaseModel):
+    hospital_id: str
+    facility_type: str
+    province: str
+    district: str
+    bed_capacity: int
+    weeks_of_history: int = 26
+
+
+@app.post("/onboarding/seed-history")
+def onboarding_seed_history(payload: HospitalOnboardRequest):
+    result = seed_hospital_history(
+        payload.model_dump(exclude={"weeks_of_history"}),
+        weeks_of_history=payload.weeks_of_history,
+    )
+    return result
+
 @app.on_event("startup")
 def _warmup() -> None:
     # Best-effort model load so first request is fast

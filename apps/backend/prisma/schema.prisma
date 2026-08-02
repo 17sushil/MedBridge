@@ -113,7 +113,7 @@ model Report {
   type        ReportType
   generatedOn DateTime   @default(now())
   hospitalId  String
-  hospital   Hospital   @relation(fields: [hospitalId], references: [id])
+  hospital    Hospital   @relation(fields: [hospitalId], references: [id])
 
   @@index([hospitalId])
 }
@@ -181,4 +181,9 @@ enum ReportType {
 enum MovementType {
   IN
   OUT
+  PROCUREMENT
+  CONSUMPTION
+  EXCHANGE_OUT
+  EXCHANGE_IN
+  EXPIRY_WRITEOFF
 }
