@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 const prisma = require("../config/db");
 const { signToken } = require("../utils/jwt");
 const { ApiError } = require("../utils/ApiError");
+const { deleteAccountSchema } = require("../utils/validators/auth.schema");
 
 const SALT_ROUNDS = 10;
 
@@ -97,4 +98,14 @@ async function updateProfile(userId, { name, email }) {
   return toPublicUser(updated);
 }
 
-module.exports = { registerHospitalAndAdmin, registerStaff, login, getProfile, updateProfile, toPublicUser };
+  async function deleteAccount(userId, password) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new ApiError(404, "User not found");
+
+    const valid = await bcrypt.compare(password, user.passwordHash);
+    if (!valid) throw new ApiError(401, "Incorrect password");
+
+    await prisma.user.delete({ where: { id: userId } });
+  }
+
+module.exports = { registerHospitalAndAdmin, registerStaff, login, getProfile, updateProfile, deleteAccount, toPublicUser };

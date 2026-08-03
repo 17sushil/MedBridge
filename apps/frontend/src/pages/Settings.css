@@ -146,3 +146,46 @@
   color: var(--ink-soft);
   margin-bottom: 0.75rem;
 }
+
+.set-danger-card {
+  padding: 1.25rem;
+  margin-top: 1rem;
+  border-color: var(--coral-200);
+}
+
+.set-danger-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--coral-700);
+  margin-bottom: 0.5rem;
+}
+
+.set-danger-desc {
+  font-size: 0.875rem;
+  color: var(--ink-soft);
+  margin-bottom: 1rem;
+  max-width: 40rem;
+}
+
+.set-danger-error {
+  background: var(--coral-50);
+  color: var(--coral-700);
+  border: 1px solid var(--coral-100);
+  border-radius: 0.5rem;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.8125rem;
+  margin-bottom: 1rem;
+}
+
+.set-danger-fields {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  max-width: 28rem;
+}
+@media (min-width: 640px) {
+  .set-danger-fields {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
