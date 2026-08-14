@@ -123,3 +123,40 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Form controls: readable in both light and dark modes */
+.modal-input,
+.modal-select {
+  background: var(--canvas);
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+.modal-input::placeholder {
+  color: var(--ink-faint);
+  opacity: 1;
+}
+
+.modal-input:hover,
+.modal-select:hover {
+  border-color: var(--teal-300);
+}
+
+.modal-input:focus,
+.modal-select:focus {
+  background: var(--surface);
+  color: var(--ink);
+  border-color: var(--teal-400);
+  box-shadow: 0 0 0 3px rgba(87, 189, 175, 0.18);
+}
+
+/* Dropdown options, including partner hospital names */
+.modal-select option {
+  background: var(--surface);
+  color: var(--ink);
+}
+
+/* Makes the calendar/date control match dark mode in supporting browsers */
+[data-theme="dark"] .modal-input[type="date"] {
+  color-scheme: dark;
+}
