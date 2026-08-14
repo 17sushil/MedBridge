@@ -15,6 +15,7 @@ const FACILITY_TYPE_MAP = {
   Teaching: "Teaching_Hospital",
   Regional: "Regional_Hospital",
   Specialty: "Central_Hospital",
+  Clinic: "PHC",
 };
 
 // Rough dosage-form -> packaging-unit mapping. Your actual medicine form
