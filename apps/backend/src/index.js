@@ -4,6 +4,27 @@ const app = require("./app");
 
 const PORT = parseInt(process.env.PORT, 10) || 4000;
 
+// Refuse to boot in production with a missing/weak JWT secret — this would
+// let anyone forge session tokens. Only enforced in production so local dev
+// stays frictionless.
+const KNOWN_WEAK_SECRETS = new Set([
+  "medbridge-dev-secret-change-in-production-2026",
+  "change-me",
+  "secret",
+  "dev-secret",
+  "changeme",
+]);
+if (
+  process.env.NODE_ENV === "production" &&
+  (!process.env.JWT_SECRET || KNOWN_WEAK_SECRETS.has(process.env.JWT_SECRET))
+) {
+  console.error(
+    "✗ Refusing to start in production: JWT_SECRET is missing or is a known-weak default."
+  );
+  console.error("  Set a strong JWT_SECRET in .env (e.g. `openssl rand -hex 32`).");
+  process.exit(1);
+}
+
 console.log("◇ Starting MedBridge API...");
 console.log(`◇ NODE_ENV=${process.env.NODE_ENV || "development"}`);
 console.log(`◇ DATABASE_URL=${process.env.DATABASE_URL ? process.env.DATABASE_URL.slice(0, 50) + "..." : "NOT SET"}`);

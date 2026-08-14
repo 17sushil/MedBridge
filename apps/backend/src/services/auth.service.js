@@ -2,7 +2,7 @@ const bcrypt = require("bcryptjs");
 const prisma = require("../config/db");
 const { signToken } = require("../utils/jwt");
 const { ApiError } = require("../utils/ApiError");
-const { deleteAccountSchema } = require("../utils/validators/auth.schema");
+const { seedNewHospitalHistory } = require("./seedNewHospital.service");
 
 const SALT_ROUNDS = 10;
 
@@ -37,12 +37,26 @@ async function registerHospitalAndAdmin({ hospitalName, location, type, name, em
     include: { hospital: true },
   });
 
+  // Fire-and-forget: give the new hospital a sensible starting inventory and
+  // demand history via the ML cold-start endpoint. Must never block or fail
+  // the actual signup, so errors are swallowed (the service also handles its
+  // own failures by returning { seeded: false }).
+  seedNewHospitalHistory(hospital).catch((err) => {
+    console.error("[auth] Cold-start seeding failed:", err.message);
+  });
+
   const token = signToken({ sub: user.id, hospitalId: user.hospitalId, role: user.role });
   return { token, user: toPublicUser(user) };
 }
 
 // Adds a staff member to an existing hospital.
-async function registerStaff({ name, email, password, hospitalId }) {
+// `callerHospitalId` is the hospital of the authenticated admin making the
+// request; staff accounts may only be created within that same hospital.
+async function registerStaff({ name, email, password, hospitalId }, callerHospitalId) {
+  if (callerHospitalId && hospitalId !== callerHospitalId) {
+    throw new ApiError(403, "You can only add staff to your own hospital");
+  }
+
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) throw new ApiError(409, "An account with this email already exists");
 

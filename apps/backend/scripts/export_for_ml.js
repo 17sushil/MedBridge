@@ -22,13 +22,17 @@ function toCsvRow(fields) {
 }
 
 async function main() {
+  // NOTE: the InventoryMovement model does not (yet) have an `isSynthetic`
+  // flag, so we export every movement. If that field is added to the schema
+  // later, add `where: { isSynthetic: false }` back here. Keeping it out means
+  // this script works against the current Prisma schema instead of throwing
+  // "Unknown field" at query time.
   const movements = await prisma.inventoryMovement.findMany({
-    where: { isSynthetic: false },
     include: { hospital: true, medicine: true },
     orderBy: { occurredAt: "asc" },
   });
 
-  console.log(`Found ${movements.length} real (non-synthetic) movements`);
+  console.log(`Found ${movements.length} movements`);
 
   const header = [
     "transaction_id", "occurred_at", "date", "type", "hospital_id", "medicine_id",
@@ -47,11 +51,11 @@ async function main() {
       m.type,
       m.hospital.externalCode || m.hospitalId, // fall back to real id if no ML code assigned
       m.medicine.medicineCode || m.medicineId,
-      m.batchNo,
-      m.counterpartyId,
-      m.department,
+      m.medicine.batch || "", // batch lives on Medicine, not the movement
+      "",                     // counterpartyId not yet modeled in schema
+      "",                     // department not yet modeled in schema
       qty,
-      m.emergencyFlag ? 1 : 0,
+      0,                      // emergencyFlag not yet modeled in schema
       "real_data",
     ]);
   });

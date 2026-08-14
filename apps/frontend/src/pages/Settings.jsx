@@ -25,22 +25,6 @@ function Field({ label, value, onChange, type = "text", readOnly = false, placeh
   );
 }
 
-function Toggle({ label, description, defaultChecked }) {
-  return (
-    <div className="set-toggle-row">
-      <div>
-        <div className="set-toggle-label">{label}</div>
-        {description && <div className="set-toggle-desc">{description}</div>}
-      </div>
-      <label className="set-switch">
-        <input type="checkbox" className="set-switch-input" defaultChecked={defaultChecked} />
-        <div className="set-switch-track" />
-        <div className="set-switch-thumb" />
-      </label>
-    </div>
-  );
-}
-
 export default function Settings() {
   const { user } = useApp();
   const { refreshUser, logout } = useAuth();
@@ -172,23 +156,30 @@ export default function Settings() {
 
         <Card className="set-notif-card">
           <h3 className="set-notif-title">Notifications</h3>
-          <div className="set-divide-list">
-            <Toggle label="Expiry alerts" description="Get notified before medicines expire" defaultChecked />
-            <Toggle label="Exchange requests" description="New requests from partner hospitals" defaultChecked />
-            <Toggle label="Low stock warnings" description="When quantity drops below threshold" defaultChecked />
-            <Toggle label="Weekly summary email" description="A digest every Monday morning" />
-          </div>
+          <p className="set-ai-desc">
+            Notifications are always on. You'll be alerted about low stock,
+            critical shortages, medicines nearing expiry, and exchange request
+            updates in the bell menu and on your Dashboard.
+          </p>
+          <p className="set-ai-desc">
+            Per-notification preferences (email digests, muting categories) are
+            not yet configurable and will be added in a future update.
+          </p>
         </Card>
       </div>
 
       <Card className="set-ai-card">
         <h3 className="set-notif-title">AI features</h3>
-        <p className="set-ai-desc">These are placeholders today — they'll activate as AI capabilities are connected.</p>
-        <div className="set-divide-list">
-          <Toggle label="Demand forecasting" description="Predict shortages before they happen" />
-          <Toggle label="Smart exchange matching" description="Suggest the best partner hospital for a request" />
-          <Toggle label="MedBridge Assistant" description="Ask questions about your data in plain language" />
-        </div>
+        <p className="set-ai-desc">
+          The MedBridge Assistant, demand forecasting, and smart exchange
+          matching are active. The Assistant answers medical questions and pulls
+          live data from your inventory; forecasting and exchange matching use
+          the ML service (port 8000) when it's running.
+        </p>
+        <p className="set-ai-desc">
+          You can manage which LLM provider the Assistant uses from the backend
+          <code> .env</code> (LLM_PROVIDER and provider API keys).
+        </p>
       </Card>
 
       <Card className="set-danger-card">

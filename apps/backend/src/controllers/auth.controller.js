@@ -7,7 +7,7 @@ const registerHospital = asyncHandler(async (req, res) => {
 });
 
 const registerStaff = asyncHandler(async (req, res) => {
-  const result = await authService.registerStaff(req.body);
+  const result = await authService.registerStaff(req.body, req.user.hospitalId);
   res.status(201).json(result);
 });
 

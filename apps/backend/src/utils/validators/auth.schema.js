@@ -3,7 +3,7 @@ const { z } = require("zod");
 const registerHospitalSchema = z.object({
   hospitalName: z.string().min(2),
   location: z.string().min(2),
-  type: z.enum(["General", "Specialty", "Clinic"]).optional(),
+  type: z.enum(["General", "Specialty", "Teaching", "Regional", "Clinic"]).optional(),
   name: z.string().min(2),
   email: z.string().email(),
   password: z.string().min(8),

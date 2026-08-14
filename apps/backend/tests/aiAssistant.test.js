@@ -26,8 +26,9 @@ test("PromptBuilder sanitizes prompt injection", () => {
 test("PromptBuilder system prompt contains safety instructions", () => {
   const prompt = PromptBuilder.getSystemPrompt();
   assert.match(prompt, /MedBridge AI/i);
-  assert.match(prompt, /Never diagnosing/i);
-  assert.match(prompt, /Never prescribing/i);
+  assert.match(prompt, /Never pretending to be a doctor/i);
+  assert.match(prompt, /diagnosing patients/i);
+  assert.match(prompt, /prescribing medications\/dosages/i);
   assert.match(prompt, /consult qualified healthcare professional/i);
   assert.match(prompt, /patient safety/i);
 });

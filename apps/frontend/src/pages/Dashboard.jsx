@@ -24,14 +24,15 @@ import { statusTone } from "../utils/expiry";
 import "./Dashboard.css";
 
 const getRecentMedicines = () => api.getMedicines().then((m) => m.slice(0, 4));
-// const getRecentMedicines = () =>api.getMedicines({ search: searchQuery })
 const getDashboardStats = () => api.getDashboardStats();
-const getInventoryOverview = () => api.getInventoryOverview();
 const getMedicineCategories = () => api.getMedicineCategories();
 const getExpiryAlerts = () => api.getExpiryAlerts();
 const getRecentActivity = () => api.getRecentActivity();
 
 export default function Dashboard() {
+  const [period, setPeriod] = useState("week");
+  const getInventoryOverview = useCallback(() => api.getInventoryOverview(period), [period]);
+
   const { data: stats, error: statsError, reload: reloadStats } = useAsyncData(getDashboardStats);
   const { data: overview, error: overviewError, reload: reloadOverview } = useAsyncData(getInventoryOverview);
   const { data: categories, error: categoriesError, reload: reloadCategories } = useAsyncData(getMedicineCategories);
@@ -105,10 +106,14 @@ export default function Dashboard() {
         <Card className="dash-trend-card">
           <div className="dash-card-head-row">
             <h3 className="dash-card-title">Inventory Overview</h3>
-            <select className="dash-select">
-              <option>This Week</option>
-              <option>This Month</option>
-              <option>This Quarter</option>
+            <select
+              className="dash-select"
+              value={period}
+              onChange={(e) => setPeriod(e.target.value)}
+            >
+              <option value="week">This Week</option>
+              <option value="month">This Month</option>
+              <option value="quarter">This Quarter</option>
             </select>
           </div>
           {overviewError ? (

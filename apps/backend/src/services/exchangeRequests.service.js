@@ -1,5 +1,6 @@
 const prisma = require("../config/db");
 const { ApiError } = require("../utils/ApiError");
+const { computeMedicineStatus: calculateMedicineStatus } = require("../utils/medicineStatus");
 
 const TRANSITIONS = {
   PENDING: ["APPROVED", "DECLINED"],
@@ -8,14 +9,6 @@ const TRANSITIONS = {
   COMPLETED: [],
   DECLINED: [],
 };
-
-function calculateMedicineStatus(quantity) {
-  if (quantity <= 0) return "CRITICAL";
-  if (quantity < 5) return "CRITICAL";
-  if (quantity < 15) return "LOW_STOCK";
-  if (quantity < 40) return "MEDIUM_STOCK";
-  return "IN_STOCK";
-}
 
 async function listForHospital(hospitalId, { direction } = {}) {
   let where;

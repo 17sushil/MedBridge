@@ -9,10 +9,11 @@ async function getStats(hospitalId) {
   const totalMedicines = medicines.reduce((sum, m) => sum + m.quantity, 0);
   const totalValue = medicines.reduce((sum, m) => sum + m.quantity * m.unitPrice, 0);
 
+  const now = new Date();
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() + 30);
   const expiringSoon = await prisma.medicine.count({
-    where: { hospitalId, expiry: { lte: cutoff } },
+    where: { hospitalId, expiry: { gte: now, lte: cutoff } },
   });
 
   const activeExchanges = await prisma.exchangeRequest.count({
