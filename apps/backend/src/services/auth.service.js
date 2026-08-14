@@ -2,7 +2,7 @@ const bcrypt = require("bcryptjs");
 const prisma = require("../config/db");
 const { signToken } = require("../utils/jwt");
 const { ApiError } = require("../utils/ApiError");
-const { deleteAccountSchema } = require("../utils/validators/auth.schema");
+const { seedNewHospitalHistory } = require("./seedNewHospital.service");
 
 const SALT_ROUNDS = 10;
 
@@ -35,6 +35,14 @@ async function registerHospitalAndAdmin({ hospitalName, location, type, name, em
   const user = await prisma.user.create({
     data: { name, email, passwordHash, role: "ADMIN", hospitalId: hospital.id },
     include: { hospital: true },
+  });
+
+  // Fire-and-forget: give the new hospital a sensible starting inventory and
+  // demand history via the ML cold-start endpoint. Must never block or fail
+  // the actual signup, so errors are swallowed (the service also handles its
+  // own failures by returning { seeded: false }).
+  seedNewHospitalHistory(hospital).catch((err) => {
+    console.error("[auth] Cold-start seeding failed:", err.message);
   });
 
   const token = signToken({ sub: user.id, hospitalId: user.hospitalId, role: user.role });
