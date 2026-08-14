@@ -73,6 +73,17 @@ test("InventoryContext extracts medicine names", () => {
   assert.equal(InventoryContext.extractMedicineName("Which hospital has Ceftriaxone?"), "ceftriaxone");
 });
 
+test("InventoryContext detects cross-hospital queries (no own-inventory leak)", () => {
+  assert.equal(InventoryContext.isCrossHospitalQuery("Which hospital has Ceftriaxone?"), true);
+  assert.equal(InventoryContext.isCrossHospitalQuery("which hospitals have paracetamol"), true);
+  assert.equal(InventoryContext.isCrossHospitalQuery("what hospital carries amoxicillin"), true);
+  // Own-inventory questions must NOT be treated as cross-hospital
+  assert.equal(InventoryContext.isCrossHospitalQuery("do we have ceftriaxone?"), false);
+  assert.equal(InventoryContext.isCrossHospitalQuery("does my hospital have insulin"), false);
+  assert.equal(InventoryContext.isCrossHospitalQuery("how much does paracetamol cost?"), false);
+  assert.equal(InventoryContext.isCrossHospitalQuery("show our inventory"), false);
+});
+
 test("MockProvider provides medically responsible answers", async () => {
   const MockProvider = require("../src/services/ai/providers/MockProvider");
   const provider = new MockProvider();

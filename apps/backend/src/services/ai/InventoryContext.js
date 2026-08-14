@@ -45,6 +45,15 @@ class InventoryContext {
         specificMedicine: this.extractMedicineName(query),
       };
 
+      /*
+       * A cross-hospital question ("which hospital has X", "who has X") asks
+       * about OTHER hospitals, not the caller's own stock. In that case we
+       * must only inject the redacted partner-hospital availability built
+       * above — never the caller's own detailed inventory (batch, quantity,
+       * price, expiry).
+       */
+      const isCrossHospitalQuery = this.isCrossHospitalQuery(q);
+
       const contexts = [];
 
       if (needs.expiring) {
@@ -75,24 +84,30 @@ class InventoryContext {
        *
        * General inventory is allowed only for an intentional, explicit
        * request such as "show my inventory" or "list all medicines".
+       *
+       * For cross-hospital questions we skip this entire section — the caller
+       * is asking about partner hospitals, so only the redacted availability
+       * list (added above) should be provided.
        */
-      if (needs.specificMedicine) {
-        const inventory = await this.getInventoryForMedicine(
-          hospitalId,
-          needs.specificMedicine,
-          needs.cost
-        );
+      if (!isCrossHospitalQuery) {
+        if (needs.specificMedicine) {
+          const inventory = await this.getInventoryForMedicine(
+            hospitalId,
+            needs.specificMedicine,
+            needs.cost
+          );
 
-        contexts.push(inventory);
-      } else if (this.isExplicitGeneralInventoryRequest(q)) {
-        const inventory = await this.getGeneralInventory(hospitalId);
-        contexts.push(inventory);
-      } else if (needs.inventory || needs.cost) {
-        contexts.push(
-          "INVENTORY SEARCH: No exact medicine name was identified. " +
-            "Do not reveal general inventory, stock quantities, batch details, " +
-            "expiry dates, or prices. Ask the user to provide the exact medicine name."
-        );
+          contexts.push(inventory);
+        } else if (this.isExplicitGeneralInventoryRequest(q)) {
+          const inventory = await this.getGeneralInventory(hospitalId);
+          contexts.push(inventory);
+        } else if (needs.inventory || needs.cost) {
+          contexts.push(
+            "INVENTORY SEARCH: No exact medicine name was identified. " +
+              "Do not reveal general inventory, stock quantities, batch details, " +
+              "expiry dates, or prices. Ask the user to provide the exact medicine name."
+          );
+        }
       }
 
       const combined = contexts.filter(Boolean).join("\n\n");
@@ -110,6 +125,20 @@ class InventoryContext {
         "Do not infer or invent inventory, pricing, quantity, batch, or hospital availability."
       );
     }
+  }
+
+  /**
+   * True when the query is asking about OTHER hospitals' stock ("which
+   * hospital has X", "who has X"), as opposed to the caller's own inventory.
+   * In the cross-hospital case we must not leak the caller's own detailed
+   * inventory (batch / quantity / price / expiry).
+   */
+  static isCrossHospitalQuery(query) {
+    const q = String(query || "").toLowerCase();
+    if (!q.includes("hospital")) return false;
+    if (!/(which|what|who|where|does any|has any)/.test(q)) return false;
+    if (/(\bmy\b|\bour\b|we have|do we|we carry)/.test(q)) return false;
+    return true;
   }
 
   /**
