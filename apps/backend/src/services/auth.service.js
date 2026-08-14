@@ -42,7 +42,13 @@ async function registerHospitalAndAdmin({ hospitalName, location, type, name, em
 }
 
 // Adds a staff member to an existing hospital.
-async function registerStaff({ name, email, password, hospitalId }) {
+// `callerHospitalId` is the hospital of the authenticated admin making the
+// request; staff accounts may only be created within that same hospital.
+async function registerStaff({ name, email, password, hospitalId }, callerHospitalId) {
+  if (callerHospitalId && hospitalId !== callerHospitalId) {
+    throw new ApiError(403, "You can only add staff to your own hospital");
+  }
+
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) throw new ApiError(409, "An account with this email already exists");
 
