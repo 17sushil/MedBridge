@@ -9,11 +9,13 @@ import RegisterHospital from "./pages/auth/RegisterHospital";
 import { routes } from "./routes";
 import NotFound from "./pages/NotFound";
 import { ThemeProvider } from "./context/ThemeContext";
+import { AIChatProvider } from "./context/AIChatContext";
 
 export default function App() {
   return (
     <ThemeProvider>
     <AuthProvider>
+    <AIChatProvider>
       <BrowserRouter>
         <Routes>
           <Route element={<GuestRoute />}>
@@ -45,6 +47,7 @@ export default function App() {
           />
         </Routes>
       </BrowserRouter>
+    </AIChatProvider>
     </AuthProvider>
     </ThemeProvider>
   );

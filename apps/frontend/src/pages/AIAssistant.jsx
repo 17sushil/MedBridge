@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import clsx from "clsx";
 import {
   Sparkles,
@@ -17,7 +17,7 @@ import {
 import PageHeader from "../components/ui/PageHeader";
 import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
-import { aiService } from "../services/aiService";
+import { useAIChat } from "../context/AIChatContext";
 import "./AIAssistant.css";
 
 const SAMPLE_PROMPTS = [
@@ -31,10 +31,8 @@ const SAMPLE_PROMPTS = [
 
 function SimpleMarkdown({ text }) {
   if (!text) return null;
-  // Very safe rendering: split by paragraphs, handle bold manually without dangerouslySetInnerHTML risks
   const parts = text.split("\n").map((line, idx) => {
     if (!line.trim()) return <div key={idx} style={{ height: 8 }} />;
-    // Handle bold **text**
     const boldSplit = line.split(/(\*\*.*?\*\*)/g);
     return (
       <p key={idx} style={{ margin: "4px 0", whiteSpace: "pre-wrap", lineHeight: 1.6 }}>
@@ -42,7 +40,6 @@ function SimpleMarkdown({ text }) {
           if (chunk.startsWith("**") && chunk.endsWith("**")) {
             return <strong key={j}>{chunk.slice(2, -2)}</strong>;
           }
-          // Handle `code`
           if (chunk.includes("`")) {
             const codeSplit = chunk.split(/(`.*?`)/g);
             return codeSplit.map((c, k) => {
@@ -71,115 +68,23 @@ function TypingDots() {
 }
 
 export default function AIAssistant() {
-  const [messages, setMessages] = useState([
-    {
-      id: "welcome",
-      role: "assistant",
-      text: "Hi, I'm MedBridge AI — your intelligent healthcare inventory assistant.\n\nI can help with:\n- Medical info: medicines, side effects, interactions, diseases, first aid\n- Live inventory: expiring meds, low stock, costs, exchange requests, hospital search\n- Conversation memory: ask follow-ups like 'Can I take it with Ibuprofen?'\n- Costs: ask 'How much does Paracetamol cost?' for live pricing\n\nSafety: I provide general info only, not diagnosis or prescriptions.",
-      timestamp: new Date(),
-    },
-  ]);
-  const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [conversationId, setConversationId] = useState(null);
-  const [providerInfo, setProviderInfo] = useState(null);
+  const {
+    messages,
+    input,
+    setInput,
+    loading,
+    conversationId,
+    error,
+    sendMessage,
+    handleClear,
+  } = useAIChat();
+
   const [copiedId, setCopiedId] = useState(null);
-  const [error, setError] = useState("");
-
   const endRef = useRef(null);
-
-  useEffect(() => {
-    try {
-      if (aiService.getProviderInfo && typeof aiService.getProviderInfo === "function") {
-        aiService.getProviderInfo().then(setProviderInfo).catch(() => setProviderInfo({ provider: "mock", model: "mock-llm" }));
-      } else {
-        setProviderInfo({ provider: "mock", model: "mock-llm" });
-      }
-    } catch {
-      setProviderInfo({ provider: "mock", model: "mock-llm" });
-    }
-  }, []);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
-
-  const sendMessage = async (text) => {
-    const question = (text ?? input).trim();
-    if (!question || loading) return;
-
-    setError("");
-    const userMsg = { id: `u_${Date.now()}`, role: "user", text: question, timestamp: new Date() };
-    setMessages((m) => [...m, userMsg]);
-    setInput("");
-    setLoading(true);
-
-    // Show streaming placeholder if stream method exists
-    const canStream = aiService.askAssistantStream && typeof aiService.askAssistantStream === "function";
-    const assistantId = `a_${Date.now()}`;
-    setMessages((m) => [...m, { id: assistantId, role: "assistant", text: "", timestamp: new Date(), streaming: canStream }]);
-
-    let streamed = false;
-    if (canStream) {
-      try {
-        await aiService.askAssistantStream(
-          question,
-          conversationId,
-          (chunk, full) => {
-            streamed = true;
-            setMessages((prev) => prev.map((msg) => msg.id === assistantId ? { ...msg, text: full, streaming: true } : msg));
-          },
-          (full, convId) => {
-            if (convId) setConversationId(convId);
-            setMessages((prev) => prev.map((msg) => msg.id === assistantId ? { ...msg, text: full, streaming: false, timestamp: new Date() } : msg));
-            setLoading(false);
-          },
-          () => {
-            if (!streamed) {
-              setMessages((prev) => prev.filter((msg) => msg.id !== assistantId));
-              fallback(question);
-            }
-          }
-        );
-        return; // stream handled
-      } catch {
-        setMessages((prev) => prev.filter((msg) => msg.id !== assistantId));
-        // fall through to fallback
-      }
-    } else {
-      // No streaming support in old service, remove placeholder and fallback directly
-      setMessages((prev) => prev.filter((msg) => msg.id !== assistantId));
-    }
-
-    await fallback(question);
-  };
-
-  const fallback = async (question) => {
-    try {
-      const res = await aiService.askAssistant(question, conversationId);
-      if (res.conversationId) setConversationId(res.conversationId);
-      setMessages((m) => m.filter((msg) => !msg.streaming).concat([
-        {
-          id: `a_${Date.now()}`,
-          role: "assistant",
-          text: res.message || "No response",
-          timestamp: new Date(),
-          model: res.model,
-          provider: res.provider,
-          contextUsed: res.contextUsed,
-          isError: !res.available,
-        },
-      ]));
-      if (!res.available) setError(res.message);
-    } catch (err) {
-      setError(err.message || "Failed");
-      setMessages((m) => m.filter((msg) => !msg.streaming).concat([
-        { id: `e_${Date.now()}`, role: "assistant", text: `Error: ${err.message}`, isError: true, timestamp: new Date() },
-      ]));
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleCopy = async (id, text) => {
     try {
@@ -189,14 +94,6 @@ export default function AIAssistant() {
     } catch {}
   };
 
-  const handleClear = () => {
-    setMessages([
-      { id: "welcome", role: "assistant", text: "Conversation cleared. How can I help?", timestamp: new Date() },
-    ]);
-    setConversationId(null);
-    setError("");
-  };
-
   return (
     <div className="ai-page ai-page-full">
       <PageHeader
@@ -204,11 +101,6 @@ export default function AIAssistant() {
         subtitle="MedBridge AI - Full screen, live inventory, pricing, medical knowledge"
         actions={
           <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-            {providerInfo && (
-              <span style={{ fontSize: 11, background: "var(--teal-50)", color: "var(--teal-700)", padding: "4px 8px", borderRadius: 999, border: "1px solid var(--teal-100)" }}>
-                {providerInfo.provider} · {providerInfo.model || "mock"}
-              </span>
-            )}
             <Button variant="outline" size="sm" onClick={handleClear}>
               <Trash2 size={14} /> Clear
             </Button>
