@@ -10,45 +10,44 @@ import { routes } from "./routes";
 import NotFound from "./pages/NotFound";
 import { ThemeProvider } from "./context/ThemeContext";
 import { AIChatProvider } from "./context/AIChatContext";
+import ErrorBoundary from "./components/ErrorBoundary";
+import PageLoader from "./components/ui/PageLoader";
 
 export default function App() {
   return (
     <ThemeProvider>
-    <AuthProvider>
-    <AIChatProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route element={<GuestRoute />}>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<RegisterHospital />} />
-          </Route>
+      <ErrorBoundary>
+        <AuthProvider>
+          <AIChatProvider>
+            <BrowserRouter>
+              <Suspense fallback={<PageLoader />}>
+                <Routes>
+                  <Route element={<GuestRoute />}>
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<RegisterHospital />} />
+                  </Route>
 
-          <Route element={<ProtectedRoute />}>
-            <Route
-              element={
-                <AppProvider>
-                  <AppLayout />
-                </AppProvider>
-              }
-            >
-              {routes.map(({ path, element: Element }) => (
-                <Route key={path} path={path} element={<Element />} />
-              ))}
-            </Route>
-          </Route>
+                  <Route element={<ProtectedRoute />}>
+                    <Route
+                      element={
+                        <AppProvider>
+                          <AppLayout />
+                        </AppProvider>
+                      }
+                    >
+                      {routes.map(({ path, element: Element }) => (
+                        <Route key={path} path={path} element={<Element />} />
+                      ))}
+                    </Route>
+                  </Route>
 
-          <Route
-            path="*"
-            element={
-              <Suspense fallback={null}>
-                <NotFound />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
               </Suspense>
-            }
-          />
-        </Routes>
-      </BrowserRouter>
-    </AIChatProvider>
-    </AuthProvider>
+            </BrowserRouter>
+          </AIChatProvider>
+        </AuthProvider>
+      </ErrorBoundary>
     </ThemeProvider>
   );
 }
