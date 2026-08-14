@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { ClipboardList, Plus } from "lucide-react";
+import { Plus, ClipboardList } from "lucide-react";
 import { api } from "../services/api";
 import PageHeader from "../components/ui/PageHeader";
 import Card from "../components/ui/Card";
@@ -23,51 +23,24 @@ export default function MyRequests() {
   const load = useCallback(async () => {
     setError("");
     try {
-      const all = await api.getExchangeRequests({ direction: "outgoing" });
-      // Fallback filtering if API ignoring direction (client safety)
-      const outgoing = all.filter((r) => r.direction === "outgoing");
-      setRequests(outgoing.length ? outgoing : all.filter((r) => r.direction === "outgoing" || r.direction === undefined));
-      // If API already filtered, all are outgoing; if not, above filters.
-      // Best: if backend fixed, all will already be outgoing, just use all.
-      const finalList = all.every(r => r.direction === "outgoing" || !r.direction) ? all : outgoing;
-      // Actually simplification: if we queried outgoing, use whatever returned, but re-evaluate:
-      // To avoid confusion after fix: request with direction outgoing
-      // Our backend now returns outgoing correctly.
-      // So if we asked for outgoing, server already filtered.
-      // We'll just trust server and if server returned empty but we still want client filter, reload all and filter.
-      if (finalList.length === 0) {
-        const allReqs = await api.getExchangeRequests();
-        setRequests(allReqs.filter((r) => r.direction === "outgoing"));
-      } else {
-        setRequests(finalList);
-      }
+      const data = await api.getExchangeRequests({ direction: "outgoing" });
+      setRequests(data);
     } catch (e) {
       setError(e.message || "Failed to load my requests");
       setRequests([]);
     }
   }, []);
 
-  // Initial load simplified
   useEffect(() => {
-    const initial = async () => {
-      try {
-        const all = await api.getExchangeRequests();
-        setRequests(all.filter((r) => r.direction === "outgoing"));
-      } catch {
-        setRequests([]);
-      }
-    };
-    initial();
-  }, []);
+    load();
+  }, [load]);
 
   const handleConfirmDelivery = async (id) => {
     setActionId(id);
     setError("");
     try {
       await api.updateExchangeStatus(id, "Completed");
-      // reload
-      const all = await api.getExchangeRequests();
-      setRequests(all.filter((r) => r.direction === "outgoing"));
+      await load();
       await refreshNotifications().catch(() => {});
     } catch (e) {
       setError(e.message || "Failed to confirm delivery");
@@ -161,8 +134,7 @@ export default function MyRequests() {
         <ExchangeRequestModal
           onClose={() => setShowModal(false)}
           onCreated={async () => {
-            const all = await api.getExchangeRequests();
-            setRequests(all.filter((r) => r.direction === "outgoing"));
+            await load();
             await refreshNotifications().catch(() => {});
           }}
         />
