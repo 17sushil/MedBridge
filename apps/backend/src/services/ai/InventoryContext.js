@@ -12,7 +12,7 @@ class InventoryContext {
     try {
       const needs = {
         inventory: q.includes("inventory") || q.includes("medicines") || q.includes("stock") || q.includes("medicine") || q.includes("drug") || q.includes("available") || q.includes("have") || q.includes("cost") || q.includes("price") || q.includes("how much"),
-        expiring: q.includes("expir"),
+        expiring: q.includes("expire"),
         lowStock: q.includes("low") || q.includes("critical"),
         exchange: q.includes("exchange") || q.includes("request"),
         hospitals: q.includes("hospital"),
@@ -38,7 +38,10 @@ class InventoryContext {
       }
 
       if (needs.hospitals && (q.includes("which") || q.includes("hospital"))) {
-        const hospitals = await this.getHospitalsContext(query);
+        // FIX: now passes hospitalId through, so the query can exclude the
+        // caller's own hospital from the "partner hospitals" list, and so
+        // any future hospital-scoped logic here has access to it.
+        const hospitals = await this.getHospitalsContext(query, hospitalId);
         contexts.push(hospitals);
       }
 
@@ -163,37 +166,53 @@ class InventoryContext {
     }
   }
 
-  static async getHospitalsContext(query) {
+  // Converts an exact quantity into a coarse bucket. Cross-hospital
+  // answers should never reveal another hospital's exact stock count or
+  // batch numbers — that's the same boundary your Hospitals page already
+  // respects (it shows "Request Stock", not raw inventory).
+  static stockLevelLabel(totalQuantity) {
+    if (totalQuantity >= 500) return "High stock";
+    if (totalQuantity >= 100) return "Moderate stock";
+    if (totalQuantity > 0) return "Limited stock";
+    return "Out of stock";
+  }
+
+  static async getHospitalsContext(query, hospitalId) {
     try {
       const medicineName = this.extractMedicineName(query);
 
       if (medicineName) {
+        // FIX: scoped away from the caller's own hospital ONLY for the
+        // purpose of building the "which partner hospitals might have
+        // this" list — this is intentionally cross-hospital (that's the
+        // whole point of the question), but must never expose another
+        // hospital's exact quantity or batch numbers.
         const hospitalsWithMed = await prisma.medicine.findMany({
           where: {
             name: { contains: medicineName, mode: "insensitive" },
             quantity: { gt: 0 },
+            ...(hospitalId ? { hospitalId: { not: hospitalId } } : {}),
           },
           include: { hospital: true },
           take: 20,
         });
 
         if (!hospitalsWithMed.length) {
-          return `HOSPITALS WITH ${medicineName.toUpperCase()}: No hospital in network has ${medicineName} in stock currently (based on live inventory).`;
+          return `PARTNER HOSPITALS WITH ${medicineName.toUpperCase()}: No partner hospital in the network currently shows ${medicineName} in stock.`;
         }
 
         const grouped = {};
         hospitalsWithMed.forEach(m => {
           const hName = m.hospital.name;
-          if (!grouped[hName]) grouped[hName] = { hospital: m.hospital, total: 0, batches: [] };
+          if (!grouped[hName]) grouped[hName] = { hospital: m.hospital, total: 0 };
           grouped[hName].total += m.quantity;
-          grouped[hName].batches.push(`${m.batch} (${m.quantity} ${m.unit})`);
         });
 
         const lines = Object.values(grouped).map(g =>
-          `- ${g.hospital.name} (${g.hospital.location}): ${g.total} units total, batches: ${g.batches.join(", ")}`
+          `- ${g.hospital.name} (${g.hospital.location}): ${this.stockLevelLabel(g.total)}`
         ).join("\n");
 
-        return `HOSPITALS WITH ${medicineName.toUpperCase()} IN STOCK:\n${lines}`;
+        return `PARTNER HOSPITALS THAT MAY HAVE ${medicineName.toUpperCase()}:\n${lines}\nExact quantities and batch numbers are private to each hospital. Submit an Exchange Request to confirm availability and arrange a transfer.`;
       } else {
         const hospitals = await prisma.hospital.findMany({
           include: {

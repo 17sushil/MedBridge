@@ -23,6 +23,17 @@ class AIService {
     }
   }
 
+  // FIX: shared ownership check, used anywhere a conversationId supplied
+  // by the client is resolved to a real conversation. Without this, any
+  // authenticated user could pass another hospital's conversationId and
+  // read/continue their AI chat history — a direct cross-tenant leak,
+  // worse than a data-shape bug because it exposes exact prior messages.
+  assertConversationOwnership(conversation, userId) {
+    if (conversation && conversation.userId && conversation.userId !== userId) {
+      throw new Error("Unauthorized: this conversation does not belong to you");
+    }
+  }
+
   /**
    * Main entry for AI assistant
    * Handles RAG routing, conversation memory, safety
@@ -35,6 +46,7 @@ class AIService {
     let conversation;
     if (conversationId) {
       conversation = await ConversationService.getConversation(conversationId);
+      this.assertConversationOwnership(conversation, userId); // FIX: added
     }
     if (!conversation) {
       conversation = await ConversationService.getOrCreateLatestConversation(userId, hospitalId);
@@ -126,10 +138,15 @@ class AIService {
    */
   async *askQuestionStream({ question, userId, hospitalId, hospitalName, conversationId }) {
     const sanitizedQuestion = PromptBuilder.sanitizeInput(question);
-    let conversation = conversationId
-      ? await ConversationService.getConversation(conversationId)
-      : await ConversationService.getOrCreateLatestConversation(userId, hospitalId);
 
+    let conversation;
+    if (conversationId) {
+      conversation = await ConversationService.getConversation(conversationId);
+      this.assertConversationOwnership(conversation, userId); // FIX: added
+    }
+    if (!conversation) {
+      conversation = await ConversationService.getOrCreateLatestConversation(userId, hospitalId);
+    }
     if (!conversation) conversation = await ConversationService.createConversation(userId, hospitalId);
 
     const previousMessages = await ConversationService.getMessages(conversation.id, 20);
