@@ -1,5 +1,6 @@
 const prisma = require("../config/db");
 const { ApiError } = require("../utils/ApiError");
+const { computeMedicineStatus } = require("../utils/medicineStatus");
 
 async function listMedicines(hospitalId, { search, status } = {}) {
   return prisma.medicine.findMany({
@@ -27,11 +28,7 @@ async function getMedicine(hospitalId, id) {
 
 function computeStatusFromQuantity(qty, explicitStatus) {
   if (explicitStatus) return explicitStatus;
-  if (qty <= 0) return "CRITICAL";
-  if (qty < 5) return "CRITICAL";
-  if (qty < 15) return "LOW_STOCK";
-  if (qty < 40) return "MEDIUM_STOCK";
-  return "IN_STOCK";
+  return computeMedicineStatus(qty);
 }
 
 async function createMedicine(hospitalId, data) {
