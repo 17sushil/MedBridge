@@ -127,3 +127,25 @@
   align-items: center;
   gap: 0.5rem;
 }
+
+/* Improve secondary exchange-request text contrast in dark mode */
+[data-theme="dark"] .ex-card-title,
+[data-theme="dark"] .ex-date-value {
+  color: var(--ink);
+}
+
+[data-theme="dark"] .ex-card-sub,
+[data-theme="dark"] .ex-date-label {
+  color: var(--ink-soft);
+}
+
+/* Keep the direction icons clear against dark cards */
+[data-theme="dark"] .ex-direction-icon-in {
+  background: rgba(141, 211, 202, 0.14);
+  color: var(--teal-200);
+}
+
+[data-theme="dark"] .ex-direction-icon-out {
+  background: rgba(179, 192, 217, 0.15);
+  color: var(--navy-200);
+}
