@@ -75,20 +75,6 @@ export default function HospitalProfileModal({ hospitalId, onClose }) {
             <Badge tone="navy">{hospital.type}</Badge>
           </div>
 
-          {hospital.medicines && hospital.medicines.length > 0 && (
-            <div>
-              <div style={{ fontWeight: 600, marginBottom: 8 }}>Recent Inventory (5)</div>
-              <div style={{ display: "grid", gap: 6 }}>
-                {hospital.medicines.map((m) => (
-                  <div key={m.id} style={{ display: "flex", justifyContent: "space-between", fontSize: 13, padding: "6px 8px", background: "var(--canvas)", borderRadius: 6 }}>
-                    <span>{m.name} · {m.batch}</span>
-                    <span style={{ color: "var(--ink-faint)" }}>{m.quantity} {m.unit}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
           <div style={{ fontSize: 12, color: "var(--ink-faint)" }}>
             Hospital ID: {hospital.id}
             {hospital.externalCode && ` · Code: ${hospital.externalCode}`}
