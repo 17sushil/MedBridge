@@ -6,14 +6,14 @@ async function resolveHospitalCode(hospitalId) {
     where: { id: hospitalId },
     select: { externalCode: true },
   });
-  return hospital?.externalCode || null;
+  return hospital?.externalCode || hospitalId;
 }
 
 async function fallbackForecast(hospitalId, months = 6) {
   const since = new Date();
   since.setMonth(since.getMonth() - months);
   const movements = await prisma.inventoryMovement.findMany({
-    where: { hospitalId, type: "OUT", occurredAt: { gte: since } },
+    where: { hospitalId, type: { in: ["CONSUMPTION", "EXCHANGE_OUT", "EXPIRY_WRITEOFF"] }, occurredAt: { gte: since } },
   });
 
   const byMonth = new Map();

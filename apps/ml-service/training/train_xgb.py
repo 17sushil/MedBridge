@@ -43,6 +43,7 @@ CAT_COLS = [
 
 DROP_COLS = [
     "week_start", "generic_name", "target_demand",
+    "hospital_id", "medicine_id",
 ]
 
 

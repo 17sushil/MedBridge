@@ -42,7 +42,7 @@ async function createMedicine(hospitalId, data) {
     data: {
       hospitalId,
       medicineId: created.id,
-      type: "IN",
+      type: "PROCUREMENT",
       quantity: created.quantity,
     },
   });
@@ -78,7 +78,7 @@ async function updateMedicine(hospitalId, id, data) {
         data: {
           hospitalId,
           medicineId: id,
-          type: diff > 0 ? "IN" : "OUT",
+          type: diff > 0 ? "PROCUREMENT" : "CONSUMPTION",
           quantity: Math.abs(diff),
         },
       });

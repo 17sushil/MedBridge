@@ -125,7 +125,7 @@ async function completeTransfer(tx, request) {
   });
 
   await tx.inventoryMovement.create({
-    data: { hospitalId: request.fromHospitalId, medicineId: source.id, type: "OUT", quantity: request.quantity },
+    data: { hospitalId: request.fromHospitalId, medicineId: source.id, type: "EXCHANGE_OUT", quantity: request.quantity, counterpartyId: request.toHospitalId },
   });
 
   let destination = await tx.medicine.findFirst({
@@ -162,7 +162,7 @@ async function completeTransfer(tx, request) {
     });
   }
   await tx.inventoryMovement.create({
-    data: { hospitalId: request.toHospitalId, medicineId: destination.id, type: "IN", quantity: request.quantity },
+    data: { hospitalId: request.toHospitalId, medicineId: destination.id, type: "EXCHANGE_IN", quantity: request.quantity, counterpartyId: request.fromHospitalId },
   });
 
   return { source: updatedSource, destination };
