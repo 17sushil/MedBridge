@@ -2,20 +2,23 @@ require("dotenv").config({
   path: require("path").resolve(__dirname, "../.env"),
 });
 
-
 /**
- * Seed MedBridge DB from ML synthetic CSVs (8 demo hospital logins).
+ * Seed MedBridge DB from ML ledger CSVs (8 demo hospital logins).
  *
  * Reads:
  *   apps/ml-service/data/raw/hospitals.csv
  *   apps/ml-service/data/raw/medicines.csv
- *   apps/ml-service/data/raw/inventory_snapshots.csv
+ *   apps/ml-service/data/raw/inventory.csv          (current batch snapshot)
+ *   apps/ml-service/data/raw/inventory_state.csv    (reorder level / avg use / status)
  *   apps/ml-service/data/raw/demo_hospital_accounts.csv
- *   apps/ml-service/data/raw/resource_exchange_log.csv
+ *   apps/ml-service/data/raw/transactions.csv       (used for exchange history)
+ *
+ * Run AFTER generating ML data:
+ *   cd apps/ml-service && python training/generate_ledger_data.py
  *
  * Demo password for all: MedBridge@2026
- * Emails: admin@demo-01.medbridge.local … admin@demo-08.medbridge.local
- * Legacy: sarah.johnson@cityhospital.org / password123  (maps to DEMO-01)
+ * Emails: admin@<hospital-code>.medbridge.local
+ * Legacy: sarah.johnson@cityhospital.org / password123  (maps to the first demo hospital)
  */
 
 const fs = require("fs");
@@ -30,7 +33,7 @@ const ML_RAW = path.resolve(__dirname, "../../ml-service/data/raw");
 function readCsv(fileName) {
   const full = path.join(ML_RAW, fileName);
   if (!fs.existsSync(full)) {
-    throw new Error(`Missing ${full}. Run: cd apps/ml-service && python training/generate_synthetic_data.py`);
+    throw new Error(`Missing ${full}. Run: cd apps/ml-service && python training/generate_ledger_data.py`);
   }
   const text = fs.readFileSync(full, "utf8").trim();
   if (!text) throw new Error(`Empty CSV: ${full}`);
@@ -81,16 +84,6 @@ function mapStockStatus(status, quantity, reorder) {
   return "IN_STOCK";
 }
 
-function mapExchangeStatus(status) {
-  const s = String(status || "").toLowerCase();
-  if (s.includes("complete")) return "COMPLETED";
-  if (s.includes("transit")) return "IN_TRANSIT";
-  if (s.includes("approve")) return "APPROVED";
-  if (s.includes("reject")) return "DECLINED";
-  if (s.includes("request")) return "PENDING";
-  return "PENDING";
-}
-
 function facilityTypeLabel(t) {
   return String(t || "General").replace(/_/g, " ");
 }
@@ -100,18 +93,21 @@ async function main() {
 
   const hospitalsCsv = readCsv("hospitals.csv");
   const medicinesCsv = readCsv("medicines.csv");
-  const inventoryCsv = readCsv("inventory_snapshots.csv");
+  const inventoryCsv = readCsv("inventory.csv");            // current batches: hospital_id, medicine_id, batch_no, quantity_available, manufacture_date, expiry_date, last_updated
+  const inventoryStateCsv = readCsv("inventory_state.csv");  // has reorder_level, avg_daily_use, stock_status per (hospital, medicine, week)
+
   let accountsCsv = [];
   try {
     accountsCsv = readCsv("demo_hospital_accounts.csv");
   } catch {
     console.warn("demo_hospital_accounts.csv missing — will synthesize accounts");
   }
-  let exchangeCsv = [];
+
+  let transactionsCsv = [];
   try {
-    exchangeCsv = readCsv("resource_exchange_log.csv");
+    transactionsCsv = readCsv("transactions.csv");
   } catch {
-    console.warn("resource_exchange_log.csv missing — skipping exchanges");
+    console.warn("transactions.csv missing — skipping exchange history seeding");
   }
 
   const demoHospitals = hospitalsCsv.filter((h) => String(h.is_demo) === "1");
@@ -120,6 +116,17 @@ async function main() {
   }
 
   const medById = Object.fromEntries(medicinesCsv.map((m) => [m.medicine_id, m]));
+
+  // inventory_state.csv has one row per (hospital, medicine) per WEEK — keep
+  // only the most recent week's row for each pair, that's the "current" state.
+  const latestStateByPair = {};
+  for (const row of inventoryStateCsv) {
+    const key = `${row.hospital_id}|${row.medicine_id}`;
+    const existing = latestStateByPair[key];
+    if (!existing || row.week_start > existing.week_start) {
+      latestStateByPair[key] = row;
+    }
+  }
 
   console.log("Cleaning existing data…");
   await prisma.inventoryMovement.deleteMany();
@@ -156,7 +163,7 @@ async function main() {
     hospitalIdByCode[code] = hospital.id;
 
     const acc = accountByCode[code] || {};
-    const username = acc.demo_username || code.toLowerCase().replace("-", "_");
+    const username = acc.demo_username || code.toLowerCase().replace(/-/g, "_");
     const email = `admin@${code.toLowerCase()}.medbridge.local`;
 
     await prisma.user.create({
@@ -171,43 +178,49 @@ async function main() {
     console.log(`  ${code}  login: ${email} / MedBridge@2026  (${username})`);
   }
 
-  // Legacy single login used by older frontend docs → DEMO-01
-  if (hospitalIdByCode["DEMO-01"]) {
+  // Legacy single login used by older frontend docs → first demo hospital
+  // (was hardcoded to "DEMO-01", which no longer exists after the hospital
+  // ID rename — derive it dynamically instead so this survives future renames)
+  const legacyCode = demoHospitals[0]?.hospital_id;
+  if (legacyCode && hospitalIdByCode[legacyCode]) {
     await prisma.user.create({
       data: {
         name: "Dr. Sarah Johnson",
         email: "sarah.johnson@cityhospital.org",
         passwordHash: legacyHash,
         role: "ADMIN",
-        hospitalId: hospitalIdByCode["DEMO-01"],
+        hospitalId: hospitalIdByCode[legacyCode],
         avatarUrl:
           "https://images.unsplash.com/photo-1594824476967-48c8b964273f?q=80&w=200&auto=format&fit=crop",
       },
     });
-    console.log("  Legacy login: sarah.johnson@cityhospital.org / password123 → DEMO-01");
+    console.log(`  Legacy login: sarah.johnson@cityhospital.org / password123 → ${legacyCode}`);
   }
 
-  // Inventory batches for demo hospitals only (aggregate by hospital+medicine+batch)
+  // Inventory batches for demo hospitals only
   const demoCodes = new Set(Object.keys(hospitalIdByCode));
   const invRows = inventoryCsv.filter((r) => demoCodes.has(r.hospital_id));
   console.log(`Importing ${invRows.length} inventory batches…`);
 
   let medCreated = 0;
-  const medicineUuidByKey = {}; // hospitalCode|medicineId|batch -> uuid
+  const medicineUuidByKey = {}; // hospitalCode|medicineId -> uuid (first batch created for that pair)
 
   for (const row of invRows) {
     const hospitalDbId = hospitalIdByCode[row.hospital_id];
     if (!hospitalDbId) continue;
     const meta = medById[row.medicine_id] || {};
-    const qty = parseInt(row.quantity_units, 10) || 0;
-    const reorder = parseInt(row.reorder_level, 10) || 0;
-    const unitPrice = parseFloat(row.unit_cost_npr || meta.unit_cost_npr || 0) || 0;
+    const stateKey = `${row.hospital_id}|${row.medicine_id}`;
+    const state = latestStateByPair[stateKey] || {};
+
+    const qty = parseInt(row.quantity_available, 10) || 0;
+    const reorder = parseInt(state.reorder_level, 10) || 0;
+    const unitPrice = parseFloat(meta.unit_cost_npr || 0) || 0;
     const expiry = row.expiry_date ? new Date(row.expiry_date) : new Date(Date.now() + 180 * 864e5);
-    const status = mapStockStatus(row.stock_status, qty, reorder);
+    const status = mapStockStatus(state.stock_status, qty, reorder);
     const name = meta.generic_name || row.medicine_id;
     const category = meta.category || "General";
-    const unit = row.unit || meta.unit || "units";
-    const batch = row.batch_id || `BATCH-${medCreated}`;
+    const unit = meta.dosage_form || "units";
+    const batch = row.batch_no || `BATCH-${medCreated}`;
 
     const created = await prisma.medicine.create({
       data: {
@@ -223,15 +236,12 @@ async function main() {
         hospitalId: hospitalDbId,
       },
     });
-    medicineUuidByKey[`${row.hospital_id}|${row.medicine_id}|${batch}`] = created.id;
-    // also index without batch for movements
-    medicineUuidByKey[`${row.hospital_id}|${row.medicine_id}`] =
-      medicineUuidByKey[`${row.hospital_id}|${row.medicine_id}`] || created.id;
+    medicineUuidByKey[stateKey] = medicineUuidByKey[stateKey] || created.id;
     medCreated++;
   }
   console.log(`  medicines/batches created: ${medCreated}`);
 
-  // Synthetic movements from inventory avg_daily_use for charts
+  // Synthetic recent movements from avg_daily_use, for dashboard charts
   console.log("Creating inventory movements for charts…");
   const movementRows = [];
   const seenPair = new Set();
@@ -242,62 +252,54 @@ async function main() {
     const medicineId = medicineUuidByKey[key];
     const hospitalId = hospitalIdByCode[row.hospital_id];
     if (!medicineId || !hospitalId) continue;
-    const daily = Math.max(1, Math.round(parseFloat(row.avg_daily_use) || 5));
+    const state = latestStateByPair[key] || {};
+    const daily = Math.max(1, Math.round(parseFloat(state.avg_daily_use) || 5));
     for (let i = 6; i >= 0; i--) {
       const day = new Date();
       day.setDate(day.getDate() - i);
       movementRows.push({
-        hospitalId,
-        medicineId,
-        type: "OUT",
-        quantity: daily + (i % 3),
-        occurredAt: day,
+        hospitalId, medicineId, type: "CONSUMPTION",
+        quantity: daily + (i % 3), occurredAt: day,
       });
       movementRows.push({
-        hospitalId,
-        medicineId,
-        type: "IN",
-        quantity: Math.round(daily * 1.2),
-        occurredAt: day,
+        hospitalId, medicineId, type: "PROCUREMENT",
+        quantity: Math.round(daily * 1.2), occurredAt: day,
       });
     }
-    // monthly OUT for 6 months
     for (let m = 5; m >= 0; m--) {
       const day = new Date();
       day.setMonth(day.getMonth() - m);
       movementRows.push({
-        hospitalId,
-        medicineId,
-        type: "OUT",
-        quantity: daily * 25 + m * 3,
-        occurredAt: day,
+        hospitalId, medicineId, type: "CONSUMPTION",
+        quantity: daily * 25 + m * 3, occurredAt: day,
       });
     }
   }
-  // insert in chunks
   const chunk = 1000;
   for (let i = 0; i < movementRows.length; i += chunk) {
     await prisma.inventoryMovement.createMany({ data: movementRows.slice(i, i + chunk) });
   }
   console.log(`  movements: ${movementRows.length}`);
 
-  // Exchange log among demo hospitals
-  const demoExchanges = exchangeCsv.filter(
-    (e) => demoCodes.has(e.from_hospital_id) && demoCodes.has(e.to_hospital_id)
+  // Exchange history among demo hospitals — read directly from the ledger's
+  // EXCHANGE_OUT rows (each already represents one completed exchange:
+  // hospital_id = source, counterparty_id = destination).
+  const demoExchangeRows = transactionsCsv.filter(
+    (t) => t.type === "EXCHANGE_OUT" && demoCodes.has(t.hospital_id) && demoCodes.has(t.counterparty_id)
   );
   let exCount = 0;
-  for (const e of demoExchanges.slice(0, 80)) {
-    const fromId = hospitalIdByCode[e.from_hospital_id];
-    const toId = hospitalIdByCode[e.to_hospital_id];
+  for (const e of demoExchangeRows.slice(0, 80)) {
+    const fromId = hospitalIdByCode[e.hospital_id];
+    const toId = hospitalIdByCode[e.counterparty_id];
     if (!fromId || !toId || fromId === toId) continue;
     const meta = medById[e.medicine_id] || {};
     await prisma.exchangeRequest.create({
       data: {
         medicine: meta.generic_name || e.medicine_id,
-        quantity: parseInt(e.quantity_units, 10) || 10,
-        unit: meta.unit || "units",
-        status: mapExchangeStatus(e.status),
-        requestedOn: e.request_date ? new Date(e.request_date) : new Date(),
+        quantity: Math.abs(parseInt(e.quantity, 10)) || 10,
+        unit: meta.dosage_form || "units",
+        status: "COMPLETED",   // ledger EXCHANGE_OUT rows always represent completed transfers
+        requestedOn: e.date ? new Date(e.date) : new Date(),
         fromHospitalId: fromId,
         toHospitalId: toId,
       },

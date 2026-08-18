@@ -1,4 +1,6 @@
 const prisma = require("../../config/db");
+const ml = require("../mlClient");
+const { resolveHospitalCode } = require("../demandForecast.service");
 
 /**
  * InventoryContext - RAG layer that fetches live MedBridge data for LLM.
@@ -36,6 +38,16 @@ class InventoryContext {
         exchange: q.includes("exchange") || q.includes("request"),
         hospitals: q.includes("hospital"),
 
+        forecast:
+          q.includes("forecast") ||
+          q.includes("predict") ||
+          q.includes("demand") ||
+          q.includes("next week") ||
+          q.includes("how much will") ||
+          q.includes("how much do we need") ||
+          q.includes("what should i order") ||
+          q.includes("what should we order"),
+
         cost:
           q.includes("cost") ||
           q.includes("price") ||
@@ -69,6 +81,11 @@ class InventoryContext {
       if (needs.exchange) {
         const exchanges = await this.getExchangeRequests(hospitalId);
         contexts.push(exchanges);
+      }
+
+      if (needs.forecast) {
+        const forecast = await this.getForecastContext(hospitalId);
+        contexts.push(forecast);
       }
 
       if (needs.hospitals && (q.includes("which") || q.includes("hospital"))) {
@@ -344,6 +361,35 @@ class InventoryContext {
       return `ACTIVE EXCHANGE REQUESTS (Pending/Approved/In Transit):\n${lines}`;
     } catch (e) {
       return "EXCHANGE REQUESTS: Data is temporarily unavailable.";
+    }
+  }
+
+  /**
+   * Pulls real XGBoost demand predictions for this hospital from the ML
+   * service, the same data source the Demand Forecast page uses — so the
+   * assistant can actually discuss forecasting, the project's core feature,
+   * instead of having zero awareness of it.
+   */
+  static async getForecastContext(hospitalId) {
+    try {
+      const code = await resolveHospitalCode(hospitalId);
+      if (!code) {
+        return "DEMAND FORECAST: This hospital isn't linked to the ML forecasting service yet.";
+      }
+
+      const detail = await ml.getForecastDetail(code, 8);
+      const items = detail?.items || [];
+      if (!items.length) {
+        return `DEMAND FORECAST: No forecast rows available yet for ${code}.`;
+      }
+
+      const lines = items
+        .map((i) => `- ${i.generic_name || i.medicine_id}: ~${Math.round(i.predicted_demand)} units predicted for week of ${i.week_start}`)
+        .join("\n");
+
+      return `DEMAND FORECAST (XGBoost model, week of ${items[0].week_start}) for this hospital:\n${lines}\nThese are model predictions based on recent usage trends and seasonality — use them as procurement guidance, not a guarantee.`;
+    } catch (e) {
+      return "DEMAND FORECAST: The forecasting service is temporarily unavailable. Don't invent demand numbers — suggest the user check the Demand Forecast page directly.";
     }
   }
 
