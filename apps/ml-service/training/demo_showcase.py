@@ -132,7 +132,7 @@ def main():
 
     # Specialty highlight: cancer oncology + children pediatric
     print("\n--- Specialty highlight forecasts ---")
-    for hid, label in [("DEMO-03", "Cancer/Oncology"), ("DEMO-04", "Children/Pediatric+Vaccine")]:
+    for hid, label in [("HOSP-BG-003", "Cancer/Oncology"), ("HOSP-BG-004", "Children/Pediatric+Vaccine")]:
         sub = out_pred[out_pred["hospital_id"] == hid]
         if label.startswith("Cancer"):
             sub = sub[sub["category"] == "Oncology"]

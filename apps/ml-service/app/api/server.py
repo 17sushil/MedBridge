@@ -139,7 +139,7 @@ def medicines() -> dict[str, Any]:
 
 @app.get("/forecast")
 def forecast(
-    hospital_id: str = Query(..., description="e.g. DEMO-03"),
+    hospital_id: str = Query(..., description="e.g. HOSP-BG-003"),
     top: int = Query(50, ge=1, le=500),
     week: Optional[str] = Query(None, description="YYYY-MM-DD week_start; default=latest"),
 ) -> dict[str, Any]:

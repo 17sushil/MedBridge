@@ -132,7 +132,7 @@ def main() -> int:
         else:
             import pandas as pd
             df = pd.read_csv(feat, parse_dates=["week_start"])
-            df = df[df["hospital_id"] == "DEMO-03"]
+            df = df[df["hospital_id"] == "HOSP-BG-003"]
             if df.empty:
                 df = pd.read_csv(feat, parse_dates=["week_start"])
             latest = df["week_start"].max()
