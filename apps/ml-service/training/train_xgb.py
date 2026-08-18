@@ -192,7 +192,8 @@ def main():
     sample.to_csv(ART_MET / "test_predictions_sample.csv", index=False)
 
     # Per demo hospital accuracy on test
-    demo_ids = [f"DEMO-0{i}" for i in range(1, 9)]
+    hospitals_df = pd.read_csv(ROOT / "data" / "raw" / "hospitals.csv")
+    demo_ids = sorted(hospitals_df.loc[hospitals_df["is_demo"] == 1, "hospital_id"].unique())
     demo_rows = []
     # need original hospital ids on test
     test_h = encoders["hospital_id"].inverse_transform(test["hospital_id"].astype(int))
