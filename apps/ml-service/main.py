@@ -4,7 +4,7 @@ MedBridge ML Service entrypoint.
 Run FROM apps/ml-service:
   python diagnose_windows.py
   python main.py doctor
-  python main.py forecast --hospital DEMO-03
+  python main.py forecast --hospital HOSP-BG-003
 """
 
 from __future__ import annotations
@@ -145,7 +145,7 @@ def cmd_forecast(args: argparse.Namespace) -> None:
         feats = feats[feats["hospital_id"] == args.hospital]
         if feats.empty:
             print(f"No rows for hospital_id={args.hospital}")
-            print("Try DEMO-01 .. DEMO-08")
+            print("Try HOSP-BG-001 .. HOSP-KR-002 (see hospitals.csv, is_demo=1 rows)")
             raise SystemExit(1)
 
     latest = feats["week_start"].max()

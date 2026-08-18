@@ -1,0 +1,42 @@
+hospital_id,hospital_name,facility_type,province,district,municipality,ecoregion,urban_class,latitude,longitude,bed_capacity,ownership,is_demo,specialty_focus,load_factor,urban_factor,is_referral,road_access_score,demo_username,demo_role
+HOSP-BG-001,Bir Hospital,Central_Hospital,Bagmati,Kathmandu,Kathmandu,Hill,Metropolitan,27.7052,85.314,460,public,1,General / Emergency / Referral,1.0,1.15,1,0.762,hosp_bg_001,hospital_admin
+HOSP-BG-002,Tribhuvan University Teaching Hospital (TUTH),Teaching_Hospital,Bagmati,Kathmandu,Maharajgunj,Hill,Metropolitan,27.736,85.33,700,public,1,Teaching / Multi-specialty,0.85,1.15,1,0.708,hosp_bg_002,hospital_admin
+HOSP-BG-003,Bhaktapur Cancer Hospital,Cancer_Hospital,Bagmati,Bhaktapur,Dudhpati,Hill,Municipality,27.6725,85.4278,120,public,1,Oncology / Chemotherapy / Palliative,0.7,0.75,1,0.78,hosp_bg_003,hospital_admin
+HOSP-BG-004,Kanti Children's Hospital,Children_Hospital,Bagmati,Kathmandu,Maharajgunj,Hill,Metropolitan,27.7375,85.332,350,public,1,Pediatrics / Neonatal / Vaccines,0.55,1.15,1,0.788,hosp_bg_004,hospital_admin
+HOSP-BG-005,Paropakar Maternity & Women's Hospital,Maternity_Hospital,Bagmati,Kathmandu,Thapathali,Hill,Metropolitan,27.69,85.32,415,public,1,OBGYN / Labor / Blood bank,0.5,1.15,1,0.672,hosp_bg_005,hospital_admin
+HOSP-BG-010,BP Koirala Memorial Cancer Hospital,Cancer_Hospital,Bagmati,Chitwan,Bharatpur,Terai,Metropolitan,27.67,84.43,250,public,0,National cancer referral,0.7,1.15,1,0.949,,
+HOSP-BG-011,Tilganga Institute of Ophthalmology,Eye_Hospital,Bagmati,Kathmandu,Gaushala,Hill,Metropolitan,27.705,85.348,100,community,0,Eye specialty,0.35,1.15,0,0.716,,
+HOSP-BG-012,National Trauma Center,Trauma_Center,Bagmati,Kathmandu,Mahankal,Hill,Metropolitan,27.702,85.32,200,public,0,Trauma / Ortho emergency,0.6,1.15,1,0.785,,
+HOSP-BG-013,Patan Hospital,Teaching_Hospital,Bagmati,Lalitpur,Lagankhel,Hill,Metropolitan,27.6683,85.3222,450,public,0,Teaching / General,0.85,1.15,1,0.781,,
+HOSP-BG-014,Civil Service Hospital,Central_Hospital,Bagmati,Kathmandu,Minbhawan,Hill,Metropolitan,27.691,85.342,200,public,0,Civil servants / General,1.0,1.15,1,0.753,,
+HOSP-BG-015,Dhulikhel Hospital,Teaching_Hospital,Bagmati,Kavrepalanchok,Dhulikhel,Hill,Municipality,27.619,85.542,375,community,0,Community teaching,0.85,0.75,1,0.795,,
+HOSP-BG-016,Hetauda Hospital,Zonal_Hospital,Bagmati,Makwanpur,Hetauda,Hill,Sub_Metropolitan,27.428,85.032,150,public,0,Zonal general,0.45,1.0,0,0.769,,
+HOSP-BG-017,Chautara District Hospital,District_Hospital,Bagmati,Sindhupalchok,Chautara,Hill,Municipality,27.778,85.716,50,public,0,District hill,0.3,0.75,0,0.716,,
+HOSP-BG-018,Mental Hospital Lagankhel,Mental_Hospital,Bagmati,Lalitpur,Lagankhel,Hill,Metropolitan,27.666,85.324,100,public,0,Psychiatry,0.25,1.15,0,0.765,,
+HOSP-BG-019,Grande International Hospital,Central_Hospital,Bagmati,Kathmandu,Dhapasi,Hill,Metropolitan,27.75,85.33,200,private,0,Private multi-specialty,1.0,1.15,1,0.712,,
+HOSP-GD-001,Pokhara Academy of Health Sciences,Regional_Hospital,Gandaki,Kaski,Pokhara,Hill,Metropolitan,28.2096,83.9856,500,public,1,Regional / Trauma / Tourism corridor,0.65,1.15,1,0.755,hosp_gd_001,hospital_admin
+HOSP-GD-002,Dhaulagiri Hospital,Zonal_Hospital,Gandaki,Baglung,Baglung,Hill,Municipality,28.27,83.59,100,public,0,Hill zonal,0.45,0.75,0,0.736,,
+HOSP-GD-003,Gorkha District Hospital,District_Hospital,Gandaki,Gorkha,Gorkha Bazaar,Hill,Municipality,28.0,84.633,60,public,0,District hill,0.3,0.75,0,0.771,,
+HOSP-GD-004,Manang Primary Health Center,Primary_Health_Center,Gandaki,Manang,Chame,Mountain,Rural_Municipality,28.556,84.241,15,public,0,High mountain PHC,0.12,0.55,0,0.415,,
+HOSP-GD-005,Manipal Teaching Hospital,Teaching_Hospital,Gandaki,Kaski,Pokhara,Hill,Metropolitan,28.24,83.99,750,private,0,Private teaching,0.85,1.15,1,0.767,,
+HOSP-KP-001,B.P. Koirala Institute of Health Sciences (BPKIHS),Teaching_Hospital,Koshi,Sunsari,Dharan,Hill,Sub_Metropolitan,26.8065,87.2846,700,public,0,Eastern teaching referral,0.85,1.0,1,0.785,,
+HOSP-KP-002,Koshi Hospital,Regional_Hospital,Koshi,Morang,Biratnagar,Terai,Metropolitan,26.4525,87.2718,350,public,1,Regional general / Monsoon load,0.65,1.15,1,0.898,hosp_kp_002,hospital_admin
+HOSP-KP-003,Mechi Zonal Hospital,Zonal_Hospital,Koshi,Jhapa,Bhadrapur,Terai,Municipality,26.544,88.094,180,public,0,Eastern border Terai,0.45,0.75,0,0.948,,
+HOSP-KP-004,Okhaldhunga Community Hospital,Community_Hospital,Koshi,Okhaldhunga,Siddhicharan,Hill,Municipality,27.3167,86.5042,50,community,0,Hill community,0.22,0.75,0,0.743,,
+HOSP-KR-001,Karnali Provincial Hospital,Regional_Hospital,Karnali,Surkhet,Birendranagar,Hill,Municipality,28.6,81.616,200,public,0,Karnali regional,0.65,0.75,1,0.775,,
+HOSP-KR-002,Jumla District Hospital,District_Hospital,Karnali,Jumla,Khalanga,Mountain,Municipality,29.274,82.183,50,public,1,Remote mountain / Access-limited,0.3,0.75,0,0.387,hosp_kr_002,hospital_admin
+HOSP-KR-003,Dolpa Primary Health Center,Primary_Health_Center,Karnali,Dolpa,Dunai,Mountain,Rural_Municipality,28.95,82.9,12,public,0,Remote mountain PHC,0.12,0.55,0,0.445,,
+HOSP-KR-004,Rukum West District Hospital,District_Hospital,Karnali,Rukum West,Musikot,Hill,Municipality,28.63,82.45,40,public,0,District hill,0.3,0.75,0,0.745,,
+HOSP-LB-001,Lumbini Provincial Hospital,Regional_Hospital,Lumbini,Rupandehi,Butwal,Terai,Sub_Metropolitan,27.7,83.448,300,public,0,Lumbini regional,0.65,1.0,1,0.967,,
+HOSP-LB-002,Bheri Hospital,Zonal_Hospital,Lumbini,Banke,Nepalgunj,Terai,Sub_Metropolitan,28.05,81.616,250,public,0,Mid-west Terai,0.45,1.0,0,1.0,,
+HOSP-LB-003,Rapti Academy of Health Sciences,Teaching_Hospital,Lumbini,Dang,Ghorahi,Terai,Sub_Metropolitan,28.04,82.485,200,public,0,Teaching Terai,0.85,1.0,1,0.934,,
+HOSP-LB-004,Pyuthan District Hospital,District_Hospital,Lumbini,Pyuthan,Pyuthan Khalanga,Hill,Municipality,28.1,82.87,45,public,0,District hill,0.3,0.75,0,0.73,,
+HOSP-LB-005,Lumbini Medical College Teaching Hospital,Teaching_Hospital,Lumbini,Palpa,Tansen,Hill,Municipality,27.867,83.546,600,private,0,Private teaching hill,0.85,0.75,1,0.717,,
+HOSP-MD-001,Provincial Hospital Janakpur,Regional_Hospital,Madhesh,Dhanusha,Janakpur,Terai,Sub_Metropolitan,26.7288,85.925,300,public,0,Madhesh regional,0.65,1.0,1,0.923,,
+HOSP-MD-002,Narayani Hospital,Zonal_Hospital,Madhesh,Parsa,Birgunj,Terai,Metropolitan,27.0104,84.877,250,public,0,Border trade hub,0.45,1.15,0,0.999,,
+HOSP-MD-003,Gaur District Hospital,District_Hospital,Madhesh,Rautahat,Gaur,Terai,Municipality,26.764,85.278,75,public,0,District Terai,0.3,0.75,0,0.944,,
+HOSP-MD-004,National Medical College Teaching Hospital,Teaching_Hospital,Madhesh,Parsa,Birgunj,Terai,Metropolitan,27.02,84.88,700,private,0,Private teaching,0.85,1.15,1,0.933,,
+HOSP-SP-001,Seti Provincial Hospital,Regional_Hospital,Sudurpashchim,Kailali,Dhangadhi,Terai,Sub_Metropolitan,28.685,80.621,280,public,0,Far-west regional,0.65,1.0,1,0.916,,
+HOSP-SP-002,Mahakali Hospital,Zonal_Hospital,Sudurpashchim,Kanchanpur,Bhimdatta,Terai,Municipality,28.97,80.18,150,public,0,Far-west border,0.45,0.75,0,0.917,,
+HOSP-SP-003,Bajhang District Hospital,District_Hospital,Sudurpashchim,Bajhang,Chainpur,Mountain,Municipality,29.55,81.2,35,public,0,Mountain district,0.3,0.75,0,0.426,,
+HOSP-SP-004,Dadeldhura Hospital,District_Hospital,Sudurpashchim,Dadeldhura,Amargadhi,Hill,Municipality,29.3,80.58,55,public,0,Hill district,0.3,0.75,0,0.78,,
