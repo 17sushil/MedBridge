@@ -1,5 +1,5 @@
 # Generated datasets
-data/raw/*.csv
+
 data/processed/
 
 # Generated training/model outputs
