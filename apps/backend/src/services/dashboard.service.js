@@ -124,11 +124,19 @@ async function getInventoryOverview(hospitalId, period = "week") {
     where: { hospitalId, occurredAt: { gte: since } },
   });
 
-  for (const m of movements) {
-    const bucket = buckets.find((b) => movementInBucket(m.occurredAt, b));
+  const stockInTypes = new Set(["IN", "PROCUREMENT", "EXCHANGE_IN"]);
+  const stockOutTypes = new Set([
+    "OUT",
+    "CONSUMPTION",
+    "EXCHANGE_OUT",
+    "EXPIRY_WRITEOFF",
+  ]);
+
+  for (const movement of movements) {
+    const bucket = buckets.find((item) => movementInBucket(movement.occurredAt, item));
     if (!bucket) continue;
-    if (m.type === "IN") bucket.stockIn += m.quantity;
-    else bucket.stockOut += m.quantity;
+    if (stockInTypes.has(movement.type)) bucket.stockIn += movement.quantity;
+    if (stockOutTypes.has(movement.type)) bucket.stockOut += movement.quantity;
   }
 
   return buckets.map(({ day, stockIn, stockOut }) => ({ day, stockIn, stockOut }));

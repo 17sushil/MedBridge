@@ -72,7 +72,7 @@ export default function Login() {
         </form>
 
         <div className="auth-demo-hint">
-          Demo account: <code>sarah.johnson@cityhospital.org</code> / <code>password123</code>
+          Demo account: <code>admin@hosp-bg-001.medbridge.local</code> / <code>MedBridge@2026</code>
         </div>
 
         <p className="auth-footer">
