@@ -100,7 +100,7 @@ async function main() {
 
   const hospitalsCsv = readCsv("hospitals.csv");
   const medicinesCsv = readCsv("medicines.csv");
-  const inventoryCsv = readCsv("inventory_snapshots.csv");
+  const inventoryCsv = readCsv("inventory.csv");
   let accountsCsv = [];
   try {
     accountsCsv = readCsv("demo_hospital_accounts.csv");
@@ -170,23 +170,32 @@ async function main() {
     });
     console.log(`  ${code}  login: ${email} / MedBridge@2026  (${username})`);
   }
+  
+// Legacy single login used by older frontend docs → DEMO-01
+// Extra Sarah demo account for a separate hospital.
+// Sarah will use Bhaktapur Cancer Hospital's own inventory and forecast data.
+const sarahHospitalCode = "HOSP-BG-003";
+const sarahHospitalId = hospitalIdByCode[sarahHospitalCode];
 
-  // Legacy single login used by older frontend docs → DEMO-01
-  if (hospitalIdByCode["DEMO-01"]) {
-    await prisma.user.create({
-      data: {
-        name: "Dr. Sarah Johnson",
-        email: "sarah.johnson@cityhospital.org",
-        passwordHash: legacyHash,
-        role: "ADMIN",
-        hospitalId: hospitalIdByCode["DEMO-01"],
-        avatarUrl:
-          "https://images.unsplash.com/photo-1594824476967-48c8b964273f?q=80&w=200&auto=format&fit=crop",
-      },
-    });
-    console.log("  Legacy login: sarah.johnson@cityhospital.org / password123 → DEMO-01");
-  }
+if (!sarahHospitalId) {
+  throw new Error(`Sarah hospital ${sarahHospitalCode} was not found.`);
+}
 
+await prisma.user.create({
+  data: {
+    name: "Dr. Sarah Johnson",
+    email: "sarah.johnson@cityhospital.org",
+    passwordHash: legacyHash,
+    role: "ADMIN",
+    hospitalId: sarahHospitalId,
+    avatarUrl:
+      "https://images.unsplash.com/photo-1594824476967-48c8b964273f?q=80&w=200&auto=format&fit=crop",
+  },
+});
+
+console.log(
+  `Sarah created: sarah.johnson@cityhospital.org / password123 → ${sarahHospitalCode}`
+);
   // Inventory batches for demo hospitals only (aggregate by hospital+medicine+batch)
   const demoCodes = new Set(Object.keys(hospitalIdByCode));
   const invRows = inventoryCsv.filter((r) => demoCodes.has(r.hospital_id));
@@ -199,7 +208,7 @@ async function main() {
     const hospitalDbId = hospitalIdByCode[row.hospital_id];
     if (!hospitalDbId) continue;
     const meta = medById[row.medicine_id] || {};
-    const qty = parseInt(row.quantity_units, 10) || 0;
+    const qty = parseInt(row.quantity_available ?? row.quantity_units, 10) || 0;
     const reorder = parseInt(row.reorder_level, 10) || 0;
     const unitPrice = parseFloat(row.unit_cost_npr || meta.unit_cost_npr || 0) || 0;
     const expiry = row.expiry_date ? new Date(row.expiry_date) : new Date(Date.now() + 180 * 864e5);
@@ -207,7 +216,7 @@ async function main() {
     const name = meta.generic_name || row.medicine_id;
     const category = meta.category || "General";
     const unit = row.unit || meta.unit || "units";
-    const batch = row.batch_id || `BATCH-${medCreated}`;
+    const batch = row.batch_no || row.batch_id || `BATCH-${medCreated}`;
 
     const created = await prisma.medicine.create({
       data: {
@@ -352,6 +361,7 @@ async function main() {
 }
 
 main()
+
   .catch((e) => {
     console.error(e);
     process.exit(1);
