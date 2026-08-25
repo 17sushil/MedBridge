@@ -62,6 +62,7 @@ from generate_synthetic_data import (  # noqa: E402
     SEASONAL_BASE,
     festival_boost_month_day,
     week_starts,
+    write_demo_accounts,
     START_DATE,
     END_DATE,
 )
@@ -213,7 +214,9 @@ class BatchLedger:
         return received
 
     def consume_fifo(self, i: int, qty_needed: int):
-        self.batches[i].sort(key=lambda b: b["manufacture_date"])
+        # FEFO (first-expiry-first-out) is safer for medicines than simple
+        # first-manufactured-first-out and directly reduces avoidable waste.
+        self.batches[i].sort(key=lambda batch: batch["expiry_date"])
         taken = []
         remaining = qty_needed
         for b in self.batches[i]:
@@ -434,7 +437,15 @@ def run_simulation(hospitals: pd.DataFrame, medicines: pd.DataFrame,
                                 "batch_no": batch_no, "counterparty_id": hospital_id[i],
                                 "department": None, "quantity": -qty, "emergency_flag": 1, "note": None,
                             })
-                        manuf_est = wk_date - timedelta(weeks=int(RNG.integers(2, 12)))
+                        # We do not retain the donor batch dates in the compact
+                        # transfer tuple, so estimate a plausible age but clamp
+                        # it to leave at least seven days of shelf life. The old
+                        # 2-12 week estimate could create already-expired blood
+                        # products when shelf life was only one month.
+                        shelf_days = max(1, int(shelf_life_months[i] * 30.44))
+                        max_age_days = max(0, shelf_days - 7)
+                        estimated_age = min(int(RNG.integers(14, 85)), max_age_days)
+                        manuf_est = wk_date - timedelta(days=estimated_age)
                         in_batch_no = ledger.add_batch(i, give, manuf_est, int(shelf_life_months[i]))
                         transactions.append({
                             "event_time": rand_event_time(wk_date), "date": wk_str, "type": "EXCHANGE_IN",
@@ -523,82 +534,295 @@ def run_simulation(hospitals: pd.DataFrame, medicines: pd.DataFrame,
     return tx_df, inv_state_df, inventory_df, ledger, pair_ids
 
 
-def build_features_from_ledger(tx_df: pd.DataFrame, hospitals: pd.DataFrame,
-                                medicines: pd.DataFrame) -> pd.DataFrame:
-    print("Building features from the transaction ledger...")
-    cons = tx_df[tx_df["type"] == "CONSUMPTION"].copy()
-    cons["date"] = pd.to_datetime(cons["date"])
-    cons["quantity"] = cons["quantity"].abs()
+def _aggregate_training_signals(tx_source: pd.DataFrame | Path | str) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """Read only the transaction columns needed for forecasting.
 
-    weekly = (
-        cons.groupby(["hospital_id", "medicine_id", "date"])
-        .agg(demand_units=("quantity", "sum"))
-        .reset_index().rename(columns={"date": "week_start"})
-        .sort_values(["hospital_id", "medicine_id", "week_start"]).reset_index(drop=True)
+    A full ledger is over one million rows. Reading it in chunks prevents the
+    generator from holding the 100+ MB transaction table and the wide feature
+    table in memory at the same time. Small cold-start DataFrames still use the
+    same logic without going through disk.
+    """
+    needed = ["hospital_id", "medicine_id", "date", "type", "quantity"]
+
+    if isinstance(tx_source, (str, Path)):
+        chunks = pd.read_csv(
+            tx_source,
+            usecols=needed,
+            chunksize=150_000,
+            dtype={
+                "hospital_id": "category",
+                "medicine_id": "category",
+                "type": "category",
+                "quantity": "float32",
+            },
+        )
+    else:
+        chunks = [tx_source[needed].copy()]
+
+    demand_parts: list[pd.DataFrame] = []
+    emergency_parts: list[pd.DataFrame] = []
+    exchange_parts: list[pd.DataFrame] = []
+
+    for chunk in chunks:
+        chunk["date"] = pd.to_datetime(chunk["date"], errors="coerce")
+        chunk = chunk.dropna(subset=["date"])
+
+        consumption = chunk[chunk["type"] == "CONSUMPTION"].copy()
+        if not consumption.empty:
+            consumption["quantity"] = consumption["quantity"].abs().astype("float32")
+            demand_parts.append(
+                consumption.groupby(
+                    ["hospital_id", "medicine_id", "date"],
+                    observed=True,
+                    as_index=False,
+                )["quantity"].sum()
+            )
+
+        emergency = chunk[chunk["type"] == "EMERGENCY_REQUEST"]
+        if not emergency.empty:
+            emergency_parts.append(
+                emergency[["hospital_id", "medicine_id", "date"]].drop_duplicates()
+            )
+
+        exchange = chunk[chunk["type"] == "EXCHANGE_IN"]
+        if not exchange.empty:
+            exchange_parts.append(
+                exchange[["hospital_id", "medicine_id", "date"]].drop_duplicates()
+            )
+
+    if not demand_parts:
+        raise ValueError("No CONSUMPTION events were found; demand features cannot be built.")
+
+    demand = (
+        pd.concat(demand_parts, ignore_index=True)
+        .groupby(["hospital_id", "medicine_id", "date"], observed=True, as_index=False)["quantity"]
+        .sum()
+        .rename(columns={"date": "week_start", "quantity": "demand_units"})
     )
 
-    emer = tx_df[tx_df["type"] == "EMERGENCY_REQUEST"][["hospital_id", "medicine_id", "date"]].copy()
-    emer["date"] = pd.to_datetime(emer["date"]); emer["had_emergency"] = 1
-    exch_in = tx_df[tx_df["type"] == "EXCHANGE_IN"][["hospital_id", "medicine_id", "date"]].copy()
-    exch_in["date"] = pd.to_datetime(exch_in["date"]); exch_in["had_exchange_in"] = 1
+    def combine_flags(parts: list[pd.DataFrame], value_name: str) -> pd.DataFrame:
+        if not parts:
+            return pd.DataFrame(columns=["hospital_id", "medicine_id", "week_start", value_name])
+        out = pd.concat(parts, ignore_index=True).drop_duplicates(
+            ["hospital_id", "medicine_id", "date"]
+        )
+        out = out.rename(columns={"date": "week_start"})
+        out[value_name] = 1
+        return out
 
-    weekly = weekly.merge(emer.drop_duplicates(["hospital_id", "medicine_id", "date"])
-                           .rename(columns={"date": "week_start"}),
-                           on=["hospital_id", "medicine_id", "week_start"], how="left")
-    weekly = weekly.merge(exch_in.drop_duplicates(["hospital_id", "medicine_id", "date"])
-                           .rename(columns={"date": "week_start"}),
-                           on=["hospital_id", "medicine_id", "week_start"], how="left")
-    weekly["had_emergency"] = weekly["had_emergency"].fillna(0).astype(int)
-    weekly["had_exchange_in"] = weekly["had_exchange_in"].fillna(0).astype(int)
+    emergency = combine_flags(emergency_parts, "had_emergency")
+    exchange = combine_flags(exchange_parts, "had_exchange_in")
+    return demand, emergency, exchange
 
-    df = weekly.copy()
-    df["year"] = df["week_start"].dt.year
-    df["month"] = df["week_start"].dt.month
-    df["week_of_year"] = df["week_start"].dt.isocalendar().week.astype(int)
-    df["quarter"] = df["week_start"].dt.quarter
-    df["is_monsoon"] = df["month"].isin([6, 7, 8, 9]).astype(int)
-    df["is_winter"] = df["month"].isin([12, 1, 2]).astype(int)
 
-    g = df.groupby(["hospital_id", "medicine_id"], group_keys=False)["demand_units"]
+def build_features_from_ledger(
+    tx_source: pd.DataFrame | Path | str,
+    hospitals: pd.DataFrame,
+    medicines: pd.DataFrame,
+) -> pd.DataFrame:
+    """Build one-week-ahead, leakage-safe demand features.
+
+    The row dated week *t* has target demand for week *t*, while every
+    demand-derived feature uses information available no later than *t-1*.
+    Missing pair-weeks are explicitly represented as zero consumption so
+    ``lag_1w`` always means the immediately preceding calendar week.
+    """
+    print("Building leakage-safe features from the transaction ledger...")
+    weekly, emergency, exchange = _aggregate_training_signals(tx_source)
+
+    # Complete hospital × medicine × week calendar. The old implementation
+    # silently skipped no-consumption weeks, making lag_1w mean "previous
+    # observed row" rather than "previous week".
+    weeks = pd.DataFrame(
+        {"week_start": pd.date_range(weekly["week_start"].min(), weekly["week_start"].max(), freq="W-MON")}
+    )
+    pairs = (
+        hospitals[["hospital_id"]]
+        .assign(_key=1)
+        .merge(medicines[["medicine_id"]].assign(_key=1), on="_key")
+        .drop(columns="_key")
+    )
+    grid = pairs.assign(_key=1).merge(weeks.assign(_key=1), on="_key").drop(columns="_key")
+    df = grid.merge(weekly, on=["hospital_id", "medicine_id", "week_start"], how="left")
+    df["demand_units"] = df["demand_units"].fillna(0).astype("float32")
+
+    df = df.merge(
+        emergency,
+        on=["hospital_id", "medicine_id", "week_start"],
+        how="left",
+    ).merge(
+        exchange,
+        on=["hospital_id", "medicine_id", "week_start"],
+        how="left",
+    )
+    df["had_emergency"] = pd.to_numeric(
+        df["had_emergency"], errors="coerce"
+    ).fillna(0).astype("int8")
+    df["had_exchange_in"] = pd.to_numeric(
+        df["had_exchange_in"], errors="coerce"
+    ).fillna(0).astype("int8")
+    df = df.sort_values(["hospital_id", "medicine_id", "week_start"]).reset_index(drop=True)
+
+    df["year"] = df["week_start"].dt.year.astype("int16")
+    df["month"] = df["week_start"].dt.month.astype("int8")
+    df["week_of_year"] = df["week_start"].dt.isocalendar().week.astype("int8")
+    df["quarter"] = df["week_start"].dt.quarter.astype("int8")
+    df["is_monsoon"] = df["month"].isin([6, 7, 8, 9]).astype("int8")
+    df["is_winter"] = df["month"].isin([12, 1, 2]).astype("int8")
+
+    group_keys = ["hospital_id", "medicine_id"]
+    g = df.groupby(group_keys, observed=True, group_keys=False)["demand_units"]
     for lag in (1, 2, 3, 4, 8, 12):
-        df[f"lag_{lag}w"] = g.shift(lag)
-    for win in (2, 4, 8, 12):
-        df[f"roll_mean_{win}w"] = g.transform(lambda s: s.shift(1).rolling(win, min_periods=1).mean())
-        df[f"roll_std_{win}w"] = g.transform(lambda s: s.shift(1).rolling(win, min_periods=1).std())
-    df["roll_min_4w"] = g.transform(lambda s: s.shift(1).rolling(4, min_periods=1).min())
-    df["roll_max_4w"] = g.transform(lambda s: s.shift(1).rolling(4, min_periods=1).max())
-    df["diff_1w"] = g.diff(1)
-    df["diff_4w"] = g.diff(4)
-    df["ewm_4w"] = g.transform(lambda s: s.shift(1).ewm(span=4, adjust=False).mean())
-    df["ewm_12w"] = g.transform(lambda s: s.shift(1).ewm(span=12, adjust=False).mean())
+        df[f"lag_{lag}w"] = g.shift(lag).astype("float32")
+    for window in (2, 4, 8, 12):
+        df[f"roll_mean_{window}w"] = g.transform(
+            lambda series: series.shift(1).rolling(window, min_periods=1).mean()
+        ).astype("float32")
+        df[f"roll_std_{window}w"] = g.transform(
+            lambda series: series.shift(1).rolling(window, min_periods=2).std()
+        ).astype("float32")
+    df["roll_min_4w"] = g.transform(
+        lambda series: series.shift(1).rolling(4, min_periods=1).min()
+    ).astype("float32")
+    df["roll_max_4w"] = g.transform(
+        lambda series: series.shift(1).rolling(4, min_periods=1).max()
+    ).astype("float32")
 
-    ge = df.groupby(["hospital_id", "medicine_id"], group_keys=False)["had_emergency"]
-    gx = df.groupby(["hospital_id", "medicine_id"], group_keys=False)["had_exchange_in"]
-    df["emergency_last_4w"] = ge.transform(lambda s: s.shift(1).rolling(4, min_periods=1).max()).fillna(0)
-    df["exchange_in_last_4w"] = gx.transform(lambda s: s.shift(1).rolling(4, min_periods=1).max()).fillna(0)
+    # CRITICAL LEAKAGE FIX:
+    # `g.diff(1)` used target_t - target_(t-1), exposing the current target.
+    # With lag_1w the model could reconstruct target_t exactly. Shift first so
+    # differences use only demand already known before the forecast week.
+    df["diff_1w"] = g.transform(lambda series: series.shift(1).diff(1)).astype("float32")
+    df["diff_4w"] = g.transform(lambda series: series.shift(1).diff(4)).astype("float32")
+    df["ewm_4w"] = g.transform(
+        lambda series: series.shift(1).ewm(span=4, adjust=False).mean()
+    ).astype("float32")
+    df["ewm_12w"] = g.transform(
+        lambda series: series.shift(1).ewm(span=12, adjust=False).mean()
+    ).astype("float32")
+
+    ge = df.groupby(group_keys, observed=True, group_keys=False)["had_emergency"]
+    gx = df.groupby(group_keys, observed=True, group_keys=False)["had_exchange_in"]
+    df["emergency_last_4w"] = ge.transform(
+        lambda series: series.shift(1).rolling(4, min_periods=1).max()
+    ).fillna(0).astype("int8")
+    df["exchange_in_last_4w"] = gx.transform(
+        lambda series: series.shift(1).rolling(4, min_periods=1).max()
+    ).fillna(0).astype("int8")
     df = df.drop(columns=["had_emergency", "had_exchange_in"])
 
-    hcols = ["hospital_id", "facility_type", "province", "district", "ecoregion", "urban_class",
-             "bed_capacity", "ownership", "load_factor", "urban_factor", "is_referral",
-             "road_access_score", "latitude", "longitude", "is_demo"]
-    mcols = ["medicine_id", "generic_name", "category", "dosage_form", "shelf_life_months",
-             "unit_cost_npr", "requires_cold_chain", "is_essential",
-             "base_demand_per_100_beds", "abc_class", "pack_size"]
+    hcols = [
+        "hospital_id", "facility_type", "province", "district", "ecoregion", "urban_class",
+        "bed_capacity", "ownership", "load_factor", "urban_factor", "is_referral",
+        "road_access_score", "latitude", "longitude", "is_demo",
+    ]
+    mcols = [
+        "medicine_id", "generic_name", "category", "dosage_form", "shelf_life_months",
+        "unit_cost_npr", "requires_cold_chain", "is_essential",
+        "base_demand_per_100_beds", "abc_class", "pack_size",
+    ]
     df = df.merge(hospitals[hcols], on="hospital_id", how="left")
     df = df.merge(medicines[mcols], on="medicine_id", how="left")
 
-    df["month_sin"] = np.sin(2 * np.pi * df["month"] / 12)
-    df["month_cos"] = np.cos(2 * np.pi * df["month"] / 12)
-    df["week_sin"] = np.sin(2 * np.pi * df["week_of_year"] / 52)
-    df["week_cos"] = np.cos(2 * np.pi * df["week_of_year"] / 52)
+    df["month_sin"] = np.sin(2 * np.pi * df["month"] / 12).astype("float32")
+    df["month_cos"] = np.cos(2 * np.pi * df["month"] / 12).astype("float32")
+    df["week_sin"] = np.sin(2 * np.pi * df["week_of_year"] / 52).astype("float32")
+    df["week_cos"] = np.cos(2 * np.pi * df["week_of_year"] / 52).astype("float32")
 
     df = df.rename(columns={"demand_units": "target_demand"})
     df = df[df["week_start"] >= (pd.Timestamp(START_DATE) + pd.Timedelta(weeks=12))].copy()
-    feature_fill = [c for c in df.columns if c.startswith(("lag_", "roll_", "diff_", "ewm_"))]
-    for c in feature_fill:
-        df[c] = df[c].fillna(0)
+    historical_features = [
+        column for column in df.columns
+        if column.startswith(("lag_", "roll_", "diff_", "ewm_"))
+    ]
+    df[historical_features] = df[historical_features].fillna(0).astype("float32")
+
+    # Guard against accidental reintroduction of the exact leakage formula.
+    leaked_difference = (df["target_demand"] - df["lag_1w"]).astype("float32")
+    if np.allclose(df["diff_1w"], leaked_difference, equal_nan=True):
+        raise RuntimeError("Target leakage detected: diff_1w contains current-week demand.")
+
+    print(f"Feature rows={len(df):,}; forecast weeks use history through t-1 only.")
     return df
 
+
+
+def feature_partition_path(directory: Path, hospital_id: str) -> Path:
+    safe_id = "".join(
+        character if character.isalnum() or character in ("-", "_") else "_"
+        for character in str(hospital_id)
+    )
+    return directory / f"{safe_id}.csv"
+
+
+def save_feature_partitions(
+    features: pd.DataFrame,
+    directory: Path,
+    *,
+    replace_all: bool = True,
+) -> None:
+    """Write small per-hospital histories for low-latency API serving."""
+    directory.mkdir(parents=True, exist_ok=True)
+    if replace_all:
+        for old_file in directory.glob("*.csv"):
+            old_file.unlink()
+    for hospital_id, rows in features.groupby("hospital_id", observed=True):
+        rows.to_csv(feature_partition_path(directory, str(hospital_id)), index=False)
+
+
+def build_inventory_snapshot(
+    inventory_df: pd.DataFrame,
+    inventory_state_df: pd.DataFrame,
+    medicines: pd.DataFrame,
+) -> pd.DataFrame:
+    """Create the compact serving snapshot consumed by alert/matching APIs.
+
+    `inventory.csv` remains the batch-level source of truth; this file simply
+    enriches each open batch with the latest pair-level reorder/usage state.
+    """
+    if inventory_df.empty:
+        return pd.DataFrame()
+
+    state = inventory_state_df.copy()
+    state["week_start"] = pd.to_datetime(state["week_start"])
+    latest = (
+        state.sort_values("week_start")
+        .groupby(["hospital_id", "medicine_id"], observed=True, as_index=False)
+        .tail(1)
+    )
+    latest = latest[[
+        "hospital_id", "medicine_id", "week_start", "reorder_level",
+        "avg_daily_use", "stock_status",
+    ]].rename(columns={"week_start": "snapshot_date"})
+
+    snapshot = inventory_df.merge(
+        latest, on=["hospital_id", "medicine_id"], how="left"
+    ).merge(
+        medicines[["medicine_id", "unit", "unit_cost_npr"]],
+        on="medicine_id",
+        how="left",
+    )
+    snapshot = snapshot.rename(columns={
+        "batch_no": "batch_id",
+        "quantity_available": "quantity_units",
+    })
+    snapshot["expiry_date"] = pd.to_datetime(snapshot["expiry_date"])
+    snapshot["snapshot_date"] = pd.to_datetime(snapshot["snapshot_date"])
+    snapshot["days_to_expiry"] = (
+        snapshot["expiry_date"] - snapshot["snapshot_date"]
+    ).dt.days
+    snapshot["days_of_cover"] = np.where(
+        snapshot["avg_daily_use"].fillna(0) > 0,
+        snapshot["quantity_units"] / snapshot["avg_daily_use"],
+        np.nan,
+    ).round(2)
+    columns = [
+        "hospital_id", "medicine_id", "batch_id", "quantity_units",
+        "manufacture_date", "expiry_date", "snapshot_date", "reorder_level",
+        "avg_daily_use", "days_of_cover", "stock_status", "unit",
+        "unit_cost_npr", "days_to_expiry",
+    ]
+    return snapshot[columns]
 
 def save_pending_arrivals(ledger: BatchLedger, pair_ids: list[tuple[str, str]], path: Path):
     data = ledger.pending_to_jsonable(pair_ids)
@@ -608,24 +832,39 @@ def save_pending_arrivals(ledger: BatchLedger, pair_ids: list[tuple[str, str]], 
 
 
 def main():
+    import gc
+
     OUT_RAW.mkdir(parents=True, exist_ok=True)
     OUT_PROCESSED.mkdir(parents=True, exist_ok=True)
 
     hospitals = build_hospitals()
     medicines = build_medicines()
+    # Keep the reference CSVs and demo credentials synchronized with the
+    # Python builders, which are the actual source of truth.
+    hospitals.to_csv(OUT_RAW / "hospitals.csv", index=False)
+    medicines.to_csv(OUT_RAW / "medicines.csv", index=False)
+    write_demo_accounts(hospitals)
 
     tx_df, inv_state_df, inventory_df, ledger, pair_ids = run_simulation(hospitals, medicines)
-    tx_df.to_csv(OUT_RAW / "transactions.csv", index=False)
+    tx_path = OUT_RAW / "transactions.csv"
+    tx_df.to_csv(tx_path, index=False)
     inv_state_df.to_csv(OUT_RAW / "inventory_state.csv", index=False)
     inventory_df.to_csv(OUT_RAW / "inventory.csv", index=False)
+    serving_snapshot = build_inventory_snapshot(inventory_df, inv_state_df, medicines)
+    serving_snapshot.to_csv(OUT_RAW / "inventory_snapshots.csv", index=False)
     save_pending_arrivals(ledger, pair_ids, OUT_RAW / "pending_arrivals.json")
     print(f"transactions={len(tx_df):,}  inventory_state={len(inv_state_df):,}  "
           f"inventory(current batches)={len(inventory_df):,}")
     print(tx_df["type"].value_counts())
 
-    features = build_features_from_ledger(tx_df, hospitals, medicines)
+    # Release the large event table before constructing the wide feature table.
+    del tx_df, inv_state_df, inventory_df, ledger
+    gc.collect()
+    features = build_features_from_ledger(tx_path, hospitals, medicines)
     features.to_csv(OUT_PROCESSED / "demand_features.csv", index=False)
+    save_feature_partitions(features, OUT_PROCESSED / "by_hospital")
     print(f"demand_features={len(features):,} cols={features.shape[1]}")
+    print(f"serving partitions={features['hospital_id'].nunique():,}")
 
 
 if __name__ == "__main__":

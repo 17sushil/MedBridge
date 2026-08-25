@@ -19,3 +19,19 @@ def test_batch_forecast_returns_non_negative_predictions():
     assert len(predicted) == len(frame)
     assert "predicted_demand" in predicted
     assert (predicted["predicted_demand"] >= 0).all()
+
+
+def test_next_week_forecast_is_genuinely_future():
+    pytest.importorskip("xgboost")
+    from app.services.forecast_services import next_week_forecast
+
+    partition = ROOT / "data" / "processed" / "by_hospital" / "HOSP-BG-001.csv"
+    if not partition.exists():
+        pytest.skip("Generated per-hospital serving features are not available")
+
+    history = pd.read_csv(partition, parse_dates=["week_start"])
+    future = next_week_forecast(history)
+    assert len(future) == history["medicine_id"].nunique()
+    assert future["week_start"].min() > history["week_start"].max()
+    assert future["target_demand"].isna().all()
+    assert (future["predicted_demand"] >= 0).all()

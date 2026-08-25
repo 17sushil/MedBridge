@@ -125,10 +125,10 @@ def main() -> int:
         feat = ROOT / "data" / "processed" / "demand_features.csv"
         if not feat.exists():
             print("  skip predict: demand_features.csv missing")
-            print("  run: python training/generate_synthetic_data.py")
+            print("  run: python3 training/generate_ledger_data.py")
         elif not MODEL_PATH.exists():
             print("  skip predict: model missing")
-            print("  run: python training/train_xgb.py")
+            print("  run: python3 training/train_xgb.py")
         else:
             import pandas as pd
             df = pd.read_csv(feat, parse_dates=["week_start"])

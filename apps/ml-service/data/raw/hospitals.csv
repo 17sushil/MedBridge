@@ -40,5 +40,3 @@ HOSP-SP-001,Seti Provincial Hospital,Regional_Hospital,Sudurpashchim,Kailali,Dha
 HOSP-SP-002,Mahakali Hospital,Zonal_Hospital,Sudurpashchim,Kanchanpur,Bhimdatta,Terai,Municipality,28.97,80.18,150,public,0,Far-west border,0.45,0.75,0,0.917,,
 HOSP-SP-003,Bajhang District Hospital,District_Hospital,Sudurpashchim,Bajhang,Chainpur,Mountain,Municipality,29.55,81.2,35,public,0,Mountain district,0.3,0.75,0,0.426,,
 HOSP-SP-004,Dadeldhura Hospital,District_Hospital,Sudurpashchim,Dadeldhura,Amargadhi,Hill,Municipality,29.3,80.58,55,public,0,Hill district,0.3,0.75,0,0.78,,
-TEST-HOSP-999,,District_Hospital,Bagmati,Chitwan,,Hill,Municipality,27.7,85.3,80,public,0,,1.0,1.0,0,0.7,,
-TEST-HOSP-MINIMAL,,District_Hospital,Koshi,Morang,,Hill,Municipality,27.7,85.3,50,public,0,,1.0,1.0,0,0.7,,

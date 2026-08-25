@@ -25,8 +25,8 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from generate_synthetic_data import build_hospitals, build_medicines
 from generate_ledger_data import (
-    run_simulation, build_features_from_ledger, build_pairs, BatchLedger,
-    save_pending_arrivals,
+    run_simulation, build_features_from_ledger, build_inventory_snapshot,
+    save_feature_partitions, build_pairs, BatchLedger, save_pending_arrivals,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -38,6 +38,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--weeks", type=int, default=4)
     args = ap.parse_args()
+    OUT_PROCESSED.mkdir(parents=True, exist_ok=True)
 
     tx_path = OUT_RAW / "transactions.csv"
     inv_state_path = OUT_RAW / "inventory_state.csv"
@@ -101,12 +102,15 @@ def main():
     tx_df.to_csv(tx_path, index=False)
     inv_state_df.to_csv(inv_state_path, index=False)
     new_inv.to_csv(inv_path, index=False)  # CURRENT-only, overwrite not append
+    serving_snapshot = build_inventory_snapshot(new_inv, inv_state_df, medicines)
+    serving_snapshot.to_csv(OUT_RAW / "inventory_snapshots.csv", index=False)
     save_pending_arrivals(ledger, pair_ids, pending_path)
     print(f"transactions.csv now {len(tx_df):,} rows, inventory_state.csv now {len(inv_state_df):,} rows")
     print(f"inventory.csv (current batches) refreshed: {len(new_inv):,} open batches")
 
-    features = build_features_from_ledger(tx_df, hospitals, medicines)
+    features = build_features_from_ledger(tx_path, hospitals, medicines)
     features.to_csv(OUT_PROCESSED / "demand_features.csv", index=False)
+    save_feature_partitions(features, OUT_PROCESSED / "by_hospital")
     print(f"demand_features.csv rebuilt: {len(features):,} rows")
     print("Now re-run training/train_xgb.py to retrain on the updated data.")
 

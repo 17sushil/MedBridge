@@ -121,15 +121,31 @@ export function mapCategories(rows) {
   }));
 }
 
+// FIXED: Expiry logic - now correctly shows expired vs expiring
 export function mapExpiryAlert(m) {
   const expiry = new Date(m.expiry);
-  const daysLeft = Math.max(0, Math.ceil((expiry - Date.now()) / (1000 * 60 * 60 * 24)));
+  const now = new Date();
+  const diffMs = expiry - now;
+  const daysLeft = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+  // FIX: Don't hide expired with Math.max(0), show actual negative days
+  let severity = medicineStatusLabel(m.status);
+  let displayDays = daysLeft;
+
+  // If already expired, mark as critical and show how many days ago
+  if (daysLeft < 0) {
+    severity = "Critical";
+    displayDays = daysLeft; // Keep negative to show expired
+  }
+
   return {
     id: m.id,
     medicine: m.name,
-    daysLeft,
+    daysLeft: displayDays, // Can be negative for expired
+    isExpired: daysLeft < 0,
     expiry: expiry.toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" }),
-    severity: medicineStatusLabel(m.status),
+    expiryRaw: expiry,
+    severity,
   };
 }
 

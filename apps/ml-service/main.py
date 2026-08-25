@@ -109,15 +109,15 @@ def cmd_doctor(_: argparse.Namespace) -> None:
         raise SystemExit(1)
 
     print("\nIf data/model missing, run:")
-    print("  python training/generate_synthetic_data.py")
-    print("  python training/train_xgb.py")
+    print("  python3 training/generate_ledger_data.py")
+    print("  python3 training/train_xgb.py")
     print("\nDoctor import check passed")
 
 
 def cmd_metrics(_: argparse.Namespace) -> None:
     path = ROOT / "artifacts" / "metrics" / "training_metrics.json"
     if not path.exists():
-        print(f"Missing {path}. Run: python training/train_xgb.py")
+        print(f"Missing {path}. Run: python3 training/train_xgb.py")
         raise SystemExit(1)
     print(path.read_text(encoding="utf-8"))
 
@@ -126,18 +126,18 @@ def cmd_forecast(args: argparse.Namespace) -> None:
     import pandas as pd
 
     mod = import_forecast_service()
-    batch_forecast = mod.batch_forecast
+    next_week_forecast = mod.next_week_forecast
 
     feat_path = ROOT / "data" / "processed" / "demand_features.csv"
     if not feat_path.exists():
         print(f"Missing {feat_path}")
-        print("Run: python training/generate_synthetic_data.py")
+        print("Run: python3 training/generate_ledger_data.py")
         raise SystemExit(1)
 
     model_path = ROOT / "artifacts" / "models" / "xgb_demand_model.joblib"
     if not model_path.exists():
         print(f"Missing model {model_path}")
-        print("Run: python training/train_xgb.py")
+        print("Run: python3 training/train_xgb.py")
         raise SystemExit(1)
 
     feats = pd.read_csv(feat_path, parse_dates=["week_start"])
@@ -148,10 +148,9 @@ def cmd_forecast(args: argparse.Namespace) -> None:
             print("Try HOSP-BG-001 .. HOSP-KR-002 (see hospitals.csv, is_demo=1 rows)")
             raise SystemExit(1)
 
-    latest = feats["week_start"].max()
-    rows = feats[feats["week_start"] == latest].copy()
     try:
-        out = batch_forecast(rows)
+        out = next_week_forecast(feats)
+        latest = pd.to_datetime(out["week_start"]).max()
     except Exception:
         print("Forecast failed while predicting:\n")
         traceback.print_exc()
@@ -168,7 +167,6 @@ def cmd_forecast(args: argparse.Namespace) -> None:
             "medicine_id",
             "generic_name",
             "category",
-            "target_demand",
             "predicted_demand",
         ]
         if c in out.columns

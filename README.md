@@ -28,8 +28,8 @@ React SPA ──HTTP──▶ Express API ──Prisma──▶ PostgreSQL
 cd apps/ml-service
 python -m venv venv && source venv/bin/activate   # Windows: venv\Scripts\activate
 pip install -r requirements.txt
-python training/generate_synthetic_data.py        # generates data/raw CSVs
-python training/train_xgb.py                      # trains + saves the model
+python3 training/generate_ledger_data.py          # event ledger + leakage-safe features
+python3 training/train_xgb.py                     # audited training + saved model
 uvicorn app.api.server:app --host 0.0.0.0 --port 8000 --reload
 ```
 
@@ -57,11 +57,11 @@ first). All use password **`MedBridge@2026`**:
 
 | Hospital | Login |
 |---|---|
-| DEMO-01 Bir Hospital | `admin@demo-01.medbridge.local` |
-| DEMO-02 TUTH | `admin@demo-02.medbridge.local` |
-| DEMO-03 … DEMO-08 | `admin@demo-0X.medbridge.local` |
+| HOSP-BG-001 Bir Hospital | `admin@hosp-bg-001.medbridge.local` |
+| HOSP-BG-002 TUTH | `admin@hosp-bg-002.medbridge.local` |
+| Other six demo hospitals | Run `cd apps/backend && npm run verify:demo-logins` |
 
-Legacy single login: `sarah.johnson@cityhospital.org` / `password123`.
+All demo administrators use `MedBridge@2026`. Legacy login: `sarah.johnson@cityhospital.org` / `password123`.
 
 ## AI Assistant
 
