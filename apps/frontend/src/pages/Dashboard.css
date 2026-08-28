@@ -277,3 +277,17 @@
 .dash-muted-cell {
   color: var(--ink-soft);
 }
+
+
+.dash-alert-dial-expired {
+  background: var(--coral-100);
+}
+
+.dash-alert-dial-expired-label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--coral-700);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
