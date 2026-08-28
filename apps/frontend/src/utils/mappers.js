@@ -123,16 +123,18 @@ export function mapCategories(rows) {
 
 export function mapExpiryAlert(m) {
   const expiry = new Date(m.expiry);
-  const daysLeft = Math.max(0, Math.ceil((expiry - Date.now()) / (1000 * 60 * 60 * 24)));
+  const daysLeft = Math.ceil((expiry - Date.now()) / (1000 * 60 * 60 * 24));
+  const isExpired = daysLeft < 0;
+
   return {
     id: m.id,
     medicine: m.name,
-    daysLeft,
+    daysLeft: isExpired ? 0 : daysLeft,
+    isExpired,
     expiry: expiry.toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" }),
-    severity: medicineStatusLabel(m.status),
+    severity: isExpired ? "Expired" : medicineStatusLabel(m.status),
   };
 }
-
 export function mapActivityFromNotifications(notifications) {
   return notifications.slice(0, 5).map((n) => ({
     id: n.id,
