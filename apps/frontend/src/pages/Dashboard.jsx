@@ -31,14 +31,41 @@ const getRecentActivity = () => api.getRecentActivity();
 
 export default function Dashboard() {
   const [period, setPeriod] = useState("week");
-  const getInventoryOverview = useCallback(() => api.getInventoryOverview(period), [period]);
+  const getInventoryOverview = useCallback(
+    () => api.getInventoryOverview(period),
+    [period],
+  );
 
-  const { data: stats, error: statsError, reload: reloadStats } = useAsyncData(getDashboardStats);
-  const { data: overview, error: overviewError, reload: reloadOverview } = useAsyncData(getInventoryOverview);
-  const { data: categories, error: categoriesError, reload: reloadCategories } = useAsyncData(getMedicineCategories);
-  const { data: medicines, error: medicinesError, reload: reloadMedicines } = useAsyncData(getRecentMedicines);
-  const { data: alerts, error: alertsError, reload: reloadAlerts } = useAsyncData(getExpiryAlerts);
-  const { data: activity, error: activityError, reload: reloadActivity } = useAsyncData(getRecentActivity);
+  const {
+    data: stats,
+    error: statsError,
+    reload: reloadStats,
+  } = useAsyncData(getDashboardStats);
+  const {
+    data: overview,
+    error: overviewError,
+    reload: reloadOverview,
+  } = useAsyncData(getInventoryOverview);
+  const {
+    data: categories,
+    error: categoriesError,
+    reload: reloadCategories,
+  } = useAsyncData(getMedicineCategories);
+  const {
+    data: medicines,
+    error: medicinesError,
+    reload: reloadMedicines,
+  } = useAsyncData(getRecentMedicines);
+  const {
+    data: alerts,
+    error: alertsError,
+    reload: reloadAlerts,
+  } = useAsyncData(getExpiryAlerts);
+  const {
+    data: activity,
+    error: activityError,
+    reload: reloadActivity,
+  } = useAsyncData(getRecentActivity);
 
   const forecastFetcher = useCallback(() => aiService.getForecastInsight(), []);
 
@@ -125,7 +152,9 @@ export default function Dashboard() {
           ) : overview ? (
             <InventoryTrendChart data={overview} />
           ) : (
-            <Skeleton style={{ height: 260, width: "100%", marginTop: "0.5rem" }} />
+            <Skeleton
+              style={{ height: 260, width: "100%", marginTop: "0.5rem" }}
+            />
           )}
         </Card>
 
@@ -163,9 +192,21 @@ export default function Dashboard() {
             ) : alerts ? (
               alerts.map((a) => (
                 <div key={a.id} className="dash-alert-row">
-                  <div className="dash-alert-dial">
-                    <span className="dash-alert-dial-num">{a.daysLeft}</span>
-                    <span className="dash-alert-dial-label">days</span>
+                  <div
+                    className={`dash-alert-dial${a.isExpired ? " dash-alert-dial-expired" : ""}`}
+                  >
+                    {a.isExpired ? (
+                      <span className="dash-alert-dial-expired-label">
+                        Expired
+                      </span>
+                    ) : (
+                      <>
+                        <span className="dash-alert-dial-num">
+                          {a.daysLeft}
+                        </span>
+                        <span className="dash-alert-dial-label">days</span>
+                      </>
+                    )}
                   </div>
                   <div className="dash-alert-info">
                     <div className="dash-alert-name">{a.medicine}</div>
@@ -216,7 +257,10 @@ export default function Dashboard() {
       <Card className="dash-table-card">
         <div className="dash-panel-head">
           <h3 className="dash-panel-title">Recent Medicines</h3>
-          <Link to="/inventory" className="dash-panel-link dash-panel-link-icon">
+          <Link
+            to="/inventory"
+            className="dash-panel-link dash-panel-link-icon"
+          >
             View all <ArrowRight size={12} />
           </Link>
         </div>
