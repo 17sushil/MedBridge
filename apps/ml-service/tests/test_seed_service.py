@@ -11,7 +11,7 @@ def test_seed_hospital_history_produces_usable_data():
         "province": "Bagmati",
         "district": "Chitwan",
         "bed_capacity": 80,
-    }, weeks_of_history=8)
+    }, weeks_of_history=8, persist=False)
 
     assert result["weeks_generated"] >= 8  # Monday-alignment can add a week, that's fine
     assert result["transaction_count"] > 0
@@ -37,6 +37,6 @@ def test_seed_hospital_history_works_with_minimal_attributes():
         "province": "Koshi",
         "district": "Morang",
         "bed_capacity": 50,
-    }, weeks_of_history=4)
+    }, weeks_of_history=4, persist=False)
 
     assert result["transaction_count"] > 0
