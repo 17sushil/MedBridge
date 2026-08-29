@@ -19,14 +19,17 @@ build/
 .next/
 out/
 
-# ML large data - from Samir branch
-apps/ml-service/data/raw/transactions.csv
-apps/ml-service/data/raw/legacy/transactions.csv
+# ML service — generated data and artifacts are regenerable
+# (see apps/ml-service/.gitignore for the authoritative rules)
+apps/ml-service/data/raw/*.csv
+apps/ml-service/data/raw/*.json
 apps/ml-service/data/processed/
-apps/ml-service/artifacts/models/*.joblib
+apps/ml-service/artifacts/
+
 *.pyc
 __pycache__/
 .pytest_cache/
+.ipynb_checkpoints/
 
 # OS
 .DS_Store
