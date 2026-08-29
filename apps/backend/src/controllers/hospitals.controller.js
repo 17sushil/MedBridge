@@ -19,4 +19,17 @@ const getOne = asyncHandler(async (req, res) => {
   res.json(hospital);
 });
 
-module.exports = { list, getOne };
+// Public directory (no auth) — used by the "Join hospital" registration page.
+// Exposes only coarse, non-sensitive fields (id, name, type, location).
+const directory = asyncHandler(async (req, res) => {
+  const hospitals = await service.listHospitals();
+  const shaped = hospitals.map((h) => ({
+    id: h.id,
+    name: h.name,
+    type: h.type,
+    location: h.location,
+  }));
+  res.json(shaped);
+});
+
+module.exports = { list, getOne, directory };

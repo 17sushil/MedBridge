@@ -165,6 +165,7 @@ async function main() {
         email,
         passwordHash,
         role: "ADMIN",
+        approvalStatus: "APPROVED",
         hospitalId: hospital.id,
       },
     });
@@ -187,6 +188,7 @@ await prisma.user.create({
     email: "sarah.johnson@cityhospital.org",
     passwordHash: legacyHash,
     role: "ADMIN",
+    approvalStatus: "APPROVED",
     hospitalId: sarahHospitalId,
     avatarUrl:
       "https://images.unsplash.com/photo-1594824476967-48c8b964273f?q=80&w=200&auto=format&fit=crop",

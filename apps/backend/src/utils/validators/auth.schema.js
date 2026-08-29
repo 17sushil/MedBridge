@@ -9,18 +9,28 @@ const registerHospitalSchema = z.object({
   password: z.string().min(8),
 });
 
-const registerStaffSchema = z.object({
+// Public self-registration for Staff / Inventory Manager at an existing hospital.
+const registerMemberSchema = z.object({
   name: z.string().min(2),
   email: z.string().email(),
   password: z.string().min(8),
   hospitalId: z.string().uuid(),
+  role: z.enum(["STAFF", "INVENTORY_MANAGER"]),
+});
+
+// Admin-created account (Staff / Inventory Manager only).
+const registerUserSchema = z.object({
+  name: z.string().min(2),
+  email: z.string().email(),
+  password: z.string().min(8),
+  hospitalId: z.string().uuid(),
+  role: z.enum(["STAFF", "INVENTORY_MANAGER"]),
 });
 
 const loginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(1),
 });
-
 
 const updateProfileSchema = z.object({
   name: z.string().trim().min(2).max(100).optional(),
@@ -31,4 +41,16 @@ const deleteAccountSchema = z.object({
   password: z.string().min(1, "Password is required"),
 });
 
-module.exports = { registerHospitalSchema, registerStaffSchema, loginSchema, updateProfileSchema,deleteAccountSchema };
+const approveUserSchema = z.object({
+  approve: z.boolean(),
+});
+
+module.exports = {
+  registerHospitalSchema,
+  registerMemberSchema,
+  registerUserSchema,
+  loginSchema,
+  updateProfileSchema,
+  deleteAccountSchema,
+  approveUserSchema,
+};
