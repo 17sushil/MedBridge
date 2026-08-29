@@ -179,4 +179,8 @@ export const api = {
       })
     );
   },
+
+    async deleteReport(id) {
+    return request(`/reports/${id}`, { method: "DELETE" });
+  },
 };

@@ -10,5 +10,6 @@ router.use(requireAuth);
 
 router.get("/", controller.list);
 router.post("/", validate(createReportSchema), controller.create);
+router.delete("/:id", controller.remove);
 
 module.exports = router;

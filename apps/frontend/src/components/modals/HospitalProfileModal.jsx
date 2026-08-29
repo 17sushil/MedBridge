@@ -75,10 +75,12 @@ export default function HospitalProfileModal({ hospitalId, onClose }) {
             <Badge tone="navy">{hospital.type}</Badge>
           </div>
 
+          {/* //This Shows the hospitalId
           <div style={{ fontSize: 12, color: "var(--ink-faint)" }}>
             Hospital ID: {hospital.id}
-            {hospital.externalCode && ` · Code: ${hospital.externalCode}`}
-          </div>
+            {hospital.externalCode && ` · Code: ${hospital.externalCode}`} 
+          </div>  */}
+          
         </div>
       ) : null}
     </Modal>

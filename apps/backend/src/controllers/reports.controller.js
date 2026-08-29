@@ -11,4 +11,9 @@ const create = asyncHandler(async (req, res) => {
   res.status(201).json(report);
 });
 
-module.exports = { list, create };
+const remove = asyncHandler(async (req, res) => {
+  await service.remove(req.user.hospitalId, req.params.id);
+  res.status(204).send();
+});
+
+module.exports = { list, create, remove };
