@@ -28,8 +28,9 @@ React SPA ──HTTP──▶ Express API ──Prisma──▶ PostgreSQL
 cd apps/ml-service
 python -m venv venv && source venv/bin/activate   # Windows: venv\Scripts\activate
 pip install -r requirements.txt
-python training/generate_synthetic_data.py        # generates data/raw CSVs
+python training/generate_ledger_data.py           # generates data/raw CSVs + features
 python training/train_xgb.py                      # trains + saves the model
+# (or open notebooks/01–04 for EDA, model comparison, training & evaluation)
 uvicorn app.api.server:app --host 0.0.0.0 --port 8000 --reload
 ```
 
