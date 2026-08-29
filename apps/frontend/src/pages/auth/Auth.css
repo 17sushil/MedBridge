@@ -117,6 +117,16 @@
   font-size: 0.875rem;
 }
 
+.auth-success {
+  padding: 0.65rem 0.85rem;
+  background: var(--teal-50, #e6f6f4);
+  border: 1px solid var(--teal-200, #b5e4df);
+  border-radius: var(--radius-md);
+  color: var(--teal-700, #0b6f65);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
 .auth-submit {
   width: 100%;
   margin-top: 0.25rem;

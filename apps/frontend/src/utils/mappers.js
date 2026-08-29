@@ -41,7 +41,7 @@ const REPORT_TYPE_LABEL = {
   COMPLIANCE: "Compliance",
 };
 
-const ROLE_LABEL = { ADMIN: "Admin", STAFF: "Staff" };
+const ROLE_LABEL = { ADMIN: "Admin", INVENTORY_MANAGER: "Inventory Manager", STAFF: "Staff" };
 
 const CATEGORY_COLORS = ["#233A5C", "#0E8C82", "#26A596", "#E8A23D", "#546E97", "#EBB35C"];
 
@@ -72,6 +72,8 @@ export function mapUser(user) {
     name: user.name,
     email: user.email,
     role: roleLabel(user.role),
+    roleKey: user.role, // raw enum (ADMIN / INVENTORY_MANAGER / STAFF) for gating
+    approvalStatus: user.approvalStatus,
     hospital: user.hospital?.name || "",
     hospitalId: user.hospitalId,
     avatar:
