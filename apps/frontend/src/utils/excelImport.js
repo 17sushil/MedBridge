@@ -69,6 +69,47 @@ function normalizeHeader(key) {
 }
 
 /**
+ * Download a ready-to-fill Excel template with the exact expected headers and
+ * one example row. Uses SheetJS to write a real .xlsx file client-side.
+ */
+export function downloadTemplate() {
+  const header = [
+    "name",
+    "category",
+    "batch",
+    "quantity",
+    "unit",
+    "expiry",
+    "unitPrice",
+    "status",
+    "medicineCode",
+  ];
+
+  // One illustrative row so users see the expected format at a glance.
+  const example = [
+    "Paracetamol",
+    "Antipyretic",
+    "BATCH-0001",
+    100,
+    "boxes",
+    "2027-06-30",
+    1.5,
+    "In Stock",
+    "MED-001",
+  ];
+
+  const worksheet = XLSX.utils.aoa_to_sheet([header, example]);
+
+  // Widen columns for readability.
+  worksheet["!cols"] = header.map((h) => ({ wch: Math.max(h.length + 2, 12) }));
+
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Medicines");
+
+  XLSX.writeFile(workbook, "medbridge_medicine_import_template.xlsx");
+}
+
+/**
  * Convert parsed rows (keyed by arbitrary header text) into the canonical
  * field names the API expects, normalising quantity/unitPrice to numbers and
  * expiry to a YYYY-MM-DD string.

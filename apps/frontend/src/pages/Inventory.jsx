@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import clsx from "clsx";
-import { Plus, Search, Pill, SlidersHorizontal, Pencil, Trash2, Upload } from "lucide-react";
+import { Plus, Search, Pill, SlidersHorizontal, Pencil, Trash2, Upload, Download } from "lucide-react";
 import { api } from "../services/api";
 import PageHeader from "../components/ui/PageHeader";
 import Card from "../components/ui/Card";
@@ -14,7 +14,7 @@ import { formatDate } from "../utils/format";
 import { statusTone } from "../utils/expiry";
 import { useAuth } from "../context/AuthContext";
 import { canManageInventory } from "../utils/permissions";
-import { parseSpreadsheet, checkHeaders, normalizeRows, REQUIRED_HEADERS } from "../utils/excelImport";
+import { parseSpreadsheet, checkHeaders, normalizeRows, REQUIRED_HEADERS, downloadTemplate } from "../utils/excelImport";
 import "./Inventory.css";
 
 const FILTERS = ["All", "In Stock", "Low Stock", "Critical"];
@@ -126,6 +126,9 @@ export default function Inventory() {
         actions={
           canWrite ? (
             <>
+              <Button variant="outline" onClick={downloadTemplate}>
+                <Download size={16} /> Template
+              </Button>
               <Button variant="outline" onClick={() => fileInputRef.current?.click()} disabled={importing}>
                 <Upload size={16} /> {importing ? "Importing…" : "Import Excel"}
               </Button>
