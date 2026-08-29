@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import clsx from "clsx";
-import { Plus, Search, Pill, SlidersHorizontal, Pencil, Trash2 } from "lucide-react";
+import { Plus, Search, Pill, SlidersHorizontal, Pencil, Trash2, Upload } from "lucide-react";
 import { api } from "../services/api";
 import PageHeader from "../components/ui/PageHeader";
 import Card from "../components/ui/Card";
@@ -12,17 +12,28 @@ import EmptyState from "../components/ui/EmptyState";
 import MedicineFormModal from "../components/modals/MedicineFormModal";
 import { formatDate } from "../utils/format";
 import { statusTone } from "../utils/expiry";
+import { useAuth } from "../context/AuthContext";
+import { canManageInventory } from "../utils/permissions";
+import { parseSpreadsheet, checkHeaders, normalizeRows, REQUIRED_HEADERS } from "../utils/excelImport";
 import "./Inventory.css";
 
 const FILTERS = ["All", "In Stock", "Low Stock", "Critical"];
 
 export default function Inventory() {
+  const { user } = useAuth();
+  const canWrite = canManageInventory(user?.roleKey);
+
   const [medicines, setMedicines] = useState(null);
   const [filter, setFilter] = useState("All");
   const [modal, setModal] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get("search") || "";
+
+  const [importing, setImporting] = useState(false);
+  const [importResult, setImportResult] = useState(null); // { imported, failed, errors }
+  const [importError, setImportError] = useState("");
+  const fileInputRef = useRef(null);
 
   const loadMedicines = useCallback(() => {
     setMedicines(null);
@@ -35,9 +46,7 @@ export default function Inventory() {
 
   const filtered = useMemo(() => {
     if (!medicines) return [];
-    return medicines.filter((m) => {
-      return filter === "All" || m.status === filter;
-    });
+    return medicines.filter((m) => filter === "All" || m.status === filter);
   }, [medicines, filter]);
 
   const setSearch = (value) => {
@@ -71,17 +80,90 @@ export default function Inventory() {
     }
   };
 
+  // --- Excel / CSV import ----------------------------------------------------
+  const handleFile = async (e) => {
+    const file = e.target.files?.[0];
+    e.target.value = ""; // allow re-uploading the same file
+    if (!file) return;
+
+    setImportError("");
+    setImportResult(null);
+    setImporting(true);
+
+    try {
+      const rows = await parseSpreadsheet(file);
+
+      const { missing, unknown } = checkHeaders(rows);
+      if (missing.length > 0) {
+        setImportError(
+          `Missing required column(s): ${missing.join(", ")}. Required headers are: ${REQUIRED_HEADERS.join(", ")}.`
+        );
+        return;
+      }
+      if (unknown.length > 0) {
+        setImportError(
+          `Unrecognized column(s): ${unknown.join(", ")}. Allowed headers: ${REQUIRED_HEADERS.join(", ")}, unitPrice, status, medicineCode.`
+        );
+        return;
+      }
+
+      const normalized = normalizeRows(rows);
+      const result = await api.bulkImportMedicines(normalized);
+      setImportResult(result);
+      loadMedicines();
+    } catch (err) {
+      setImportError(err.message || "Import failed");
+    } finally {
+      setImporting(false);
+    }
+  };
+
   return (
     <div>
       <PageHeader
         title="Inventory"
         subtitle="Track stock levels, expiry, and batches across your hospital."
         actions={
-          <Button variant="teal" onClick={() => setModal({ mode: "create" })}>
-            <Plus size={16} /> Add Medicine
-          </Button>
+          canWrite ? (
+            <>
+              <Button variant="outline" onClick={() => fileInputRef.current?.click()} disabled={importing}>
+                <Upload size={16} /> {importing ? "Importing…" : "Import Excel"}
+              </Button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".xlsx,.xls,.csv"
+                onChange={handleFile}
+                style={{ display: "none" }}
+              />
+              <Button variant="teal" onClick={() => setModal({ mode: "create" })}>
+                <Plus size={16} /> Add Medicine
+              </Button>
+            </>
+          ) : undefined
         }
       />
+
+      {(importError || importResult) && (
+        <Card className={importError ? "inv-import-banner inv-import-error" : "inv-import-banner"}>
+          {importError ? (
+            <span>{importError}</span>
+          ) : (
+            <span>
+              Import complete: <strong>{importResult.imported}</strong> added
+              {importResult.failed > 0 && (
+                <>
+                  , <strong>{importResult.failed}</strong> failed
+                  {importResult.errors?.length > 0 && (
+                    <em> — {importResult.errors.map((e) => `row ${e.row}: ${e.error}`).join("; ")}</em>
+                  )}
+                </>
+              )}
+              .
+            </span>
+          )}
+        </Card>
+      )}
 
       <Card className="inv-toolbar">
         <div className="inv-toolbar-row">
@@ -145,7 +227,7 @@ export default function Inventory() {
                   <th>Quantity</th>
                   <th>Expiry Date</th>
                   <th>Status</th>
-                  <th aria-label="Actions" />
+                  {canWrite && <th aria-label="Actions" />}
                 </tr>
               </thead>
               <tbody>
@@ -170,27 +252,29 @@ export default function Inventory() {
                     <td>
                       <Badge tone={statusTone(m.status)}>{m.status}</Badge>
                     </td>
-                    <td>
-                      <div className="inv-row-actions">
-                        <button
-                          type="button"
-                          className="inv-action-btn"
-                          title="Edit"
-                          onClick={() => setModal({ mode: "edit", medicine: m })}
-                        >
-                          <Pencil size={14} />
-                        </button>
-                        <button
-                          type="button"
-                          className="inv-action-btn inv-action-btn-danger"
-                          title="Delete"
-                          disabled={deletingId === m.id}
-                          onClick={() => handleDelete(m.id)}
-                        >
-                          <Trash2 size={14} />
-                        </button>
-                      </div>
-                    </td>
+                    {canWrite && (
+                      <td>
+                        <div className="inv-row-actions">
+                          <button
+                            type="button"
+                            className="inv-action-btn"
+                            title="Edit"
+                            onClick={() => setModal({ mode: "edit", medicine: m })}
+                          >
+                            <Pencil size={14} />
+                          </button>
+                          <button
+                            type="button"
+                            className="inv-action-btn inv-action-btn-danger"
+                            title="Delete"
+                            disabled={deletingId === m.id}
+                            onClick={() => handleDelete(m.id)}
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>

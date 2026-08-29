@@ -78,7 +78,11 @@ export default function Login() {
         <p className="auth-footer">
           New hospital?{" "}
           <Link to="/register" className="auth-link">
-            Register on MedBridge
+            Register your hospital
+          </Link>
+          {" · "}
+          <Link to="/join" className="auth-link">
+            Join as staff
           </Link>
         </p>
       </div>

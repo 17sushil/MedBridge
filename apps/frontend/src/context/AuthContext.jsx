@@ -4,6 +4,7 @@ import {
   fetchCurrentUser,
   login as loginRequest,
   registerHospital as registerRequest,
+  registerMember as registerMemberRequest,
   logout as clearSession,
 } from "../services/authService";
 
@@ -77,6 +78,10 @@ export function AuthProvider({ children }) {
     return result.user;
   };
 
+  // Self-register as Staff / Inventory Manager. Does NOT log the user in —
+  // returns the pending result so the UI can show a "awaiting approval" message.
+  const registerMember = async (data) => registerMemberRequest(data);
+
   const logout = () => {
     clearSession();
     setIsAuthenticated(false);
@@ -85,7 +90,7 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, loading, isAuthenticated, login, registerHospital, logout, refreshUser: loadSession }}
+      value={{ user, loading, isAuthenticated, login, registerHospital, registerMember, logout, refreshUser: loadSession }}
     >
       {children}
     </AuthContext.Provider>

@@ -6,6 +6,7 @@ import { ProtectedRoute, GuestRoute } from "./components/auth/ProtectedRoute";
 import AppLayout from "./layouts/AppLayout";
 import Login from "./pages/auth/Login";
 import RegisterHospital from "./pages/auth/RegisterHospital";
+import JoinHospital from "./pages/auth/JoinHospital";
 import { routes } from "./routes";
 import NotFound from "./pages/NotFound";
 import { ThemeProvider } from "./context/ThemeContext";
@@ -25,6 +26,7 @@ export default function App() {
                   <Route element={<GuestRoute />}>
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<RegisterHospital />} />
+                    <Route path="/join" element={<JoinHospital />} />
                   </Route>
 
                   <Route element={<ProtectedRoute />}>
