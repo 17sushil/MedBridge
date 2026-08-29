@@ -23,7 +23,13 @@ TRAINING_DIR = Path(__file__).resolve().parents[2] / "training"
 sys.path.insert(0, str(TRAINING_DIR))
 
 from generate_synthetic_data import build_medicines  # noqa: E402
-from generate_ledger_data import build_pairs, run_simulation, week_starts, build_features_from_ledger  # noqa: E402
+from generate_ledger_data import (  # noqa: E402
+    build_pairs,
+    run_simulation,
+    week_starts,
+    build_features_from_ledger,
+    feature_partition_path,
+)
 
 RAW_DIR = Path(__file__).resolve().parents[2] / "data" / "raw"
 PROCESSED_DIR = Path(__file__).resolve().parents[2] / "data" / "processed"
@@ -52,6 +58,9 @@ def _persist_for_serving(hospitals_df: pd.DataFrame, tx_df: pd.DataFrame, medici
     404 on this hospital, since /forecast reads demand_features.csv directly,
     not the database.
     """
+    RAW_DIR.mkdir(parents=True, exist_ok=True)
+    PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
+
     hospitals_path = RAW_DIR / "hospitals.csv"
     if hospitals_path.exists():
         existing = pd.read_csv(hospitals_path)
@@ -62,6 +71,8 @@ def _persist_for_serving(hospitals_df: pd.DataFrame, tx_df: pd.DataFrame, medici
     tx_path = RAW_DIR / "transactions.csv"
     if tx_path.exists():
         tx_df.to_csv(tx_path, mode="a", header=False, index=False)
+    else:
+        tx_df.to_csv(tx_path, index=False)
 
     feats = build_features_from_ledger(tx_df, hospitals_df, medicines_df)
     feat_path = PROCESSED_DIR / "demand_features.csv"
@@ -70,8 +81,28 @@ def _persist_for_serving(hospitals_df: pd.DataFrame, tx_df: pd.DataFrame, medici
     else:
         feats.to_csv(feat_path, index=False)
 
+    partition_dir = PROCESSED_DIR / "by_hospital"
+    partition_dir.mkdir(parents=True, exist_ok=True)
+    partition_path = feature_partition_path(
+        partition_dir, str(hospitals_df["hospital_id"].iloc[0])
+    )
+    if partition_path.exists():
+        existing_partition = pd.read_csv(partition_path, parse_dates=["week_start"])
+        combined_partition = pd.concat([existing_partition, feats], ignore_index=True)
+        combined_partition = combined_partition.drop_duplicates(
+            ["hospital_id", "medicine_id", "week_start"], keep="last"
+        )
+        combined_partition.to_csv(partition_path, index=False)
+    else:
+        feats.to_csv(partition_path, index=False)
 
-def seed_hospital_history(hospital_row: dict, weeks_of_history: int = 26) -> dict:
+
+def seed_hospital_history(
+    hospital_row: dict,
+    weeks_of_history: int = 26,
+    *,
+    persist: bool = True,
+) -> dict:
     """
     hospital_row must at minimum contain:
       hospital_id (str, the Postgres Hospital.id — used as the join key),
@@ -97,8 +128,10 @@ def seed_hospital_history(hospital_row: dict, weeks_of_history: int = 26) -> dic
     inventory_df = inventory_df.merge(med_lookup, left_on="medicine_id", right_index=True, how="left")
 
     # Bridge into the ML service's own serving data — without this, /forecast
-    # would 404 for this hospital even though Postgres has its data.
-    _persist_for_serving(hospitals_df, tx_df, medicines_df)
+    # would 404 for this hospital even though Postgres has its data. Tests can
+    # disable persistence so they never modify the real training CSVs.
+    if persist:
+        _persist_for_serving(hospitals_df, tx_df, medicines_df)
 
     return {
         "hospital_id": row["hospital_id"],
