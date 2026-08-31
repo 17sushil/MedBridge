@@ -4,6 +4,7 @@
   "description": "MedBridge API — medicine exchange platform backend",
   "main": "src/index.js",
   "scripts": {
+    "postinstall": "prisma generate",
     "dev": "nodemon src/index.js",
     "start": "node src/index.js",
     "prisma:generate": "prisma generate",
@@ -17,7 +18,8 @@
     "db:studio": "prisma studio",
     "db:reset": "prisma migrate reset",
     "db:status": "prisma migrate status",
-    "db:setup": "prisma migrate dev && node prisma/seed.js"
+    "db:setup": "prisma migrate dev && node prisma/seed.js",
+    "db:reconcile": "prisma db execute --file scripts/reconcile-baseline.sql && prisma migrate resolve --applied 20260831000000_baseline"
   },
   "keywords": [],
   "author": "",
