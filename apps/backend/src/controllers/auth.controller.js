@@ -7,7 +7,7 @@ const registerHospital = asyncHandler(async (req, res) => {
 });
 
 const registerStaff = asyncHandler(async (req, res) => {
-  const result = await authService.registerStaff(req.body);
+  const result = await authService.registerStaff(req.body, req.user.hospitalId);
   res.status(201).json(result);
 });
 
@@ -26,4 +26,9 @@ const updateMe = asyncHandler(async (req, res) => {
   res.json(user);
 });
 
-module.exports = { registerHospital, registerStaff, login, me, updateMe };
+const deleteAccount = asyncHandler(async (req, res) => {
+  await authService.deleteAccount(req.user.id, req.body.password);
+  res.status(204).send();
+});
+
+module.exports = { registerHospital, registerStaff, login, me, updateMe, deleteAccount };

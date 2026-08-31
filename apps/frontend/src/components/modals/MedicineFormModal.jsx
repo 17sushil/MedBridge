@@ -100,7 +100,7 @@ function MedicineForm({ medicine, onClose, onSave }) {
 
         <div className="modal-row">
           <label className="modal-field">
-            <span className="modal-label">Unit price (USD)</span>
+            <span className="modal-label">Unit price (NPR)</span>
             <input
               type="number"
               min="0"

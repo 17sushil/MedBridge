@@ -2,8 +2,13 @@ const bcrypt = require("bcryptjs");
 const prisma = require("../config/db");
 const { signToken } = require("../utils/jwt");
 const { ApiError } = require("../utils/ApiError");
+const { seedNewHospitalHistory } = require("./seedNewHospital.service");
 
 const SALT_ROUNDS = 10;
+
+function normalizeEmail(email) {
+  return String(email || "").trim().toLowerCase();
+}
 
 function toPublicUser(user) {
   return {
@@ -22,18 +27,37 @@ function toPublicUser(user) {
 // Onboards a brand-new hospital onto the platform along with its first
 // admin user.
 async function registerHospitalAndAdmin({ hospitalName, location, type, name, email, password }) {
-  const existing = await prisma.user.findUnique({ where: { email } });
+  const normalizedEmail = normalizeEmail(email);
+  const existing = await prisma.user.findUnique({ where: { email: normalizedEmail } });
   if (existing) throw new ApiError(409, "An account with this email already exists");
 
   const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
 
-  const hospital = await prisma.hospital.create({
-    data: { name: hospitalName, location, type: type || "General" },
+  // Create the hospital and its first administrator atomically so a failed
+  // user insert cannot leave an orphan hospital behind.
+  const { hospital, user } = await prisma.$transaction(async (tx) => {
+    const createdHospital = await tx.hospital.create({
+      data: { name: hospitalName, location, type: type || "General" },
+    });
+    const createdUser = await tx.user.create({
+      data: {
+        name,
+        email: normalizedEmail,
+        passwordHash,
+        role: "ADMIN",
+        hospitalId: createdHospital.id,
+      },
+      include: { hospital: true },
+    });
+    return { hospital: createdHospital, user: createdUser };
   });
 
-  const user = await prisma.user.create({
-    data: { name, email, passwordHash, role: "ADMIN", hospitalId: hospital.id },
-    include: { hospital: true },
+  // Fire-and-forget: give the new hospital a sensible starting inventory and
+  // demand history via the ML cold-start endpoint. Must never block or fail
+  // the actual signup, so errors are swallowed (the service also handles its
+  // own failures by returning { seeded: false }).
+  seedNewHospitalHistory(hospital).catch((err) => {
+    console.error("[auth] Cold-start seeding failed:", err.message);
   });
 
   const token = signToken({ sub: user.id, hospitalId: user.hospitalId, role: user.role });
@@ -41,8 +65,15 @@ async function registerHospitalAndAdmin({ hospitalName, location, type, name, em
 }
 
 // Adds a staff member to an existing hospital.
-async function registerStaff({ name, email, password, hospitalId }) {
-  const existing = await prisma.user.findUnique({ where: { email } });
+// `callerHospitalId` is the hospital of the authenticated admin making the
+// request; staff accounts may only be created within that same hospital.
+async function registerStaff({ name, email, password, hospitalId }, callerHospitalId) {
+  if (callerHospitalId && hospitalId !== callerHospitalId) {
+    throw new ApiError(403, "You can only add staff to your own hospital");
+  }
+
+  const normalizedEmail = normalizeEmail(email);
+  const existing = await prisma.user.findUnique({ where: { email: normalizedEmail } });
   if (existing) throw new ApiError(409, "An account with this email already exists");
 
   const hospital = await prisma.hospital.findUnique({ where: { id: hospitalId } });
@@ -51,7 +82,7 @@ async function registerStaff({ name, email, password, hospitalId }) {
   const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
 
   const user = await prisma.user.create({
-    data: { name, email, passwordHash, role: "STAFF", hospitalId },
+    data: { name, email: normalizedEmail, passwordHash, role: "STAFF", hospitalId },
     include: { hospital: true },
   });
 
@@ -60,7 +91,11 @@ async function registerStaff({ name, email, password, hospitalId }) {
 }
 
 async function login({ email, password }) {
-  const user = await prisma.user.findUnique({ where: { email }, include: { hospital: true } });
+  const normalizedEmail = normalizeEmail(email);
+  const user = await prisma.user.findUnique({
+    where: { email: normalizedEmail },
+    include: { hospital: true },
+  });
   if (!user) throw new ApiError(401, "Incorrect email or password");
 
   const valid = await bcrypt.compare(password, user.passwordHash);
@@ -80,8 +115,9 @@ async function updateProfile(userId, { name, email }) {
   const existing = await prisma.user.findUnique({ where: { id: userId } });
   if (!existing) throw new ApiError(404, "User not found");
 
-  if (email && email !== existing.email) {
-    const emailTaken = await prisma.user.findUnique({ where: { email } });
+  const normalizedEmail = email ? normalizeEmail(email) : undefined;
+  if (normalizedEmail && normalizedEmail !== existing.email) {
+    const emailTaken = await prisma.user.findUnique({ where: { email: normalizedEmail } });
     if (emailTaken) throw new ApiError(409, "Email already in use");
   }
 
@@ -89,7 +125,7 @@ async function updateProfile(userId, { name, email }) {
     where: { id: userId },
     data: {
       name: name || undefined,
-      email: email || undefined,
+      email: normalizedEmail,
     },
     include: { hospital: true },
   });
@@ -97,4 +133,14 @@ async function updateProfile(userId, { name, email }) {
   return toPublicUser(updated);
 }
 
-module.exports = { registerHospitalAndAdmin, registerStaff, login, getProfile, updateProfile, toPublicUser };
+  async function deleteAccount(userId, password) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new ApiError(404, "User not found");
+
+    const valid = await bcrypt.compare(password, user.passwordHash);
+    if (!valid) throw new ApiError(401, "Incorrect password");
+
+    await prisma.user.delete({ where: { id: userId } });
+  }
+
+module.exports = { registerHospitalAndAdmin, registerStaff, login, getProfile, updateProfile, deleteAccount, toPublicUser };

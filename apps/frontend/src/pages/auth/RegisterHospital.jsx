@@ -4,7 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 import Button from "../../components/ui/Button";
 import "./Auth.css";
 
-const HOSPITAL_TYPES = ["General", "Specialty", "Clinic"];
+const HOSPITAL_TYPES = ["General", "Specialty", "Teaching", "Regional", "Clinic"];
 
 export default function RegisterHospital() {
   const { registerHospital } = useAuth();

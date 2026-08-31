@@ -1,0 +1,7172 @@
+{
+  "HOSP-BG-001|MED-003": [
+    {
+      "qty": 2000,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-001|MED-011": [
+    {
+      "qty": 2200,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-001|MED-016": [
+    {
+      "qty": 360,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-001|MED-019": [
+    {
+      "qty": 340,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-001|MED-023": [
+    {
+      "qty": 1800,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-001|MED-028": [
+    {
+      "qty": 890,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-001|MED-029": [
+    {
+      "qty": 800,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-001|MED-030": [
+    {
+      "qty": 471,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-001|MED-031": [
+    {
+      "qty": 1850,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-BG-001|MED-032": [
+    {
+      "qty": 3900,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-BG-001|MED-033": [
+    {
+      "qty": 1250,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-BG-001|MED-037": [
+    {
+      "qty": 349,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-001|MED-039": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-001|MED-040": [
+    {
+      "qty": 290,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-001|MED-041": [
+    {
+      "qty": 37,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-001|MED-042": [
+    {
+      "qty": 22,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-001|MED-050": [
+    {
+      "qty": 340,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-001|MED-052": [
+    {
+      "qty": 615,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-001|MED-054": [
+    {
+      "qty": 380,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-001|MED-055": [
+    {
+      "qty": 220,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-001|MED-056": [
+    {
+      "qty": 130,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-001|MED-057": [
+    {
+      "qty": 109,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-001|MED-058": [
+    {
+      "qty": 94,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-001|MED-059": [
+    {
+      "qty": 99,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-001|MED-060": [
+    {
+      "qty": 46,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-001|MED-064": [
+    {
+      "qty": 432,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-BG-001|MED-068": [
+    {
+      "qty": 183,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-001|MED-069": [
+    {
+      "qty": 120,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-001|MED-070": [
+    {
+      "qty": 450,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-002|MED-004": [
+    {
+      "qty": 930,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-002|MED-006": [
+    {
+      "qty": 1120,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-002|MED-007": [
+    {
+      "qty": 723,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-002|MED-008": [
+    {
+      "qty": 2190,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-002|MED-009": [
+    {
+      "qty": 800,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-002|MED-011": [
+    {
+      "qty": 2500,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-002|MED-012": [
+    {
+      "qty": 1700,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-002|MED-013": [
+    {
+      "qty": 1576,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-002|MED-014": [
+    {
+      "qty": 1478,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-002|MED-015": [
+    {
+      "qty": 923,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-002|MED-018": [
+    {
+      "qty": 474,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-002|MED-020": [
+    {
+      "qty": 483,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-002|MED-022": [
+    {
+      "qty": 2400,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-002|MED-024": [
+    {
+      "qty": 363,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-002|MED-025": [
+    {
+      "qty": 1200,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-002|MED-027": [
+    {
+      "qty": 1700,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-002|MED-028": [
+    {
+      "qty": 890,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-002|MED-030": [
+    {
+      "qty": 615,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-002|MED-032": [
+    {
+      "qty": 6500,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-BG-002|MED-040": [
+    {
+      "qty": 430,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-002|MED-041": [
+    {
+      "qty": 44,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-002|MED-042": [
+    {
+      "qty": 28,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-002|MED-043": [
+    {
+      "qty": 23,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-002|MED-046": [
+    {
+      "qty": 14,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 18
+    }
+  ],
+  "HOSP-BG-002|MED-048": [
+    {
+      "qty": 537,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-002|MED-050": [
+    {
+      "qty": 340,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-002|MED-052": [
+    {
+      "qty": 518,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-002|MED-053": [
+    {
+      "qty": 480,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-002|MED-055": [
+    {
+      "qty": 180,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-002|MED-056": [
+    {
+      "qty": 235,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-002|MED-059": [
+    {
+      "qty": 75,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-002|MED-060": [
+    {
+      "qty": 81,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-002|MED-061": [
+    {
+      "qty": 190,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-002|MED-063": [
+    {
+      "qty": 108,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-002|MED-064": [
+    {
+      "qty": 720,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-BG-002|MED-065": [
+    {
+      "qty": 242,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 1
+    }
+  ],
+  "HOSP-BG-002|MED-067": [
+    {
+      "qty": 477,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-002|MED-068": [
+    {
+      "qty": 107,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-002|MED-072": [
+    {
+      "qty": 318,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-003|MED-002": [
+    {
+      "qty": 49,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-003|MED-006": [
+    {
+      "qty": 200,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-003|MED-007": [
+    {
+      "qty": 99,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-003|MED-008": [
+    {
+      "qty": 230,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-003|MED-012": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-003|MED-013": [
+    {
+      "qty": 286,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-003|MED-014": [
+    {
+      "qty": 270,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-003|MED-015": [
+    {
+      "qty": 322,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-003|MED-016": [
+    {
+      "qty": 48,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-003|MED-018": [
+    {
+      "qty": 24,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-003|MED-019": [
+    {
+      "qty": 40,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-003|MED-020": [
+    {
+      "qty": 16,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-003|MED-021": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-003|MED-025": [
+    {
+      "qty": 200,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-003|MED-027": [
+    {
+      "qty": 200,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-003|MED-028": [
+    {
+      "qty": 50,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-003|MED-030": [
+    {
+      "qty": 26,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-003|MED-035": [
+    {
+      "qty": 5,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-003|MED-037": [
+    {
+      "qty": 26,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-003|MED-039": [
+    {
+      "qty": 30,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-003|MED-041": [
+    {
+      "qty": 135,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-003|MED-043": [
+    {
+      "qty": 61,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-003|MED-044": [
+    {
+      "qty": 75,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-003|MED-046": [
+    {
+      "qty": 65,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 18
+    }
+  ],
+  "HOSP-BG-003|MED-054": [
+    {
+      "qty": 12,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-003|MED-057": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-003|MED-058": [
+    {
+      "qty": 18,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-003|MED-059": [
+    {
+      "qty": 10,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-003|MED-060": [
+    {
+      "qty": 6,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-003|MED-061": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-003|MED-062": [
+    {
+      "qty": 30,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-003|MED-066": [
+    {
+      "qty": 46,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 1
+    }
+  ],
+  "HOSP-BG-003|MED-067": [
+    {
+      "qty": 29,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-003|MED-068": [
+    {
+      "qty": 8,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-004|MED-001": [
+    {
+      "qty": 3900,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-004|MED-003": [
+    {
+      "qty": 500,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-004|MED-004": [
+    {
+      "qty": 100,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-004|MED-005": [
+    {
+      "qty": 1800,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-004|MED-006": [
+    {
+      "qty": 490,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-004|MED-009": [
+    {
+      "qty": 867,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-004|MED-013": [
+    {
+      "qty": 178,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-004|MED-014": [
+    {
+      "qty": 270,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-004|MED-018": [
+    {
+      "qty": 387,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-004|MED-020": [
+    {
+      "qty": 1420,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-004|MED-021": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-004|MED-022": [
+    {
+      "qty": 200,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-004|MED-023": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-004|MED-024": [
+    {
+      "qty": 16,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-004|MED-028": [
+    {
+      "qty": 200,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-004|MED-031": [
+    {
+      "qty": 550,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-BG-004|MED-032": [
+    {
+      "qty": 800,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-BG-004|MED-037": [
+    {
+      "qty": 122,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-004|MED-038": [
+    {
+      "qty": 440,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-004|MED-039": [
+    {
+      "qty": 350,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-004|MED-040": [
+    {
+      "qty": 90,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-004|MED-041": [
+    {
+      "qty": 54,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-004|MED-042": [
+    {
+      "qty": 43,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-004|MED-044": [
+    {
+      "qty": 38,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-004|MED-045": [
+    {
+      "qty": 140,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-004|MED-049": [
+    {
+      "qty": 2200,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-004|MED-051": [
+    {
+      "qty": 430,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-004|MED-052": [
+    {
+      "qty": 1990,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-004|MED-055": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-004|MED-057": [
+    {
+      "qty": 116,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-004|MED-058": [
+    {
+      "qty": 86,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-004|MED-059": [
+    {
+      "qty": 55,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-004|MED-069": [
+    {
+      "qty": 55,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-004|MED-070": [
+    {
+      "qty": 450,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-005|MED-001": [
+    {
+      "qty": 1000,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-005|MED-002": [
+    {
+      "qty": 147,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-005|MED-003": [
+    {
+      "qty": 700,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-005|MED-006": [
+    {
+      "qty": 530,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-005|MED-007": [
+    {
+      "qty": 420,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-005|MED-008": [
+    {
+      "qty": 690,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-005|MED-009": [
+    {
+      "qty": 447,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-005|MED-011": [
+    {
+      "qty": 700,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-005|MED-013": [
+    {
+      "qty": 891,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-005|MED-014": [
+    {
+      "qty": 2006,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-005|MED-015": [
+    {
+      "qty": 929,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-005|MED-018": [
+    {
+      "qty": 112,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-005|MED-019": [
+    {
+      "qty": 160,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-005|MED-020": [
+    {
+      "qty": 284,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-005|MED-021": [
+    {
+      "qty": 500,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-005|MED-023": [
+    {
+      "qty": 700,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-005|MED-027": [
+    {
+      "qty": 500,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-005|MED-029": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-005|MED-031": [
+    {
+      "qty": 500,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-BG-005|MED-032": [
+    {
+      "qty": 1200,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-BG-005|MED-033": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-BG-005|MED-035": [
+    {
+      "qty": 104,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-005|MED-038": [
+    {
+      "qty": 160,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-005|MED-042": [
+    {
+      "qty": 13,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-005|MED-045": [
+    {
+      "qty": 60,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-005|MED-047": [
+    {
+      "qty": 800,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-005|MED-048": [
+    {
+      "qty": 207,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-005|MED-054": [
+    {
+      "qty": 1328,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-005|MED-058": [
+    {
+      "qty": 66,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-005|MED-063": [
+    {
+      "qty": 17,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-005|MED-064": [
+    {
+      "qty": 216,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-BG-005|MED-066": [
+    {
+      "qty": 177,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 1
+    }
+  ],
+  "HOSP-BG-005|MED-068": [
+    {
+      "qty": 160,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-005|MED-072": [
+    {
+      "qty": 204,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-001|MED-002": [
+    {
+      "qty": 660,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-001|MED-003": [
+    {
+      "qty": 1100,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-001|MED-011": [
+    {
+      "qty": 1850,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-001|MED-014": [
+    {
+      "qty": 1114,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-001|MED-015": [
+    {
+      "qty": 868,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-001|MED-020": [
+    {
+      "qty": 263,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-001|MED-021": [
+    {
+      "qty": 1800,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-001|MED-022": [
+    {
+      "qty": 900,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-001|MED-024": [
+    {
+      "qty": 211,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-001|MED-025": [
+    {
+      "qty": 700,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-001|MED-026": [
+    {
+      "qty": 1100,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-001|MED-030": [
+    {
+      "qty": 225,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-001|MED-033": [
+    {
+      "qty": 1200,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-GD-001|MED-039": [
+    {
+      "qty": 260,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-001|MED-041": [
+    {
+      "qty": 27,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-001|MED-042": [
+    {
+      "qty": 14,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-001|MED-043": [
+    {
+      "qty": 19,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-001|MED-045": [
+    {
+      "qty": 80,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-001|MED-046": [
+    {
+      "qty": 12,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 18
+    }
+  ],
+  "HOSP-GD-001|MED-048": [
+    {
+      "qty": 242,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-001|MED-050": [
+    {
+      "qty": 270,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-001|MED-051": [
+    {
+      "qty": 290,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-001|MED-053": [
+    {
+      "qty": 340,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-001|MED-055": [
+    {
+      "qty": 160,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-001|MED-056": [
+    {
+      "qty": 95,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-001|MED-057": [
+    {
+      "qty": 66,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-001|MED-058": [
+    {
+      "qty": 87,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-001|MED-061": [
+    {
+      "qty": 120,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-001|MED-062": [
+    {
+      "qty": 120,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-001|MED-063": [
+    {
+      "qty": 69,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-001|MED-064": [
+    {
+      "qty": 264,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-GD-001|MED-065": [
+    {
+      "qty": 126,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 1
+    }
+  ],
+  "HOSP-GD-001|MED-067": [
+    {
+      "qty": 265,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-001|MED-070": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-001|MED-071": [
+    {
+      "qty": 70,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-002|MED-001": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KR-002|MED-006": [
+    {
+      "qty": 40,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-002|MED-007": [
+    {
+      "qty": 15,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-002|MED-008": [
+    {
+      "qty": 30,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    },
+    {
+      "qty": 40,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KR-002|MED-009": [
+    {
+      "qty": 21,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-002|MED-011": [
+    {
+      "qty": 100,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    },
+    {
+      "qty": 100,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KR-002|MED-012": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KR-002|MED-013": [
+    {
+      "qty": 22,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-002|MED-014": [
+    {
+      "qty": 27,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-002|MED-015": [
+    {
+      "qty": 15,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-002|MED-016": [
+    {
+      "qty": 48,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    },
+    {
+      "qty": 48,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-002|MED-020": [
+    {
+      "qty": 12,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    },
+    {
+      "qty": 12,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-002|MED-023": [
+    {
+      "qty": 200,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KR-002|MED-030": [
+    {
+      "qty": 13,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    },
+    {
+      "qty": 8,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KR-002|MED-032": [
+    {
+      "qty": 100,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    },
+    {
+      "qty": 200,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-KR-002|MED-037": [
+    {
+      "qty": 9,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    },
+    {
+      "qty": 11,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KR-002|MED-038": [
+    {
+      "qty": 30,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-002|MED-040": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KR-002|MED-048": [
+    {
+      "qty": 12,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    },
+    {
+      "qty": 11,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-002|MED-051": [
+    {
+      "qty": 10,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    },
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-002|MED-052": [
+    {
+      "qty": 15,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-002|MED-053": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    },
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-002|MED-054": [
+    {
+      "qty": 12,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    },
+    {
+      "qty": 16,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-002|MED-055": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    },
+    {
+      "qty": 30,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KR-002|MED-059": [
+    {
+      "qty": 5,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-002|MED-060": [
+    {
+      "qty": 6,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-002|MED-066": [
+    {
+      "qty": 9,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 1
+    }
+  ],
+  "HOSP-KR-002|MED-069": [
+    {
+      "qty": 5,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KR-002|MED-070": [
+    {
+      "qty": 150,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-002|MED-072": [
+    {
+      "qty": 8,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    },
+    {
+      "qty": 7,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-011|MED-002": [
+    {
+      "qty": 24,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-011|MED-005": [
+    {
+      "qty": 200,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-011|MED-006": [
+    {
+      "qty": 70,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-011|MED-007": [
+    {
+      "qty": 51,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-011|MED-008": [
+    {
+      "qty": 170,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-011|MED-009": [
+    {
+      "qty": 96,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-011|MED-011": [
+    {
+      "qty": 100,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-011|MED-012": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-011|MED-013": [
+    {
+      "qty": 72,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-011|MED-015": [
+    {
+      "qty": 34,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-011|MED-018": [
+    {
+      "qty": 23,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-011|MED-019": [
+    {
+      "qty": 40,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-011|MED-022": [
+    {
+      "qty": 200,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-011|MED-028": [
+    {
+      "qty": 50,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-011|MED-030": [
+    {
+      "qty": 14,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-011|MED-031": [
+    {
+      "qty": 350,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-BG-011|MED-048": [
+    {
+      "qty": 17,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-011|MED-050": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-011|MED-051": [
+    {
+      "qty": 10,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-011|MED-052": [
+    {
+      "qty": 37,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-011|MED-057": [
+    {
+      "qty": 490,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-011|MED-059": [
+    {
+      "qty": 247,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-011|MED-060": [
+    {
+      "qty": 6,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-011|MED-061": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-011|MED-063": [
+    {
+      "qty": 5,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-011|MED-064": [
+    {
+      "qty": 36,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-BG-011|MED-068": [
+    {
+      "qty": 12,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-011|MED-072": [
+    {
+      "qty": 16,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-012|MED-004": [
+    {
+      "qty": 340,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-012|MED-006": [
+    {
+      "qty": 340,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-012|MED-007": [
+    {
+      "qty": 288,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-012|MED-009": [
+    {
+      "qty": 228,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-012|MED-011": [
+    {
+      "qty": 350,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-012|MED-012": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-012|MED-013": [
+    {
+      "qty": 892,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-012|MED-014": [
+    {
+      "qty": 591,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-012|MED-015": [
+    {
+      "qty": 424,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-012|MED-016": [
+    {
+      "qty": 48,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-012|MED-018": [
+    {
+      "qty": 44,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-012|MED-019": [
+    {
+      "qty": 60,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-012|MED-020": [
+    {
+      "qty": 72,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-012|MED-023": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-012|MED-024": [
+    {
+      "qty": 48,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-012|MED-027": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-012|MED-030": [
+    {
+      "qty": 278,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-012|MED-032": [
+    {
+      "qty": 3100,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-BG-012|MED-033": [
+    {
+      "qty": 950,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-BG-012|MED-034": [
+    {
+      "qty": 30,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-012|MED-035": [
+    {
+      "qty": 12,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-012|MED-037": [
+    {
+      "qty": 54,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-012|MED-038": [
+    {
+      "qty": 80,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-012|MED-040": [
+    {
+      "qty": 220,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-012|MED-042": [
+    {
+      "qty": 9,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-012|MED-046": [
+    {
+      "qty": 6,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 18
+    }
+  ],
+  "HOSP-BG-012|MED-048": [
+    {
+      "qty": 86,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-012|MED-052": [
+    {
+      "qty": 98,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-012|MED-054": [
+    {
+      "qty": 36,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-012|MED-057": [
+    {
+      "qty": 67,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-012|MED-060": [
+    {
+      "qty": 114,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-012|MED-061": [
+    {
+      "qty": 350,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-012|MED-062": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-012|MED-068": [
+    {
+      "qty": 95,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-012|MED-071": [
+    {
+      "qty": 70,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-012|MED-072": [
+    {
+      "qty": 115,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-013|MED-002": [
+    {
+      "qty": 403,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-013|MED-003": [
+    {
+      "qty": 1300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-013|MED-007": [
+    {
+      "qty": 804,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-013|MED-008": [
+    {
+      "qty": 620,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-013|MED-009": [
+    {
+      "qty": 572,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-013|MED-011": [
+    {
+      "qty": 2100,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-013|MED-012": [
+    {
+      "qty": 1300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-013|MED-013": [
+    {
+      "qty": 1016,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-013|MED-014": [
+    {
+      "qty": 1073,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-013|MED-019": [
+    {
+      "qty": 390,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-013|MED-020": [
+    {
+      "qty": 314,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-013|MED-021": [
+    {
+      "qty": 2100,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-013|MED-024": [
+    {
+      "qty": 208,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-013|MED-025": [
+    {
+      "qty": 1100,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-013|MED-027": [
+    {
+      "qty": 1700,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-013|MED-031": [
+    {
+      "qty": 2400,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-BG-013|MED-032": [
+    {
+      "qty": 3300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-BG-013|MED-037": [
+    {
+      "qty": 398,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-013|MED-038": [
+    {
+      "qty": 250,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-013|MED-039": [
+    {
+      "qty": 240,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-013|MED-040": [
+    {
+      "qty": 240,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-013|MED-041": [
+    {
+      "qty": 54,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-013|MED-042": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-013|MED-046": [
+    {
+      "qty": 9,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 18
+    }
+  ],
+  "HOSP-BG-013|MED-048": [
+    {
+      "qty": 198,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-013|MED-050": [
+    {
+      "qty": 290,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-013|MED-052": [
+    {
+      "qty": 663,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-013|MED-053": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-013|MED-054": [
+    {
+      "qty": 264,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-013|MED-057": [
+    {
+      "qty": 107,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-013|MED-058": [
+    {
+      "qty": 64,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-013|MED-063": [
+    {
+      "qty": 58,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-013|MED-064": [
+    {
+      "qty": 612,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-BG-013|MED-065": [
+    {
+      "qty": 147,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 1
+    }
+  ],
+  "HOSP-BG-013|MED-067": [
+    {
+      "qty": 344,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-013|MED-069": [
+    {
+      "qty": 120,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-013|MED-070": [
+    {
+      "qty": 450,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-013|MED-072": [
+    {
+      "qty": 142,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-014|MED-001": [
+    {
+      "qty": 1700,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-014|MED-002": [
+    {
+      "qty": 314,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-014|MED-003": [
+    {
+      "qty": 800,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-014|MED-004": [
+    {
+      "qty": 270,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-014|MED-005": [
+    {
+      "qty": 1000,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-014|MED-006": [
+    {
+      "qty": 310,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-014|MED-007": [
+    {
+      "qty": 309,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-014|MED-008": [
+    {
+      "qty": 540,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-014|MED-011": [
+    {
+      "qty": 1100,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-014|MED-012": [
+    {
+      "qty": 900,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-014|MED-014": [
+    {
+      "qty": 1218,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-014|MED-015": [
+    {
+      "qty": 335,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-014|MED-018": [
+    {
+      "qty": 168,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-014|MED-019": [
+    {
+      "qty": 170,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-014|MED-020": [
+    {
+      "qty": 173,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-014|MED-022": [
+    {
+      "qty": 900,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-014|MED-024": [
+    {
+      "qty": 97,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-014|MED-025": [
+    {
+      "qty": 700,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-014|MED-027": [
+    {
+      "qty": 1000,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-014|MED-029": [
+    {
+      "qty": 500,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-014|MED-031": [
+    {
+      "qty": 1000,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-BG-014|MED-032": [
+    {
+      "qty": 1300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-BG-014|MED-035": [
+    {
+      "qty": 38,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-014|MED-037": [
+    {
+      "qty": 236,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-014|MED-039": [
+    {
+      "qty": 170,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-014|MED-040": [
+    {
+      "qty": 140,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-014|MED-041": [
+    {
+      "qty": 30,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-014|MED-043": [
+    {
+      "qty": 10,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-014|MED-045": [
+    {
+      "qty": 40,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-014|MED-046": [
+    {
+      "qty": 6,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 18
+    }
+  ],
+  "HOSP-BG-014|MED-047": [
+    {
+      "qty": 650,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-014|MED-048": [
+    {
+      "qty": 152,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-014|MED-049": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-014|MED-051": [
+    {
+      "qty": 130,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-014|MED-053": [
+    {
+      "qty": 180,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-014|MED-055": [
+    {
+      "qty": 80,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-014|MED-057": [
+    {
+      "qty": 59,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-014|MED-058": [
+    {
+      "qty": 37,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-014|MED-059": [
+    {
+      "qty": 40,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-014|MED-060": [
+    {
+      "qty": 25,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-014|MED-063": [
+    {
+      "qty": 38,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-014|MED-067": [
+    {
+      "qty": 155,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-014|MED-069": [
+    {
+      "qty": 65,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-014|MED-072": [
+    {
+      "qty": 68,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-015|MED-001": [
+    {
+      "qty": 2300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-015|MED-003": [
+    {
+      "qty": 1100,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-015|MED-004": [
+    {
+      "qty": 210,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-015|MED-005": [
+    {
+      "qty": 900,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-015|MED-007": [
+    {
+      "qty": 276,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-015|MED-009": [
+    {
+      "qty": 297,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-015|MED-012": [
+    {
+      "qty": 900,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-015|MED-013": [
+    {
+      "qty": 404,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-015|MED-014": [
+    {
+      "qty": 549,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-015|MED-015": [
+    {
+      "qty": 556,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-015|MED-018": [
+    {
+      "qty": 141,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-015|MED-020": [
+    {
+      "qty": 201,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-015|MED-022": [
+    {
+      "qty": 800,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-015|MED-026": [
+    {
+      "qty": 1000,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-015|MED-028": [
+    {
+      "qty": 260,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-015|MED-031": [
+    {
+      "qty": 1100,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-BG-015|MED-032": [
+    {
+      "qty": 1700,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-BG-015|MED-033": [
+    {
+      "qty": 700,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-BG-015|MED-035": [
+    {
+      "qty": 52,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-015|MED-037": [
+    {
+      "qty": 163,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-015|MED-038": [
+    {
+      "qty": 220,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-015|MED-039": [
+    {
+      "qty": 160,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-015|MED-044": [
+    {
+      "qty": 10,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-015|MED-048": [
+    {
+      "qty": 190,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-015|MED-053": [
+    {
+      "qty": 210,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-015|MED-055": [
+    {
+      "qty": 90,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-015|MED-059": [
+    {
+      "qty": 33,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-015|MED-061": [
+    {
+      "qty": 80,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-015|MED-063": [
+    {
+      "qty": 43,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-015|MED-064": [
+    {
+      "qty": 204,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-BG-015|MED-067": [
+    {
+      "qty": 132,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-015|MED-069": [
+    {
+      "qty": 60,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-015|MED-071": [
+    {
+      "qty": 50,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-016|MED-001": [
+    {
+      "qty": 700,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-016|MED-004": [
+    {
+      "qty": 70,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-016|MED-006": [
+    {
+      "qty": 140,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-016|MED-009": [
+    {
+      "qty": 102,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-016|MED-010": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-016|MED-012": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-016|MED-014": [
+    {
+      "qty": 141,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-016|MED-016": [
+    {
+      "qty": 72,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-016|MED-020": [
+    {
+      "qty": 72,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-016|MED-024": [
+    {
+      "qty": 34,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-016|MED-026": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-016|MED-028": [
+    {
+      "qty": 120,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-016|MED-029": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-016|MED-030": [
+    {
+      "qty": 55,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-016|MED-031": [
+    {
+      "qty": 350,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-BG-016|MED-036": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-016|MED-037": [
+    {
+      "qty": 49,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-016|MED-038": [
+    {
+      "qty": 70,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-016|MED-039": [
+    {
+      "qty": 60,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-016|MED-041": [
+    {
+      "qty": 5,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-016|MED-044": [
+    {
+      "qty": 8,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-016|MED-046": [
+    {
+      "qty": 5,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 18
+    }
+  ],
+  "HOSP-BG-016|MED-047": [
+    {
+      "qty": 200,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-016|MED-048": [
+    {
+      "qty": 37,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-016|MED-050": [
+    {
+      "qty": 50,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-016|MED-052": [
+    {
+      "qty": 70,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-016|MED-053": [
+    {
+      "qty": 110,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-016|MED-056": [
+    {
+      "qty": 25,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-016|MED-057": [
+    {
+      "qty": 13,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-016|MED-059": [
+    {
+      "qty": 12,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-016|MED-062": [
+    {
+      "qty": 30,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-016|MED-063": [
+    {
+      "qty": 10,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-016|MED-064": [
+    {
+      "qty": 60,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-BG-016|MED-068": [
+    {
+      "qty": 12,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-016|MED-071": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-016|MED-072": [
+    {
+      "qty": 23,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-017|MED-002": [
+    {
+      "qty": 21,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-017|MED-004": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-017|MED-007": [
+    {
+      "qty": 27,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-017|MED-009": [
+    {
+      "qty": 15,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-017|MED-011": [
+    {
+      "qty": 100,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-017|MED-013": [
+    {
+      "qty": 18,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-017|MED-014": [
+    {
+      "qty": 30,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-017|MED-018": [
+    {
+      "qty": 14,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-017|MED-019": [
+    {
+      "qty": 30,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-017|MED-021": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-017|MED-024": [
+    {
+      "qty": 9,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-017|MED-028": [
+    {
+      "qty": 30,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-017|MED-030": [
+    {
+      "qty": 9,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-017|MED-031": [
+    {
+      "qty": 100,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-BG-017|MED-034": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-017|MED-035": [
+    {
+      "qty": 5,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-017|MED-039": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-017|MED-041": [
+    {
+      "qty": 5,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-017|MED-052": [
+    {
+      "qty": 12,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-017|MED-055": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-017|MED-063": [
+    {
+      "qty": 7,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-017|MED-064": [
+    {
+      "qty": 12,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-BG-018|MED-002": [
+    {
+      "qty": 16,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-018|MED-003": [
+    {
+      "qty": 200,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-018|MED-006": [
+    {
+      "qty": 30,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-018|MED-007": [
+    {
+      "qty": 27,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-018|MED-009": [
+    {
+      "qty": 22,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-018|MED-011": [
+    {
+      "qty": 100,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-018|MED-014": [
+    {
+      "qty": 51,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-018|MED-015": [
+    {
+      "qty": 23,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-018|MED-020": [
+    {
+      "qty": 24,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-018|MED-027": [
+    {
+      "qty": 200,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-018|MED-028": [
+    {
+      "qty": 50,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-018|MED-031": [
+    {
+      "qty": 100,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-BG-018|MED-038": [
+    {
+      "qty": 30,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-018|MED-041": [
+    {
+      "qty": 5,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-018|MED-048": [
+    {
+      "qty": 22,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-018|MED-050": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-018|MED-052": [
+    {
+      "qty": 21,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-018|MED-053": [
+    {
+      "qty": 10,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-018|MED-058": [
+    {
+      "qty": 9,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-018|MED-060": [
+    {
+      "qty": 5,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-018|MED-063": [
+    {
+      "qty": 5,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-018|MED-064": [
+    {
+      "qty": 24,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-BG-018|MED-065": [
+    {
+      "qty": 7,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 1
+    }
+  ],
+  "HOSP-BG-018|MED-066": [
+    {
+      "qty": 7,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 1
+    }
+  ],
+  "HOSP-BG-018|MED-067": [
+    {
+      "qty": 12,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-018|MED-068": [
+    {
+      "qty": 5,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-018|MED-072": [
+    {
+      "qty": 8,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-019|MED-001": [
+    {
+      "qty": 2800,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-019|MED-002": [
+    {
+      "qty": 408,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-019|MED-003": [
+    {
+      "qty": 800,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-019|MED-005": [
+    {
+      "qty": 1100,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-019|MED-006": [
+    {
+      "qty": 450,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-019|MED-007": [
+    {
+      "qty": 309,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-019|MED-008": [
+    {
+      "qty": 550,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-019|MED-010": [
+    {
+      "qty": 900,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-019|MED-011": [
+    {
+      "qty": 1650,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-019|MED-012": [
+    {
+      "qty": 900,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-019|MED-014": [
+    {
+      "qty": 713,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-019|MED-015": [
+    {
+      "qty": 450,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-019|MED-016": [
+    {
+      "qty": 192,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-019|MED-018": [
+    {
+      "qty": 120,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-019|MED-019": [
+    {
+      "qty": 200,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-019|MED-020": [
+    {
+      "qty": 254,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-019|MED-022": [
+    {
+      "qty": 800,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-019|MED-024": [
+    {
+      "qty": 176,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-019|MED-025": [
+    {
+      "qty": 500,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-019|MED-027": [
+    {
+      "qty": 1000,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-019|MED-029": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-019|MED-030": [
+    {
+      "qty": 219,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-019|MED-033": [
+    {
+      "qty": 500,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-BG-019|MED-034": [
+    {
+      "qty": 110,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-019|MED-036": [
+    {
+      "qty": 700,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-019|MED-038": [
+    {
+      "qty": 210,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-019|MED-040": [
+    {
+      "qty": 130,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-019|MED-041": [
+    {
+      "qty": 19,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-019|MED-042": [
+    {
+      "qty": 16,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-019|MED-043": [
+    {
+      "qty": 7,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-019|MED-047": [
+    {
+      "qty": 450,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-019|MED-048": [
+    {
+      "qty": 240,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-019|MED-049": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-019|MED-050": [
+    {
+      "qty": 140,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-019|MED-051": [
+    {
+      "qty": 130,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-019|MED-054": [
+    {
+      "qty": 164,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-019|MED-055": [
+    {
+      "qty": 80,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-019|MED-056": [
+    {
+      "qty": 85,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-019|MED-058": [
+    {
+      "qty": 30,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-019|MED-059": [
+    {
+      "qty": 43,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-019|MED-060": [
+    {
+      "qty": 25,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-019|MED-062": [
+    {
+      "qty": 70,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-BG-019|MED-063": [
+    {
+      "qty": 35,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-BG-019|MED-064": [
+    {
+      "qty": 348,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-BG-019|MED-065": [
+    {
+      "qty": 83,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 1
+    }
+  ],
+  "HOSP-BG-019|MED-066": [
+    {
+      "qty": 42,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 1
+    }
+  ],
+  "HOSP-BG-019|MED-071": [
+    {
+      "qty": 70,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KP-001|MED-006": [
+    {
+      "qty": 1000,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KP-001|MED-008": [
+    {
+      "qty": 1530,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KP-001|MED-009": [
+    {
+      "qty": 840,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KP-001|MED-011": [
+    {
+      "qty": 2100,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KP-001|MED-015": [
+    {
+      "qty": 1238,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KP-001|MED-021": [
+    {
+      "qty": 2600,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KP-001|MED-023": [
+    {
+      "qty": 2100,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KP-001|MED-024": [
+    {
+      "qty": 400,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KP-001|MED-025": [
+    {
+      "qty": 1600,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KP-001|MED-026": [
+    {
+      "qty": 2000,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KP-001|MED-028": [
+    {
+      "qty": 910,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KP-001|MED-029": [
+    {
+      "qty": 1200,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KP-001|MED-032": [
+    {
+      "qty": 5000,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-KP-001|MED-033": [
+    {
+      "qty": 1500,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-KP-001|MED-034": [
+    {
+      "qty": 230,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KP-001|MED-035": [
+    {
+      "qty": 154,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KP-001|MED-038": [
+    {
+      "qty": 430,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KP-001|MED-040": [
+    {
+      "qty": 310,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KP-001|MED-041": [
+    {
+      "qty": 60,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KP-001|MED-044": [
+    {
+      "qty": 24,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KP-001|MED-047": [
+    {
+      "qty": 1650,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KP-001|MED-048": [
+    {
+      "qty": 294,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KP-001|MED-050": [
+    {
+      "qty": 490,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KP-001|MED-051": [
+    {
+      "qty": 290,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KP-001|MED-052": [
+    {
+      "qty": 741,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KP-001|MED-053": [
+    {
+      "qty": 700,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KP-001|MED-056": [
+    {
+      "qty": 150,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KP-001|MED-057": [
+    {
+      "qty": 123,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KP-001|MED-058": [
+    {
+      "qty": 111,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KP-001|MED-059": [
+    {
+      "qty": 122,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KP-001|MED-060": [
+    {
+      "qty": 58,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KP-001|MED-061": [
+    {
+      "qty": 140,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KP-001|MED-063": [
+    {
+      "qty": 90,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KP-001|MED-068": [
+    {
+      "qty": 99,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KP-001|MED-069": [
+    {
+      "qty": 265,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KP-001|MED-070": [
+    {
+      "qty": 600,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KP-004|MED-001": [
+    {
+      "qty": 200,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KP-004|MED-007": [
+    {
+      "qty": 9,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KP-004|MED-008": [
+    {
+      "qty": 40,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KP-004|MED-009": [
+    {
+      "qty": 21,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KP-004|MED-011": [
+    {
+      "qty": 50,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KP-004|MED-014": [
+    {
+      "qty": 41,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KP-004|MED-018": [
+    {
+      "qty": 7,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KP-004|MED-019": [
+    {
+      "qty": 30,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KP-004|MED-020": [
+    {
+      "qty": 7,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KP-004|MED-034": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KP-004|MED-054": [
+    {
+      "qty": 8,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KP-004|MED-064": [
+    {
+      "qty": 12,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-KP-004|MED-066": [
+    {
+      "qty": 7,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 1
+    }
+  ],
+  "HOSP-KP-004|MED-067": [
+    {
+      "qty": 7,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-002|MED-002": [
+    {
+      "qty": 37,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-002|MED-004": [
+    {
+      "qty": 50,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-002|MED-006": [
+    {
+      "qty": 70,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-002|MED-008": [
+    {
+      "qty": 120,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-002|MED-009": [
+    {
+      "qty": 61,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-002|MED-011": [
+    {
+      "qty": 200,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-002|MED-012": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-002|MED-013": [
+    {
+      "qty": 91,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-002|MED-014": [
+    {
+      "qty": 80,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-002|MED-020": [
+    {
+      "qty": 31,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-002|MED-023": [
+    {
+      "qty": 200,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-002|MED-024": [
+    {
+      "qty": 17,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-002|MED-027": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-002|MED-031": [
+    {
+      "qty": 150,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-GD-002|MED-033": [
+    {
+      "qty": 150,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-GD-002|MED-040": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-002|MED-041": [
+    {
+      "qty": 7,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-002|MED-047": [
+    {
+      "qty": 100,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-002|MED-048": [
+    {
+      "qty": 21,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-002|MED-050": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-002|MED-052": [
+    {
+      "qty": 46,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-002|MED-055": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-002|MED-056": [
+    {
+      "qty": 25,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-002|MED-057": [
+    {
+      "qty": 9,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-002|MED-064": [
+    {
+      "qty": 48,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-GD-002|MED-067": [
+    {
+      "qty": 19,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-002|MED-068": [
+    {
+      "qty": 7,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-002|MED-069": [
+    {
+      "qty": 15,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-002|MED-071": [
+    {
+      "qty": 10,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-002|MED-072": [
+    {
+      "qty": 13,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-003|MED-002": [
+    {
+      "qty": 16,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-003|MED-005": [
+    {
+      "qty": 200,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-003|MED-008": [
+    {
+      "qty": 40,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-003|MED-009": [
+    {
+      "qty": 21,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-003|MED-013": [
+    {
+      "qty": 22,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-003|MED-014": [
+    {
+      "qty": 34,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-003|MED-015": [
+    {
+      "qty": 26,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-003|MED-016": [
+    {
+      "qty": 48,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-003|MED-018": [
+    {
+      "qty": 10,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-003|MED-019": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-003|MED-020": [
+    {
+      "qty": 17,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-003|MED-024": [
+    {
+      "qty": 8,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-003|MED-025": [
+    {
+      "qty": 200,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-003|MED-028": [
+    {
+      "qty": 40,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-003|MED-029": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-003|MED-032": [
+    {
+      "qty": 200,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-GD-003|MED-033": [
+    {
+      "qty": 100,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-GD-003|MED-034": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-003|MED-037": [
+    {
+      "qty": 9,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-003|MED-038": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-003|MED-052": [
+    {
+      "qty": 12,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-003|MED-055": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-003|MED-064": [
+    {
+      "qty": 24,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-GD-003|MED-071": [
+    {
+      "qty": 10,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-004|MED-008": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-004|MED-013": [
+    {
+      "qty": 5,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-004|MED-017": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-004|MED-039": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    },
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-004|MED-048": [
+    {
+      "qty": 6,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-004|MED-066": [
+    {
+      "qty": 9,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 1
+    }
+  ],
+  "HOSP-GD-005|MED-004": [
+    {
+      "qty": 530,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-005|MED-006": [
+    {
+      "qty": 1250,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-005|MED-007": [
+    {
+      "qty": 1233,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-005|MED-009": [
+    {
+      "qty": 1002,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-005|MED-011": [
+    {
+      "qty": 2450,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-005|MED-013": [
+    {
+      "qty": 1685,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-005|MED-017": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-005|MED-020": [
+    {
+      "qty": 662,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-005|MED-021": [
+    {
+      "qty": 2000,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-005|MED-022": [
+    {
+      "qty": 2300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-005|MED-024": [
+    {
+      "qty": 305,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-005|MED-028": [
+    {
+      "qty": 1380,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-005|MED-029": [
+    {
+      "qty": 800,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-005|MED-030": [
+    {
+      "qty": 458,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-005|MED-032": [
+    {
+      "qty": 6000,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-GD-005|MED-033": [
+    {
+      "qty": 1450,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-GD-005|MED-034": [
+    {
+      "qty": 510,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-005|MED-039": [
+    {
+      "qty": 570,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-005|MED-040": [
+    {
+      "qty": 390,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-005|MED-042": [
+    {
+      "qty": 42,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-005|MED-043": [
+    {
+      "qty": 34,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-005|MED-044": [
+    {
+      "qty": 22,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-005|MED-049": [
+    {
+      "qty": 1100,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-005|MED-050": [
+    {
+      "qty": 340,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-005|MED-051": [
+    {
+      "qty": 290,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-005|MED-054": [
+    {
+      "qty": 452,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-005|MED-055": [
+    {
+      "qty": 330,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-005|MED-057": [
+    {
+      "qty": 139,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-005|MED-058": [
+    {
+      "qty": 97,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-005|MED-059": [
+    {
+      "qty": 96,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-005|MED-060": [
+    {
+      "qty": 80,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-005|MED-062": [
+    {
+      "qty": 210,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-005|MED-063": [
+    {
+      "qty": 104,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-GD-005|MED-064": [
+    {
+      "qty": 984,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-GD-005|MED-066": [
+    {
+      "qty": 199,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 1
+    }
+  ],
+  "HOSP-GD-005|MED-067": [
+    {
+      "qty": 580,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-005|MED-069": [
+    {
+      "qty": 265,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-GD-005|MED-072": [
+    {
+      "qty": 420,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-004|MED-002": [
+    {
+      "qty": 13,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-004|MED-005": [
+    {
+      "qty": 200,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-004|MED-008": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-LB-004|MED-009": [
+    {
+      "qty": 18,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-004|MED-010": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-LB-004|MED-011": [
+    {
+      "qty": 100,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-LB-004|MED-013": [
+    {
+      "qty": 17,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-004|MED-014": [
+    {
+      "qty": 38,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-004|MED-018": [
+    {
+      "qty": 6,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-004|MED-019": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-004|MED-021": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-LB-004|MED-022": [
+    {
+      "qty": 200,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-LB-004|MED-024": [
+    {
+      "qty": 9,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-004|MED-028": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-LB-004|MED-030": [
+    {
+      "qty": 7,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-LB-004|MED-035": [
+    {
+      "qty": 6,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-004|MED-037": [
+    {
+      "qty": 8,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-LB-004|MED-048": [
+    {
+      "qty": 5,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-004|MED-050": [
+    {
+      "qty": 10,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-004|MED-052": [
+    {
+      "qty": 11,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-004|MED-054": [
+    {
+      "qty": 8,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-004|MED-055": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-LB-004|MED-066": [
+    {
+      "qty": 9,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 1
+    }
+  ],
+  "HOSP-LB-005|MED-002": [
+    {
+      "qty": 569,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-005|MED-004": [
+    {
+      "qty": 420,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-005|MED-005": [
+    {
+      "qty": 1600,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-005|MED-006": [
+    {
+      "qty": 500,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-005|MED-008": [
+    {
+      "qty": 670,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-LB-005|MED-009": [
+    {
+      "qty": 625,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-005|MED-010": [
+    {
+      "qty": 1100,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-LB-005|MED-011": [
+    {
+      "qty": 1300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-LB-005|MED-012": [
+    {
+      "qty": 1500,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-LB-005|MED-013": [
+    {
+      "qty": 928,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-005|MED-014": [
+    {
+      "qty": 957,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-005|MED-015": [
+    {
+      "qty": 497,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-005|MED-016": [
+    {
+      "qty": 216,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-005|MED-018": [
+    {
+      "qty": 185,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-005|MED-019": [
+    {
+      "qty": 430,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-005|MED-020": [
+    {
+      "qty": 269,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-005|MED-021": [
+    {
+      "qty": 1200,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-LB-005|MED-027": [
+    {
+      "qty": 1900,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-LB-005|MED-028": [
+    {
+      "qty": 740,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-LB-005|MED-030": [
+    {
+      "qty": 279,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-LB-005|MED-031": [
+    {
+      "qty": 1700,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-LB-005|MED-032": [
+    {
+      "qty": 2300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-LB-005|MED-033": [
+    {
+      "qty": 1350,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-LB-005|MED-034": [
+    {
+      "qty": 180,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-005|MED-035": [
+    {
+      "qty": 74,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-005|MED-036": [
+    {
+      "qty": 1300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-005|MED-037": [
+    {
+      "qty": 212,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-LB-005|MED-041": [
+    {
+      "qty": 38,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-005|MED-044": [
+    {
+      "qty": 14,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-005|MED-047": [
+    {
+      "qty": 1150,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-LB-005|MED-049": [
+    {
+      "qty": 600,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-005|MED-050": [
+    {
+      "qty": 270,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-005|MED-052": [
+    {
+      "qty": 354,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-005|MED-054": [
+    {
+      "qty": 192,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-005|MED-055": [
+    {
+      "qty": 150,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-LB-005|MED-056": [
+    {
+      "qty": 100,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-LB-005|MED-057": [
+    {
+      "qty": 112,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-005|MED-058": [
+    {
+      "qty": 56,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-005|MED-061": [
+    {
+      "qty": 140,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-LB-005|MED-064": [
+    {
+      "qty": 420,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-LB-005|MED-065": [
+    {
+      "qty": 119,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 1
+    }
+  ],
+  "HOSP-LB-005|MED-067": [
+    {
+      "qty": 226,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-LB-005|MED-068": [
+    {
+      "qty": 68,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-LB-005|MED-069": [
+    {
+      "qty": 160,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-LB-005|MED-072": [
+    {
+      "qty": 138,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-001|MED-002": [
+    {
+      "qty": 84,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-001|MED-005": [
+    {
+      "qty": 400,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-001|MED-007": [
+    {
+      "qty": 183,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-001|MED-010": [
+    {
+      "qty": 500,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KR-001|MED-011": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KR-001|MED-012": [
+    {
+      "qty": 600,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KR-001|MED-014": [
+    {
+      "qty": 247,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-001|MED-015": [
+    {
+      "qty": 186,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-001|MED-022": [
+    {
+      "qty": 400,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KR-001|MED-024": [
+    {
+      "qty": 53,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-001|MED-026": [
+    {
+      "qty": 500,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KR-001|MED-027": [
+    {
+      "qty": 400,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KR-001|MED-030": [
+    {
+      "qty": 62,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KR-001|MED-031": [
+    {
+      "qty": 850,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-KR-001|MED-032": [
+    {
+      "qty": 700,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-KR-001|MED-035": [
+    {
+      "qty": 17,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-001|MED-036": [
+    {
+      "qty": 600,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-001|MED-037": [
+    {
+      "qty": 74,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KR-001|MED-038": [
+    {
+      "qty": 90,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-001|MED-040": [
+    {
+      "qty": 50,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KR-001|MED-041": [
+    {
+      "qty": 11,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-001|MED-042": [
+    {
+      "qty": 6,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-001|MED-046": [
+    {
+      "qty": 5,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 18
+    }
+  ],
+  "HOSP-KR-001|MED-047": [
+    {
+      "qty": 350,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KR-001|MED-048": [
+    {
+      "qty": 59,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-001|MED-053": [
+    {
+      "qty": 80,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-001|MED-054": [
+    {
+      "qty": 76,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-001|MED-057": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-001|MED-060": [
+    {
+      "qty": 18,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-001|MED-064": [
+    {
+      "qty": 132,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-KR-001|MED-067": [
+    {
+      "qty": 70,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KR-001|MED-069": [
+    {
+      "qty": 25,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KR-003|MED-002": [
+    {
+      "qty": 6,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-003|MED-014": [
+    {
+      "qty": 6,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-003|MED-015": [
+    {
+      "qty": 7,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-003|MED-025": [
+    {
+      "qty": 200,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KR-003|MED-027": [
+    {
+      "qty": 200,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KR-003|MED-032": [
+    {
+      "qty": 100,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-KR-003|MED-037": [
+    {
+      "qty": 4,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KR-003|MED-039": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KR-003|MED-069": [
+    {
+      "qty": 10,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KR-003|MED-072": [
+    {
+      "qty": 5,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    },
+    {
+      "qty": 5,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-004|MED-002": [
+    {
+      "qty": 11,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-004|MED-004": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-004|MED-007": [
+    {
+      "qty": 12,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-004|MED-009": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-004|MED-010": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KR-004|MED-011": [
+    {
+      "qty": 100,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KR-004|MED-013": [
+    {
+      "qty": 24,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-004|MED-015": [
+    {
+      "qty": 21,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-004|MED-018": [
+    {
+      "qty": 6,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-004|MED-020": [
+    {
+      "qty": 10,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-004|MED-024": [
+    {
+      "qty": 5,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-004|MED-030": [
+    {
+      "qty": 10,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KR-004|MED-034": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-004|MED-040": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KR-004|MED-042": [
+    {
+      "qty": 5,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-004|MED-047": [
+    {
+      "qty": 100,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KR-004|MED-048": [
+    {
+      "qty": 9,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-004|MED-052": [
+    {
+      "qty": 12,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-KR-004|MED-064": [
+    {
+      "qty": 12,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-KR-004|MED-067": [
+    {
+      "qty": 6,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KR-004|MED-068": [
+    {
+      "qty": 7,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-KR-004|MED-069": [
+    {
+      "qty": 5,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-SP-003|MED-002": [
+    {
+      "qty": 11,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    },
+    {
+      "qty": 14,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-SP-003|MED-004": [
+    {
+      "qty": 30,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-SP-003|MED-006": [
+    {
+      "qty": 40,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-SP-003|MED-007": [
+    {
+      "qty": 15,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-SP-003|MED-008": [
+    {
+      "qty": 30,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    },
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-SP-003|MED-009": [
+    {
+      "qty": 16,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    },
+    {
+      "qty": 15,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-SP-003|MED-011": [
+    {
+      "qty": 50,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    },
+    {
+      "qty": 100,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-SP-003|MED-012": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-SP-003|MED-014": [
+    {
+      "qty": 37,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-SP-003|MED-015": [
+    {
+      "qty": 21,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    },
+    {
+      "qty": 15,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-SP-003|MED-016": [
+    {
+      "qty": 48,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-SP-003|MED-020": [
+    {
+      "qty": 7,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-SP-003|MED-021": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    },
+    {
+      "qty": 300,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-SP-003|MED-026": [
+    {
+      "qty": 300,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-SP-003|MED-028": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-SP-003|MED-030": [
+    {
+      "qty": 9,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    },
+    {
+      "qty": 5,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-SP-003|MED-037": [
+    {
+      "qty": 7,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    },
+    {
+      "qty": 9,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-SP-003|MED-038": [
+    {
+      "qty": 30,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-SP-003|MED-048": [
+    {
+      "qty": 5,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-SP-003|MED-054": [
+    {
+      "qty": 8,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-SP-003|MED-056": [
+    {
+      "qty": 10,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    },
+    {
+      "qty": 10,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-SP-003|MED-058": [
+    {
+      "qty": 7,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-SP-003|MED-060": [
+    {
+      "qty": 7,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-SP-003|MED-061": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-SP-003|MED-062": [
+    {
+      "qty": 30,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    },
+    {
+      "qty": 30,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-SP-003|MED-064": [
+    {
+      "qty": 24,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    },
+    {
+      "qty": 24,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-SP-003|MED-065": [
+    {
+      "qty": 9,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 1
+    }
+  ],
+  "HOSP-SP-003|MED-066": [
+    {
+      "qty": 9,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 1
+    }
+  ],
+  "HOSP-SP-003|MED-067": [
+    {
+      "qty": 6,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-SP-003|MED-072": [
+    {
+      "qty": 8,
+      "order_date": "2026-06-22",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    },
+    {
+      "qty": 5,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-13",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-SP-004|MED-002": [
+    {
+      "qty": 13,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-SP-004|MED-007": [
+    {
+      "qty": 27,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-SP-004|MED-013": [
+    {
+      "qty": 16,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-SP-004|MED-014": [
+    {
+      "qty": 45,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-SP-004|MED-015": [
+    {
+      "qty": 26,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-SP-004|MED-018": [
+    {
+      "qty": 7,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-SP-004|MED-020": [
+    {
+      "qty": 17,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-SP-004|MED-030": [
+    {
+      "qty": 13,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-SP-004|MED-031": [
+    {
+      "qty": 100,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-SP-004|MED-032": [
+    {
+      "qty": 200,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-SP-004|MED-033": [
+    {
+      "qty": 100,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 60
+    }
+  ],
+  "HOSP-SP-004|MED-037": [
+    {
+      "qty": 9,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-SP-004|MED-047": [
+    {
+      "qty": 100,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-SP-004|MED-053": [
+    {
+      "qty": 20,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-SP-004|MED-056": [
+    {
+      "qty": 10,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-SP-004|MED-057": [
+    {
+      "qty": 5,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-SP-004|MED-063": [
+    {
+      "qty": 5,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ],
+  "HOSP-SP-004|MED-067": [
+    {
+      "qty": 7,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-SP-004|MED-069": [
+    {
+      "qty": 10,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 36
+    }
+  ],
+  "HOSP-SP-004|MED-072": [
+    {
+      "qty": 5,
+      "order_date": "2026-06-29",
+      "arrival_date": "2026-07-06",
+      "shelf_life_months": 24
+    }
+  ]
+}

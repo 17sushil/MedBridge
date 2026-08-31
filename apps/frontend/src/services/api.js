@@ -27,6 +27,13 @@ export const api = {
     return mapUser(user);
   },
 
+  async deleteAccount(password) {
+    return request("/auth/me", {
+      method: "DELETE",
+      body: JSON.stringify({ password }),
+    });
+  },
+  
   async getDashboardStats() {
     return request("/dashboard/stats");
   },

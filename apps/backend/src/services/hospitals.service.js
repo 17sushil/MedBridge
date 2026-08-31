@@ -29,10 +29,11 @@ async function getHospital(id) {
           users: true,
         },
       },
-      medicines: {
-        take: 5,
-        orderBy: { updatedAt: "desc" },
-      },
+      // NOTE: we deliberately do NOT include `medicines` here. This endpoint is
+      // used to view OTHER hospitals' profiles, and returning their medicines
+      // would leak batch numbers, quantities, unit prices, and expiry dates —
+      // violating the platform guarantee that one hospital can never see
+      // another's private inventory. Only coarse public metadata is exposed.
     },
   });
   if (!hospital) throw new ApiError(404, "Hospital not found");

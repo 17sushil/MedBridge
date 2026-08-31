@@ -1,5 +1,6 @@
 const prisma = require("../config/db");
 const { ApiError } = require("../utils/ApiError");
+const { computeMedicineStatus } = require("../utils/medicineStatus");
 
 async function listMedicines(hospitalId, { search, status } = {}) {
   return prisma.medicine.findMany({
@@ -27,11 +28,7 @@ async function getMedicine(hospitalId, id) {
 
 function computeStatusFromQuantity(qty, explicitStatus) {
   if (explicitStatus) return explicitStatus;
-  if (qty <= 0) return "CRITICAL";
-  if (qty < 5) return "CRITICAL";
-  if (qty < 15) return "LOW_STOCK";
-  if (qty < 40) return "MEDIUM_STOCK";
-  return "IN_STOCK";
+  return computeMedicineStatus(qty);
 }
 
 async function createMedicine(hospitalId, data) {
@@ -45,7 +42,7 @@ async function createMedicine(hospitalId, data) {
     data: {
       hospitalId,
       medicineId: created.id,
-      type: "IN",
+      type: "PROCUREMENT",
       quantity: created.quantity,
     },
   });
@@ -81,7 +78,7 @@ async function updateMedicine(hospitalId, id, data) {
         data: {
           hospitalId,
           medicineId: id,
-          type: diff > 0 ? "IN" : "OUT",
+          type: diff > 0 ? "PROCUREMENT" : "CONSUMPTION",
           quantity: Math.abs(diff),
         },
       });
@@ -110,18 +107,42 @@ async function deleteMedicine(hospitalId, id) {
   });
 }
 
-// Medicines expiring within `days` days, soonest first — powers the
-// dashboard's "Expiry Alerts" panel.
+// FIXED: Expiry logic - now correctly handles expired vs expiring
+// - Returns only medicines that will expire in next `days` days (future)
+// - Excludes already expired (use getExpired for those)
+// - Sorted by expiry soonest first
 async function expiringSoon(hospitalId, days = 30) {
+  const now = new Date();
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() + days);
+
+  // FIX: Added gte: now to exclude already expired medicines
+  // Previously it returned expired + expiring, causing confusion
   return prisma.medicine.findMany({
-    where: { hospitalId, expiry: { lte: cutoff } },
+    where: {
+      hospitalId,
+      expiry: {
+        gte: now,  // FIX: Only future expiries
+        lte: cutoff
+      }
+    },
     orderBy: { expiry: "asc" },
   });
 }
 
-// Distribution of quantity across categories — powers the category donut chart.
+// NEW: Get already expired medicines
+async function getExpired(hospitalId) {
+  const now = new Date();
+  return prisma.medicine.findMany({
+    where: {
+      hospitalId,
+      expiry: { lt: now }
+    },
+    orderBy: { expiry: "desc" },
+  });
+}
+
+// Distribution of quantity across categories
 async function categoryBreakdown(hospitalId) {
   const rows = await prisma.medicine.groupBy({
     by: ["category"],
@@ -142,5 +163,6 @@ module.exports = {
   updateMedicine,
   deleteMedicine,
   expiringSoon,
+  getExpired,
   categoryBreakdown,
 };

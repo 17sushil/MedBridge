@@ -26,6 +26,7 @@ model Hospital {
   notifications    Notification[]
   reports          Report[]
   users            User[]
+  auditLogs AuditLog[]
 }
 
 model User {
@@ -38,6 +39,7 @@ model User {
   createdAt    DateTime @default(now())
   hospitalId   String
   hospital     Hospital @relation(fields: [hospitalId], references: [id])
+  auditLogs AuditLog[]
 }
 
 model Medicine {
@@ -186,4 +188,21 @@ enum MovementType {
   EXCHANGE_OUT
   EXCHANGE_IN
   EXPIRY_WRITEOFF
+}
+model AuditLog {
+  id         String   @id @default(uuid())
+  hospitalId String
+  userId     String?
+  action     String
+  entity     String
+  entityId   String?
+  oldValue   String?  @db.Text
+  newValue   String?  @db.Text
+  createdAt  DateTime @default(now())
+  hospital Hospital @relation(fields: [hospitalId], references: [id])
+  user     User?    @relation(fields: [userId], references: [id])
+  @@index([hospitalId])
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
 }

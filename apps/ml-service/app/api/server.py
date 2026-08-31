@@ -24,7 +24,12 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from app.services.exchange_services import demo_exchange_plan, suggest_matches
-from app.services.forecast_services import batch_forecast, load_bundle
+from app.services.forecast_services import (
+    batch_forecast,
+    load_bundle,
+    next_week_forecast,
+    recursive_forecast,
+)
 from app.services.inventory_services import (
     expiry_alerts,
     hospital_inventory_summary,
@@ -57,9 +62,28 @@ def _require_features() -> Path:
     if not path.exists() or path.stat().st_size == 0:
         raise HTTPException(
             status_code=503,
-            detail="demand_features.csv missing. Run: python training/generate_synthetic_data.py",
+            detail="demand_features.csv missing. Run: python3 training/generate_ledger_data.py",
         )
     return path
+
+
+def _hospital_partition_path(hospital_id: str) -> Path:
+    safe_id = "".join(
+        character if character.isalnum() or character in ("-", "_") else "_"
+        for character in str(hospital_id)
+    )
+    return PROC / "by_hospital" / f"{safe_id}.csv"
+
+
+def _load_hospital_features(hospital_id: str) -> pd.DataFrame:
+    """Load a small serving partition; fall back to the full training table."""
+    partition = _hospital_partition_path(hospital_id)
+    if partition.exists() and partition.stat().st_size > 0:
+        return pd.read_csv(partition, parse_dates=["week_start"])
+
+    feature_path = _require_features()
+    all_features = pd.read_csv(feature_path, parse_dates=["week_start"])
+    return all_features[all_features["hospital_id"] == hospital_id].copy()
 
 
 def _require_model() -> None:
@@ -139,39 +163,45 @@ def medicines() -> dict[str, Any]:
 
 @app.get("/forecast")
 def forecast(
-    hospital_id: str = Query(..., description="e.g. DEMO-03"),
+    hospital_id: str = Query(..., description="e.g. HOSP-BG-003"),
     top: int = Query(50, ge=1, le=500),
-    week: Optional[str] = Query(None, description="YYYY-MM-DD week_start; default=latest"),
+    week: Optional[str] = Query(
+        None,
+        description="Historical YYYY-MM-DD for a backtest; omit for the next future week",
+    ),
 ) -> dict[str, Any]:
-    """Medicine-level weekly demand forecast for one hospital (XGBoost)."""
+    """Medicine-level one-week-ahead demand forecast for one hospital."""
     _require_model()
-    feat_path = _require_features()
-
-    feats = pd.read_csv(feat_path, parse_dates=["week_start"])
-    sub = feats[feats["hospital_id"] == hospital_id]
-    if sub.empty:
+    history = _load_hospital_features(hospital_id)
+    if history.empty:
         raise HTTPException(status_code=404, detail=f"No feature rows for hospital_id={hospital_id}")
 
-    if week:
-        latest = pd.Timestamp(week)
-        rows = sub[sub["week_start"] == latest]
-        if rows.empty:
-            # nearest week
-            latest = sub["week_start"].max()
-            rows = sub[sub["week_start"] == latest]
-    else:
-        latest = sub["week_start"].max()
-        rows = sub[sub["week_start"] == latest].copy()
+    last_observed = pd.Timestamp(history["week_start"].max())
+    is_future = week is None
 
     try:
-        pred = batch_forecast(rows)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Prediction failed: {e}") from e
+        if is_future:
+            predicted = next_week_forecast(history)
+            forecast_week = pd.Timestamp(predicted["week_start"].iloc[0])
+        else:
+            requested_week = pd.Timestamp(week)
+            rows = history[history["week_start"] == requested_week].copy()
+            if rows.empty:
+                raise HTTPException(
+                    status_code=404,
+                    detail=f"No historical feature rows for hospital_id={hospital_id}, week={week}",
+                )
+            predicted = batch_forecast(rows)
+            forecast_week = requested_week
+    except HTTPException:
+        raise
+    except Exception as error:
+        raise HTTPException(status_code=500, detail=f"Prediction failed: {error}") from error
 
-    pred = pred.sort_values("predicted_demand", ascending=False).head(top)
-    cols = [
-        c
-        for c in [
+    predicted = predicted.sort_values("predicted_demand", ascending=False).head(top)
+    columns = [
+        column
+        for column in [
             "hospital_id",
             "medicine_id",
             "generic_name",
@@ -181,124 +211,94 @@ def forecast(
             "target_demand",
             "predicted_demand",
         ]
-        if c in pred.columns
+        if column in predicted.columns
     ]
-    items = _df_records(pred[cols])
-    # accuracy on this slice
-    if "target_demand" in pred.columns and "predicted_demand" in pred.columns:
-        y = pred["target_demand"].to_numpy(float)
-        p = pred["predicted_demand"].to_numpy(float)
-        mae = float(np.mean(np.abs(y - p))) if len(y) else None
-    else:
-        mae = None
+    items = _df_records(predicted[columns])
+
+    slice_mae = None
+    if not is_future and "target_demand" in predicted.columns:
+        actual = predicted["target_demand"].to_numpy(float)
+        estimate = predicted["predicted_demand"].to_numpy(float)
+        slice_mae = round(float(np.mean(np.abs(actual - estimate))), 4)
 
     return {
         "hospital_id": hospital_id,
-        "week_start": str(pd.Timestamp(latest).date()),
+        "week_start": str(forecast_week.date()),
+        "last_observed_week": str(last_observed.date()),
+        "forecast_type": "future" if is_future else "historical_backtest",
         "model": "XGBoostRegressor",
         "n_items": len(items),
-        "slice_mae": round(mae, 4) if mae is not None else None,
+        "slice_mae": slice_mae,
         "items": items,
     }
-
 
 @app.get("/forecast/chart")
 def forecast_chart(
     hospital_id: str = Query(...),
     months: int = Query(6, ge=3, le=12),
 ) -> dict[str, Any]:
-    """
-    Frontend-friendly monthly series:
-      [{ month, actual, forecast }, ...]
-    Built from weekly XGBoost predictions + historical target_demand.
-    """
+    """Return historical backtests plus eight weeks of genuine future forecasts."""
     _require_model()
-    feat_path = _require_features()
-    feats = pd.read_csv(feat_path, parse_dates=["week_start"])
-    sub = feats[feats["hospital_id"] == hospital_id].copy()
-    if sub.empty:
+    history = _load_hospital_features(hospital_id)
+    if history.empty:
         raise HTTPException(status_code=404, detail=f"No data for {hospital_id}")
 
-    # Historical weekly totals (actual)
-    weekly_actual = (
-        sub.groupby("week_start", as_index=False)["target_demand"].sum()
-        .sort_values("week_start")
-    )
-    weekly_actual["month"] = weekly_actual["week_start"].dt.to_period("M").astype(str)
+    last_observed = pd.Timestamp(history["week_start"].max())
+    first_history_month = (last_observed.to_period("M") - (months - 1)).start_time
+    recent = history[history["week_start"] >= first_history_month].copy()
 
-    # Predict latest week at medicine grain, then we also backfill forecast
-    # using lag-based batch on recent weeks (sample up to last 16 weeks for speed)
-    recent_weeks = sorted(sub["week_start"].unique())[-16:]
-    recent = sub[sub["week_start"].isin(recent_weeks)].copy()
     try:
-        recent_pred = batch_forecast(recent)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Prediction failed: {e}") from e
+        historical_prediction = batch_forecast(recent)
+        future_prediction = recursive_forecast(history, periods=8)
+    except Exception as error:
+        raise HTTPException(status_code=500, detail=f"Prediction failed: {error}") from error
 
-    weekly_pred = (
-        recent_pred.groupby("week_start", as_index=False)["predicted_demand"].sum()
-        .sort_values("week_start")
+    historical_prediction["monthKey"] = (
+        historical_prediction["week_start"].dt.to_period("M").astype(str)
     )
-    weekly_pred["week_start"] = pd.to_datetime(weekly_pred["week_start"])
-    weekly_pred["month"] = weekly_pred["week_start"].dt.to_period("M").astype(str)
+    historical_monthly = historical_prediction.groupby("monthKey", as_index=False).agg(
+        actual=("target_demand", "sum"),
+        forecast=("predicted_demand", "sum"),
+    )
 
-    # Monthly actual (last N months)
-    monthly_actual = weekly_actual.groupby("month", as_index=False)["target_demand"].sum()
-    monthly_pred = weekly_pred.groupby("month", as_index=False)["predicted_demand"].sum()
-
-    months_sorted = sorted(set(monthly_actual["month"]).union(set(monthly_pred["month"])))
-    months_sorted = months_sorted[-months:]
+    future_prediction["week_start"] = pd.to_datetime(future_prediction["week_start"])
+    future_prediction["monthKey"] = future_prediction["week_start"].dt.to_period("M").astype(str)
+    future_monthly = future_prediction.groupby("monthKey", as_index=False).agg(
+        forecast=("predicted_demand", "sum")
+    )
 
     series = []
-    for m in months_sorted:
-        a = monthly_actual.loc[monthly_actual["month"] == m, "target_demand"]
-        f = monthly_pred.loc[monthly_pred["month"] == m, "predicted_demand"]
-        # pretty label
-        try:
-            label = pd.Period(m, freq="M").strftime("%b")
-        except Exception:
-            label = m
-        series.append(
-            {
-                "month": label,
-                "monthKey": m,
-                "actual": int(round(float(a.iloc[0]))) if len(a) else 0,
-                "forecast": int(round(float(f.iloc[0]))) if len(f) else None,
-            }
-        )
+    for row in historical_monthly.itertuples():
+        period = pd.Period(row.monthKey, freq="M")
+        series.append({
+            "month": period.strftime("%b"),
+            "monthKey": row.monthKey,
+            "actual": int(round(float(row.actual))),
+            "forecast": int(round(float(row.forecast))),
+            "kind": "historical_backtest",
+        })
+    for row in future_monthly.itertuples():
+        period = pd.Period(row.monthKey, freq="M")
+        series.append({
+            "month": period.strftime("%b"),
+            "monthKey": row.monthKey,
+            "actual": None,
+            "forecast": int(round(float(row.forecast))),
+            "kind": "future_forecast",
+        })
 
-    # Project 2 future months using last forecast / growth
-    if series:
-        base = series[-1]["forecast"] or series[-1]["actual"] or 0
-        last_key = series[-1]["monthKey"]
-        try:
-            p = pd.Period(last_key, freq="M")
-            for i in range(1, 3):
-                fut = p + i
-                series.append(
-                    {
-                        "month": fut.strftime("%b"),
-                        "monthKey": str(fut),
-                        "actual": None,
-                        "forecast": int(round(base * (1 + 0.04 * i))),
-                    }
-                )
-        except Exception:
-            pass
-
-    # Top medicine forecasts for cards
     detail = forecast(hospital_id=hospital_id, top=15, week=None)
-
     return {
         "hospital_id": hospital_id,
         "model": "XGBoostRegressor",
+        "forecast_horizon_weeks": 8,
+        "last_observed_week": str(last_observed.date()),
         "series": series,
         "topMedicines": detail["items"],
         "week_start": detail["week_start"],
         "available": True,
-        "message": "XGBoost demand forecast ready",
+        "message": "Leakage-audited one-week model with recursive eight-week forecast",
     }
-
 
 @app.get("/expiry")
 def expiry(

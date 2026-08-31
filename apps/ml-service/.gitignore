@@ -1,4 +1,14 @@
+# Generated datasets
+
 data/processed/
+
+# Generated training/model outputs
 artifacts/models/
 artifacts/metrics/
-database/
+artifacts/encoders/*.joblib
+artifacts/encoders/*columns.json
+
+# Local runtime files
+.venv/
+__pycache__/
+*.py[cod]

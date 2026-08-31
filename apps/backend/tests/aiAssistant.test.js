@@ -26,8 +26,9 @@ test("PromptBuilder sanitizes prompt injection", () => {
 test("PromptBuilder system prompt contains safety instructions", () => {
   const prompt = PromptBuilder.getSystemPrompt();
   assert.match(prompt, /MedBridge AI/i);
-  assert.match(prompt, /Never diagnosing/i);
-  assert.match(prompt, /Never prescribing/i);
+  assert.match(prompt, /Never pretending to be a doctor/i);
+  assert.match(prompt, /diagnosing patients/i);
+  assert.match(prompt, /prescribing medications\/dosages/i);
   assert.match(prompt, /consult qualified healthcare professional/i);
   assert.match(prompt, /patient safety/i);
 });
@@ -70,6 +71,17 @@ test("InventoryContext extracts medicine names", () => {
   assert.equal(InventoryContext.extractMedicineName("Do we have Insulin?"), "insulin");
   assert.equal(InventoryContext.extractMedicineName("Show Amoxicillin stock"), "amoxicillin");
   assert.equal(InventoryContext.extractMedicineName("Which hospital has Ceftriaxone?"), "ceftriaxone");
+});
+
+test("InventoryContext detects cross-hospital queries (no own-inventory leak)", () => {
+  assert.equal(InventoryContext.isCrossHospitalQuery("Which hospital has Ceftriaxone?"), true);
+  assert.equal(InventoryContext.isCrossHospitalQuery("which hospitals have paracetamol"), true);
+  assert.equal(InventoryContext.isCrossHospitalQuery("what hospital carries amoxicillin"), true);
+  // Own-inventory questions must NOT be treated as cross-hospital
+  assert.equal(InventoryContext.isCrossHospitalQuery("do we have ceftriaxone?"), false);
+  assert.equal(InventoryContext.isCrossHospitalQuery("does my hospital have insulin"), false);
+  assert.equal(InventoryContext.isCrossHospitalQuery("how much does paracetamol cost?"), false);
+  assert.equal(InventoryContext.isCrossHospitalQuery("show our inventory"), false);
 });
 
 test("MockProvider provides medically responsible answers", async () => {
