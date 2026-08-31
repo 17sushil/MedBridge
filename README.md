@@ -37,12 +37,17 @@ uvicorn app.api.server:app --host 0.0.0.0 --port 8000 --reload
 ### 2. Backend
 ```bash
 cd apps/backend
-npm install
+npm install                     # also auto-generates the Prisma client (postinstall)
 cp .env.example .env            # set DATABASE_URL + a strong JWT_SECRET
-npx prisma migrate dev
-npm run seed                    # imports the 8 demo hospitals from ML CSVs
+npm run db:setup                # applies migrations + seeds the 8 demo hospitals
 npm run dev                     # http://localhost:4000
 ```
+
+> **Database setup is a single step.** The schema is a single squashed
+> baseline migration (`prisma/migrations/20260831000000_baseline`), so
+> `npm run db:setup` works against any fresh database with zero drift prompts.
+> Other handy commands: `npm run db:migrate` (apply pending), `npm run
+> db:studio` (browse tables), `npm run db:reset` (wipe + rebuild).
 
 ### 3. Frontend
 ```bash

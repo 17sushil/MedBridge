@@ -1,5 +1,12 @@
+-- MedBridge baseline schema (squashed).
+-- Single migration that recreates the exact schema in prisma/schema.prisma,
+-- so a fresh database can be set up with one command and no drift.
+
 -- CreateEnum
-CREATE TYPE "Role" AS ENUM ('ADMIN', 'STAFF');
+CREATE TYPE "Role" AS ENUM ('ADMIN', 'INVENTORY_MANAGER', 'STAFF');
+
+-- CreateEnum
+CREATE TYPE "ApprovalStatus" AS ENUM ('PENDING', 'APPROVED', 'REJECTED');
 
 -- CreateEnum
 CREATE TYPE "MedicineStatus" AS ENUM ('IN_STOCK', 'LOW_STOCK', 'MEDIUM_STOCK', 'CRITICAL');
@@ -14,14 +21,18 @@ CREATE TYPE "NotificationType" AS ENUM ('CRITICAL', 'EXCHANGE', 'INFO', 'SUCCESS
 CREATE TYPE "ReportType" AS ENUM ('INVENTORY', 'EXCHANGE', 'COMPLIANCE');
 
 -- CreateEnum
-CREATE TYPE "MovementType" AS ENUM ('IN', 'OUT');
+CREATE TYPE "MovementType" AS ENUM ('IN', 'OUT', 'PROCUREMENT', 'CONSUMPTION', 'EXCHANGE_OUT', 'EXCHANGE_IN', 'EXPIRY_WRITEOFF');
 
 -- CreateTable
 CREATE TABLE "Hospital" (
     "id" TEXT NOT NULL,
+    "externalCode" TEXT,
     "name" TEXT NOT NULL,
     "location" TEXT NOT NULL,
     "type" TEXT NOT NULL,
+    "province" TEXT,
+    "district" TEXT,
+    "ecoregion" TEXT,
     "rating" DOUBLE PRECISION NOT NULL DEFAULT 4.5,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -35,6 +46,7 @@ CREATE TABLE "User" (
     "email" TEXT NOT NULL,
     "passwordHash" TEXT NOT NULL,
     "role" "Role" NOT NULL DEFAULT 'STAFF',
+    "approvalStatus" "ApprovalStatus" NOT NULL DEFAULT 'PENDING',
     "avatarUrl" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "hospitalId" TEXT NOT NULL,
@@ -45,6 +57,7 @@ CREATE TABLE "User" (
 -- CreateTable
 CREATE TABLE "Medicine" (
     "id" TEXT NOT NULL,
+    "medicineCode" TEXT,
     "name" TEXT NOT NULL,
     "category" TEXT NOT NULL,
     "batch" TEXT NOT NULL,
@@ -112,11 +125,45 @@ CREATE TABLE "Report" (
     CONSTRAINT "Report_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Conversation" (
+    "id" TEXT NOT NULL,
+    "title" TEXT,
+    "userId" TEXT NOT NULL,
+    "hospitalId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Conversation_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "AIMessage" (
+    "id" TEXT NOT NULL,
+    "conversationId" TEXT NOT NULL,
+    "role" TEXT NOT NULL,
+    "content" TEXT NOT NULL,
+    "tokens" INTEGER,
+    "metadata" JSONB,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "AIMessage_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Hospital_externalCode_key" ON "Hospital"("externalCode");
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
+CREATE INDEX "User_hospitalId_approvalStatus_idx" ON "User"("hospitalId", "approvalStatus");
+
+-- CreateIndex
 CREATE INDEX "Medicine_hospitalId_idx" ON "Medicine"("hospitalId");
+
+-- CreateIndex
+CREATE INDEX "Medicine_medicineCode_idx" ON "Medicine"("medicineCode");
 
 -- CreateIndex
 CREATE INDEX "InventoryMovement_hospitalId_idx" ON "InventoryMovement"("hospitalId");
@@ -135,6 +182,15 @@ CREATE INDEX "Notification_hospitalId_idx" ON "Notification"("hospitalId");
 
 -- CreateIndex
 CREATE INDEX "Report_hospitalId_idx" ON "Report"("hospitalId");
+
+-- CreateIndex
+CREATE INDEX "Conversation_userId_idx" ON "Conversation"("userId");
+
+-- CreateIndex
+CREATE INDEX "Conversation_hospitalId_idx" ON "Conversation"("hospitalId");
+
+-- CreateIndex
+CREATE INDEX "AIMessage_conversationId_idx" ON "AIMessage"("conversationId");
 
 -- AddForeignKey
 ALTER TABLE "User" ADD CONSTRAINT "User_hospitalId_fkey" FOREIGN KEY ("hospitalId") REFERENCES "Hospital"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -159,3 +215,7 @@ ALTER TABLE "Notification" ADD CONSTRAINT "Notification_hospitalId_fkey" FOREIGN
 
 -- AddForeignKey
 ALTER TABLE "Report" ADD CONSTRAINT "Report_hospitalId_fkey" FOREIGN KEY ("hospitalId") REFERENCES "Hospital"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "AIMessage" ADD CONSTRAINT "AIMessage_conversationId_fkey" FOREIGN KEY ("conversationId") REFERENCES "Conversation"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
