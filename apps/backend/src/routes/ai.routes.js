@@ -54,7 +54,23 @@ router.get("/provider", assistantController.getProviderInfo);
 /**
  * Response shapes match apps/frontend/src/services/aiService.js
  * and AIInsightPanel / AIAssistant (available + message).
+ *
+ * `message` is kept as a plain-string fallback. Routes that return `items`
+ * (an array of { rank, name, category, demand }) also include `headline` and
+ * `meta` so AIInsightPanel can render a structured list instead of one long
+ * run-on sentence.
  */
+
+const MONTHS_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const DAYS_SHORT = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+/** "2026-07-06" -> "Mon, Jul 6, 2026" (falls back to the raw string). */
+function prettyWeekStart(weekStart) {
+  if (!weekStart) return "";
+  const parsed = new Date(`${String(weekStart).slice(0, 10)}T00:00:00Z`);
+  if (Number.isNaN(parsed.getTime())) return String(weekStart);
+  return `${DAYS_SHORT[parsed.getUTCDay()]}, ${MONTHS_SHORT[parsed.getUTCMonth()]} ${parsed.getUTCDate()}, ${parsed.getUTCFullYear()}`;
+}
 
 router.get(
   "/forecast-insight",
@@ -75,53 +91,47 @@ router.get(
       ]);
 
       const top = (detail.items || []).slice(0, 3);
-      const lines = top.map(
-        (i) => `${i.generic_name} (~${Math.round(i.predicted_demand)} units)`
-      );
       const r2 = health?.test_metrics?.R2;
+      const model = detail.model || "XGBoost";
       const r2Text = r2 != null ? ` Model test R² ≈ ${Number(r2).toFixed(3)}.` : "";
+
+      if (!top.length) {
+        return res.json({
+          available: true,
+          headline: `Forecast connected for ${code}.`,
+          meta: r2Text ? `Model test R² ≈ ${Number(r2).toFixed(3)}` : null,
+          message: `XGBoost forecast is connected for ${code}.${r2Text}`,
+        });
+      }
+
+      const rows = top.map((i, index) => ({
+        rank: index + 1,
+        name: i.generic_name,
+        category: i.category || null,
+        demand: Math.round(Number(i.predicted_demand)),
+      }));
+
+      const metaParts = [`${model} model`];
+      if (r2 != null) metaParts.push(`test R² ≈ ${Number(r2).toFixed(3)}`);
+      if (detail.week_start) metaParts.push(`forecast week ${detail.week_start}`);
 
       return res.json({
         available: true,
-        message: top.length
-          ? `XGBoost forecast for ${code} (week ${detail.week_start}): highest need — ${lines.join("; ")}.${r2Text}`
-          : `XGBoost forecast is connected for ${code}.${r2Text}`,
+        headline: `Top demand this week — ${code}`,
+        subhead: detail.week_start
+          ? `Week of ${prettyWeekStart(detail.week_start)}`
+          : undefined,
+        items: rows,
+        meta: metaParts.join(" · "),
+        // Plain-text fallback for any consumer that only reads `message`.
+        message: `XGBoost forecast for ${code} (week ${detail.week_start}): highest need — ${rows
+          .map((r) => `${r.name} (~${r.demand} units)`)
+          .join("; ")}.${r2Text}`,
       });
     } catch (err) {
       return res.json({
         available: false,
         message: `AI forecast offline (${err.message}). Start ML on port 8000 for live XGBoost insights.`,
-      });
-    }
-  })
-);
-
-router.get(
-  "/smart-match",
-  asyncHandler(async (req, res) => {
-    const code = await resolveHospitalCode(req.user.hospitalId);
-    try {
-      const data = await ml.getSmartMatches({
-        hospitalCode: code || undefined,
-        demoOnly: true,
-        topK: 5,
-      });
-      const items = data.items || [];
-      if (!items.length) {
-        return res.json({
-          available: true,
-          message: "No strong exchange matches right now for your hospital network.",
-        });
-      }
-      const top = items[0];
-      return res.json({
-        available: true,
-        message: `Best match: ${top.from_hospital_name} → ${top.to_hospital_name} for ${top.generic_name} x${top.suggested_qty} (${top.distance_km} km, ${top.priority}). ${items.length - 1} more suggestion(s) available.`,
-      });
-    } catch (err) {
-      return res.json({
-        available: false,
-        message: `Smart matching offline (${err.message}). Start the ML service on port 8000.`,
       });
     }
   })
