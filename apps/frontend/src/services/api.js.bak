@@ -87,6 +87,15 @@ export const api = {
     return request(`/medicines/${id}`, { method: "DELETE" });
   },
 
+  // Bulk import medicines from a parsed Excel/CSV file (array of row objects).
+  // Returns { imported, failed, errors } — or throws with a header-mismatch message.
+  async bulkImportMedicines(rows) {
+    return request("/medicines/bulk", {
+      method: "POST",
+      body: JSON.stringify({ rows }),
+    });
+  },
+
   async getExpiryAlerts(days = 30) {
     const rows = await request(`/medicines/meta/expiring-soon?days=${days}`);
     return rows.map(mapExpiryAlert);
@@ -99,6 +108,11 @@ export const api = {
 
   async getHospitals() {
     return request("/hospitals");
+  },
+
+  // Public hospital directory (no auth) — for the "Join hospital" page.
+  async getHospitalDirectory() {
+    return request("/hospitals/directory");
   },
 
   async getHospital(id) {
@@ -164,5 +178,9 @@ export const api = {
         }),
       })
     );
+  },
+
+    async deleteReport(id) {
+    return request(`/reports/${id}`, { method: "DELETE" });
   },
 };
