@@ -159,7 +159,7 @@ export default function AIAssistant() {
               </div>
             </div>
           ))}
-          {loading && <div className="ai-chat-row ai-chat-row-assistant"><div className="ai-chat-avatar"><Bot size={14} /></div><div className="ai-chat-bubble ai-chat-bubble-assistant"><TypingDots /></div></div>}
+          {loading && !messages.some((m) => m.streaming) && <div className="ai-chat-row ai-chat-row-assistant"><div className="ai-chat-avatar"><Bot size={14} /></div><div className="ai-chat-bubble ai-chat-bubble-assistant"><TypingDots /></div></div>}
           {error && <div className="ai-error"><AlertTriangle size={14} /> {error}</div>}
           <div ref={endRef} />
         </div>
