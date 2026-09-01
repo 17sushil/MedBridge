@@ -69,6 +69,20 @@ async function createRequest(requestingHospitalId, { medicine, quantity, unit, t
       },
     });
 
+    // Audit log (best-effort — never affects the request creation)
+    try {
+      await tx.auditLog.create({
+        data: {
+          hospitalId: requestingHospitalId,
+          userId: null,
+          action: "EXCHANGE_REQUEST_CREATED",
+          entity: "ExchangeRequest",
+          entityId: req.id,
+          newValue: { medicine, quantity, unit, toHospitalId },
+        },
+      });
+    } catch {}
+
     return req;
   });
 
@@ -210,6 +224,19 @@ async function updateStatus(hospitalId, role, id, status) {
         },
       });
     }
+
+    // Audit log (best-effort — never affects the status change)
+    try {
+      await tx.auditLog.create({
+        data: {
+          hospitalId,
+          action: `EXCHANGE_${status}`,
+          entity: "ExchangeRequest",
+          entityId: id,
+          newValue: { status, medicine: request.medicine, quantity: request.quantity },
+        },
+      });
+    } catch {}
 
     return updated;
   });
