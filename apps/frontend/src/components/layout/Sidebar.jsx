@@ -3,7 +3,15 @@ import clsx from "clsx";
 import { Cross, PanelLeftClose, PanelLeftOpen, X } from "lucide-react";
 import { routes, navGroups } from "../../routes";
 import { useApp } from "../../context/AppContext";
+import { useAuth } from "../../context/AuthContext";
 import "./Sidebar.css";
+
+// A nav item is visible if it declares no roles, or the current user's role
+// is in the declared list.
+function isVisible(item, roleKey) {
+  if (!item.nav?.roles || item.nav.roles.length === 0) return true;
+  return item.nav.roles.includes(roleKey);
+}
 
 function NavItem({ item, collapsed }) {
   const { label, icon: Icon, badge } = item.nav;
@@ -31,11 +39,13 @@ function NavItem({ item, collapsed }) {
 export default function Sidebar() {
   const { sidebarCollapsed, setSidebarCollapsed, sidebarMobileOpen, setSidebarMobileOpen } =
     useApp();
+  const { user } = useAuth();
+  const roleKey = user?.roleKey;
 
   const grouped = navGroups
     .map((group) => ({
       group,
-      items: routes.filter((r) => r.nav?.group === group),
+      items: routes.filter((r) => r.nav?.group === group && isVisible(r, roleKey)),
     }))
     .filter((g) => g.items.length > 0);
 

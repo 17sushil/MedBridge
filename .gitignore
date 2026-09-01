@@ -1,37 +1,38 @@
+
+# (see apps/ml-service/.gitignore for the authoritative rules)
+# Build
 # Dependencies
-node_modules/
+# Environment
+# IDE
+# Logs
+# ML large data - from Samir branch
+# ML service — generated data and artifacts are regenerable
+# OS
+*.log
+*.pyc
+.DS_Store
+.env
+.env.*.local
+.env.local
+.idea/
+.ipynb_checkpoints/
+.next/
 .pnp
 .pnp.js
-
-# Environment
-.env
-.env.local
-.env.*.local
-
-# Logs
-*.log
-npm-debug.log*
-logs/
-
-# Build
-dist/
-build/
-.next/
-out/
-
-# ML large data - from Samir branch
-apps/ml-service/data/raw/transactions.csv
-apps/ml-service/data/raw/legacy/transactions.csv
-apps/ml-service/data/processed/
-apps/ml-service/artifacts/models/*.joblib
-*.pyc
-__pycache__/
 .pytest_cache/
-
-# OS
-.DS_Store
-Thumbs.db
-
-# IDE
 .vscode/
-.idea/
+Thumbs.db
+__pycache__/
+apps/ml-service/artifacts/
+apps/ml-service/artifacts/models/*.joblib
+apps/ml-service/data/processed/
+apps/ml-service/data/raw/*.csv
+apps/ml-service/data/raw/*.json
+apps/ml-service/data/raw/legacy/transactions.csv
+apps/ml-service/data/raw/transactions.csv
+build/
+dist/
+logs/
+node_modules/
+npm-debug.log*
+out/

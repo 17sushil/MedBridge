@@ -242,22 +242,3 @@
   border-color: var(--coral-200);
   color: #ffffff;
 }
-.inv-import-banner {
-  margin-bottom: 1rem;
-  padding: 0.75rem 1rem;
-  background: var(--teal-50, #e6f6f4);
-  border: 1px solid var(--teal-200, #b5e4df);
-  color: var(--teal-800, #0b6f65);
-  font-size: 0.875rem;
-}
-
-.inv-import-banner.inv-import-error {
-  background: var(--coral-50, #fdecea);
-  border-color: var(--coral-200, #f3a192);
-  color: var(--coral-700, #b4311f);
-}
-
-.inv-import-banner em {
-  font-style: normal;
-  color: var(--coral-700, #b4311f);
-}

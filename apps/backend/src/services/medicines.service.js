@@ -158,6 +158,7 @@ async function categoryBreakdown(hospitalId) {
 
 module.exports = {
   listMedicines,
+  bulkCreateMedicines,
   getMedicine,
   createMedicine,
   updateMedicine,

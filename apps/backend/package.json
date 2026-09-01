@@ -1,7 +1,7 @@
 {
   "name": "medbridge-backend",
   "version": "1.0.0",
-  "description": "MedBridge API — medicine exchange platform backend",
+  "description": "MedBridge API \u2014 medicine exchange platform backend",
   "main": "src/index.js",
   "scripts": {
     "dev": "nodemon src/index.js",
@@ -11,7 +11,16 @@
     "prisma:studio": "prisma studio",
     "seed": "node prisma/seed.js",
     "verify:demo-logins": "node scripts/verify-demo-logins.js",
-    "test": "node --test"
+    "test": "node --test",
+    "postinstall": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:generate": "prisma generate",
+    "db:studio": "prisma studio",
+    "db:reset": "prisma migrate reset",
+    "db:status": "prisma migrate status",
+    "db:setup": "prisma migrate dev && node prisma/seed.js",
+    "db:reconcile": "prisma db execute --file scripts/reconcile-baseline.sql && prisma migrate resolve --applied 20260831000000_baseline"
   },
   "keywords": [],
   "author": "",
@@ -26,7 +35,9 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "express-formidable": "^1.2.0",
+    "express-rate-limit": "^8.6.2",
     "express-session": "^1.19.0",
+    "helmet": "^8.3.0",
     "jsonwebtoken": "^9.0.3",
     "morgan": "^1.11.0",
     "zod": "^4.4.3"

@@ -10,6 +10,7 @@ import {
   Building2,
   Settings as SettingsIcon,
   Sparkles,
+  Users as UsersIcon,
 } from "lucide-react";
 
 // Lazy-loaded so adding new pages never bloats the initial bundle.
@@ -23,6 +24,7 @@ const Reports = lazy(() => import("./pages/Reports"));
 const Hospitals = lazy(() => import("./pages/Hospitals"));
 const AIAssistant = lazy(() => import("./pages/AIAssistant"));
 const Settings = lazy(() => import("./pages/Settings"));
+const Users = lazy(() => import("./pages/Users"));
 
 // ---------------------------------------------------------------------------
 // Add a new page to the app by adding ONE entry here.
@@ -84,6 +86,12 @@ export const routes = [
     path: "/settings",
     element: Settings,
     nav: { label: "Settings", icon: SettingsIcon, group: "System" },
+  },
+  {
+    path: "/users",
+    element: Users,
+    // Admin-only: user approval + account management.
+    nav: { label: "Users", icon: UsersIcon, group: "System", roles: ["ADMIN"] },
   },
 ];
 

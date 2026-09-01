@@ -48,6 +48,36 @@ email:    sarah.johnson@cityhospital.org
 password: password123
 ```
 
+## Roles & permissions
+
+Three roles, one hospital admin per hospital:
+
+| Role | Can do |
+|---|---|
+| **Admin** | Everything — plus approve/reject pending accounts, create & delete users (Users page) |
+| **Inventory Manager** | Add/edit/delete medicines (one-by-one or bulk Excel import) |
+| **Staff** | Request stock, view & search inventory |
+
+- **Registration.** A new hospital registers an admin (`POST /auth/register-hospital`).
+  Staff & Inventory Managers self-register against an existing hospital
+  (`POST /auth/register-member`) and start **PENDING** — they can only sign in after
+  the hospital admin approves them (Users page).
+- **No duplicate admins.** The Admin role is never self-assignable and never
+  assignable by an admin, so a hospital can't accumulate multiple admins.
+
+## Bulk medicine import (Excel/CSV)
+
+`POST /medicines/bulk` (Admin / Inventory Manager) accepts `{ rows: [...] }`.
+The spreadsheet must contain these **required headers**:
+
+```
+name, category, batch, quantity, unit, expiry
+```
+
+Optional headers: `unitPrice`, `status`, `medicineCode`. Header matching is
+case-insensitive and tolerates spaces/underscores (e.g. "Unit Price", "Expiry Date").
+Missing or unrecognised headers return a 400 with the offending column names.
+
 ## 5. Run the server
 ```bash
 npm run dev        # http://localhost:4000, auto-restarts on changes
