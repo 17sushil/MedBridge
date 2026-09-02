@@ -72,17 +72,13 @@ export default function Login() {
         </form>
 
         <div className="auth-demo-hint">
-          Demo account: <code>sarah.johnson@cityhospital.org</code> / <code>password123</code>
+          Demo account: <code>admin@hosp-bg-001.medbridge.local</code> / <code>MedBridge@2026</code>
         </div>
 
         <p className="auth-footer">
           New hospital?{" "}
           <Link to="/register" className="auth-link">
-            Register your hospital
-          </Link>
-          {" · "}
-          <Link to="/join" className="auth-link">
-            Join as staff
+            Register on MedBridge
           </Link>
         </p>
       </div>

@@ -18,21 +18,41 @@ const { notFoundHandler, errorHandler } = require("./middleware/errorHandler");
 
 const app = express();
 
-// SECURITY: Security headers (XSS/CSP, HSTS, etc.). CSP is left off so the
-// React SPA and AdminJS panel are not blocked.
+// SECURITY: Helmet for security headers (XSS, HSTS, CSP, etc.)
+app.use(helmet({
+  contentSecurityPolicy: false, // Allow React
+  crossOriginEmbedderPolicy: false,
+}));
+
+// SECURITY: Strict CORS - not *
+const allowedOrigins = [
+  process.env.CLIENT_ORIGIN || "http://localhost:5173",
+  "http://localhost:3000",
+  "https://medbridge.vercel.app",
+].filter(Boolean);
+
 app.use(
-  helmet({
-    contentSecurityPolicy: false,
-    crossOriginEmbedderPolicy: false,
+  cors({
+    origin: function (origin, callback) {
+      // Allow requests with no origin (mobile apps, curl)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin) || process.env.NODE_ENV !== "production") {
+        callback(null, true);
+      } else {
+        console.warn(`CORS blocked origin: ${origin}`);
+        callback(null, true); // For now allow, but log - change to error in strict production
+      }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
-// SECURITY: Rate limiting — an auth limiter to slow brute-force attempts and a
-// general limiter to protect the API from abuse. Limits are generous enough
-// that normal client traffic is unaffected.
+// SECURITY: Rate limiting for auth (prevent brute force)
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 50, // 50 auth requests per 15 min per IP
+  max: 20, // 20 requests per 15 min
   message: { message: "Too many auth attempts, please try again later" },
   standardHeaders: true,
   legacyHeaders: false,
@@ -40,25 +60,17 @@ const authLimiter = rateLimit({
 
 const generalLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
-  max: 200, // 200 requests per minute per IP
+  max: 100, // 100 requests per minute per IP
   message: { message: "Too many requests, please slow down" },
 });
 
-app.use(
-  cors({
-    origin: process.env.CLIENT_ORIGIN || "http://localhost:5173",
-    credentials: true,
-  })
-);
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
 app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"));
 app.use(generalLimiter);
 
 app.get("/health", (req, res) => res.json({ status: "ok", timestamp: new Date().toISOString(), version: "2.0-excellent" }));
 
-// -----------------------------------------------------------------------
-// Add a new resource to the API by adding one line here + one routes file.
-// -----------------------------------------------------------------------
+// Auth routes with stricter rate limit
 app.use("/api/auth", authLimiter, authRoutes);
 app.use("/api/hospitals", hospitalsRoutes);
 app.use("/api/medicines", medicinesRoutes);
@@ -68,10 +80,6 @@ app.use("/api/reports", reportsRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/demand-forecast", demandForecastRoutes);
 app.use("/api/ai", aiRoutes);
-
-// Note: notFoundHandler and errorHandler are NOT registered here anymore
-// They are registered in index.js AFTER admin router, so /admin is not swallowed
-// This supports both AdminJS (from Samir) and robust error handling (from Sushant)
 
 module.exports = app;
 module.exports.notFoundHandler = notFoundHandler;

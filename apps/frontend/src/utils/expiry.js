@@ -18,7 +18,6 @@ export function statusTone(status) {
     "Low Stock": "coral",
     "Medium Stock": "amber",
     Critical: "coralStrong",
-    Expired: "coralStrong",
     Pending: "amber",
     Approved: "teal",
     "In Transit": "navy",
