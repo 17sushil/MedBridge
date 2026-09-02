@@ -1,9 +1,15 @@
 const BaseProvider = require("./BaseProvider");
 
 /**
- * MockProvider - Development fallback when no API keys are configured
- * Provides intelligent, medically responsible responses without calling external LLM
- * Now handles cost/price queries and medical terminologies properly
+ * MockProvider - Local fallback when no LLM API key is configured (or the key
+ * has no available quota, e.g. Google's AQ. keys). It never calls a model.
+ *
+ * Behaviour contract (kept consistent with the real providers):
+ * - Answer ONLY what was asked, concisely.
+ * - When live inventory data is injected (INVENTORY CONTEXT), use it as the
+ *   source of truth and never invent a quantity, price, batch, or expiry.
+ * - For availability questions ("Do we have X?", "Is X in stock?") give a
+ *   direct yes/no + quantity from the context, not a generic template.
  */
 class MockProvider extends BaseProvider {
   constructor(config) {
@@ -15,17 +21,10 @@ class MockProvider extends BaseProvider {
     return { valid: true };
   }
 
-  // --- Response helpers -------------------------------------------------
-  // Every helper below only ever returns a string that the caller puts into
-  // `content`. None of them touch the return shape ({content, tokens, model}),
-  // the INVENTORY CONTEXT parsing, or the keyword branches that already worked.
+  // ------------------------------------------------------------------
+  // Intent detection
+  // ------------------------------------------------------------------
 
-  /**
-   * Detects a request for personal medical advice — dosing for a named person,
-   * diagnosis, prescriptions. Deliberately narrow: only phrases that clearly
-   * ask about the asker, so general questions ("What does Paracetamol do?")
-   * still fall through to their normal branch.
-   */
   detectPersonalAdviceRequest(q) {
     const phrases = [
       "should i take",
@@ -50,28 +49,6 @@ class MockProvider extends BaseProvider {
     return phrases.some((p) => q.includes(p));
   }
 
-  personalAdviceResponse() {
-    return `I can't give personal dosing, diagnosis, or prescription advice — that needs a clinician who knows the patient's history, weight, allergies, and other medicines.
-
-**What to do instead:**
-- Ask the treating doctor or your hospital pharmacist for a dose — they can check interactions and adjust for age, weight, kidney and liver function
-- For a child, pregnant patient, or anyone on other medicines, always confirm before giving anything
-- If this is urgent (breathing difficulty, chest pain, suspected overdose, uncontrolled bleeding), treat it as an emergency
-
-**What I *can* do here:**
-- Explain a medicine: what it treats, common side effects, contraindications, storage
-- Show live stock, batches, expiry dates, and unit prices from your hospital's inventory
-- Tell you which partner hospitals have a medicine, so you can raise an Exchange Request
-
-*General information only — not medical advice. Please consult a qualified healthcare professional.*`;
-  }
-
-  /**
-   * Greetings and farewells get their own reply — they're social, not
-   * off-topic, so they shouldn't get the "outside what I'm built for" card.
-   * Word boundaries (\b) matter: a bare "hi" substring would match inside
-   * "which" and "this".
-   */
   detectGreeting(q) {
     const patterns = [
       /^hi\b/,
@@ -87,18 +64,6 @@ class MockProvider extends BaseProvider {
       /\bsup\b/,
     ];
     return patterns.some((re) => re.test(q));
-  }
-
-  greetingResponse() {
-    return `Hello! I'm **MedBridge AI** — your hospital inventory assistant. How can I help you today?
-
-Here are a few things I can do right away:
-- **Medicines** — "What does Paracetamol do?", "Side effects of Ibuprofen"
-- **Live pricing** — "How much does Amoxicillin cost?"
-- **Inventory** — "Which medicines expire this month?", "What is low in stock?"
-- **Exchange** — "Which hospital has Ceftriaxone?"
-
-*General information only, not medical advice.*`;
   }
 
   detectFarewell(q) {
@@ -119,19 +84,6 @@ Here are a few things I can do right away:
     return patterns.some((re) => re.test(q));
   }
 
-  farewellResponse() {
-    return `Goodbye! Take care. 👋
-
-I'm here whenever you need stock levels, pricing, expiry dates, or medicine information — just open the assistant and ask.`;
-  }
-
-  /**
-   * Detects questions with nothing to do with medicines or inventory.
-   * Kept intentionally conservative — a false negative just shows the normal
-   * capability card, while a false positive would hide a real answer, so this
-   * list only contains things that can never be a medicine question.
-   * Greetings and farewells are handled separately, before this runs.
-   */
   detectOffTopic(q) {
     const smallTalk = [
       /\bthanks?\b/,
@@ -175,271 +127,278 @@ I'm here whenever you need stock levels, pricing, expiry dates, or medicine info
     return smallTalk.some((re) => re.test(q)) || nonMedicine.some((p) => q.includes(p));
   }
 
+  // ------------------------------------------------------------------
+  // Concise response builders
+  // ------------------------------------------------------------------
+
+  greetingResponse() {
+    return "Hi, I'm MedBridge AI.\n\nAsk me about your inventory, medicine prices, expiries, or stock levels. For example: \"Do we have Insulin?\", \"How much does Paracetamol cost?\", or \"What is low in stock?\"";
+  }
+
+  farewellResponse() {
+    return "Goodbye! Ask me anytime about stock levels, prices, or expiries.";
+  }
+
   offTopicResponse(originalQuery) {
     const trimmed = String(originalQuery || "").trim().slice(0, 120);
-    return `That's outside what I'm built for, so I'd rather be straight with you than guess${
-      trimmed ? ` (you asked: "${trimmed}")` : ""
-    }.
-
-I'm the **MedBridge assistant** — I work with medicine information and this hospital's live inventory. Try one of these:
-
-**Medicines** — "What does Paracetamol do?", "Side effects of Ibuprofen", "Can Paracetamol + Ibuprofen be taken together?"
-**Pricing (live)** — "How much does Amoxicillin cost?", "Show Insulin pricing"
-**Inventory** — "Which medicines expire this month?", "What is low in stock?", "Do we have Ceftriaxone?"
-**Exchange** — "Which hospital has Ceftriaxone?" — then raise an Exchange Request
-
-*General information only, not medical advice.*`;
+    return `I'm the MedBridge assistant — I work with medicine information and this hospital's live inventory.${trimmed ? ` (You asked: "${trimmed}")` : ""}\n\nTry \"Do we have Insulin?\" or \"How much does Paracetamol cost?\"`;
   }
 
-  /**
-   * Turns the raw context block into a human label plus a relevant follow-up.
-   * Matches the section headers InventoryContext.js actually emits, so the
-   * answer says what the data is instead of a generic sentence.
-   */
-  describeInventoryContext(text) {
-    const t = String(text || "");
-    const empty = /No partner hospital|None found|No low or critical stock|No medicines found|not found/i.test(
-      t
-    );
-    const unavailable = /temporarily unavailable/i.test(t);
-
-    if (unavailable) {
-      return {
-        label: "the inventory lookup result",
-        followUp:
-          "The inventory service didn't respond just now. Open the **Inventory** page to check directly, or ask me again in a moment.",
-      };
-    }
-    if (/EXPIRING MEDICINES/i.test(t)) {
-      return {
-        label: empty ? "the expiry check result" : "the list of batches expiring soon",
-        followUp:
-          "Expiry comes from the batch record in your inventory. Plan usage or an exchange before the date passes — ask \"What is low in stock?\" to see restock candidates.",
-      };
-    }
-    if (/LOW STOCK/i.test(t)) {
-      return {
-        label: empty ? "the stock-level check result" : "the list of items running low",
-        followUp:
-          "For anything critical, ask \"Which hospital has [medicine]?\" and I will show partner hospitals so you can raise an Exchange Request.",
-      };
-    }
-    if (/PARTNER HOSPITALS/i.test(t)) {
-      return {
-        label: "what partner hospitals in your exchange network have in stock",
-        followUp:
-          "Exact quantities, batch numbers, and prices stay private to each hospital. Raise an **Exchange Request** to confirm availability and arrange the transfer.",
-      };
-    }
-    if (/COST\/PRICING/i.test(t)) {
-      return {
-        label: "live unit pricing",
-        followUp:
-          "**Unit Price** is cost per unit; **Total value** = quantity × unit price. Prices vary by supplier and batch — confirm with procurement before billing.",
-      };
-    }
-    return {
-      label: empty ? "what I found in your inventory" : "your current inventory",
-      followUp:
-        'Ask "How much does [medicine] cost?" for batch-wise unit prices, or "Which medicines expire this month?" for expiry planning.',
-    };
+  personalAdviceResponse() {
+    return "I can't give personal dosing, diagnosis, or prescription advice — that needs a clinician who knows the patient's history, weight, and other medicines.\n\nIf this is urgent (breathing difficulty, chest pain, suspected overdose, uncontrolled bleeding), treat it as an emergency.\n\n*General information only — not medical advice. Please consult a qualified healthcare professional.*";
   }
+
+  // ------------------------------------------------------------------
+  // Parse the injected INVENTORY CONTEXT into structured records
+  // ------------------------------------------------------------------
+
+  parseContext(text) {
+    const records = [];
+    if (!text) return records;
+    // Each inventory line looks like:
+    //   - Name | Batch: B123 | Qty: 200 units | ... | Price: $0.05 per unit
+    const lines = text.split("\n").map((l) => l.trim()).filter(Boolean);
+    for (const line of lines) {
+      if (!line.startsWith("- ")) continue;
+      const body = line.slice(2);
+      const parts = body.split("|").map((p) => p.trim());
+      const rec = {};
+      for (const part of parts) {
+        const eq = part.indexOf(":");
+        if (eq === -1) continue;
+        const key = part.slice(0, eq).trim().toLowerCase();
+        const val = part.slice(eq + 1).trim();
+        if (key === "qty") {
+          const m = val.match(/^([\d.]+)/);
+          rec.qty = m ? parseFloat(m[1]) : null;
+          rec.unit = val.replace(/^[\d.]+\s*/, "").trim();
+        } else if (key === "batch") rec.batch = val;
+        else if (key === "expiry") rec.expiry = val;
+        else if (key === "status") rec.status = val;
+        else if (key === "unit price" || key === "price") rec.price = val;
+        else if (key === "category") rec.category = val;
+      }
+      if (!rec.name && /\|\s*Qty:/.test(line)) {
+        rec.name = parts[0].replace(/^[- ]*/, "").trim();
+      } else if (!rec.name) {
+        rec.name = parts[0].replace(/^[- ]*/, "").trim();
+      }
+      if (rec.name) records.push(rec);
+    }
+    return records;
+  }
+
+  findMedicine(records, name) {
+    const n = String(name || "").toLowerCase();
+    return records.find((r) => r.name && r.name.toLowerCase().includes(n));
+  }
+
+  // ------------------------------------------------------------------
+  // Main chat
+  // ------------------------------------------------------------------
 
   async chat({ systemPrompt, messages }, options = {}) {
-    const lastUser = [...messages].reverse().find(m => m.role === "user");
-    const query = (lastUser?.content || "");
+    const lastUser = [...messages].reverse().find((m) => m.role === "user");
+    const query = lastUser?.content || "";
     const q = query.toLowerCase();
 
-    await new Promise(r => setTimeout(r, 400));
+    await new Promise((r) => setTimeout(r, 250));
 
-    let content = "";
     const hasInventoryContext = systemPrompt && systemPrompt.includes("INVENTORY CONTEXT");
     let inventoryContextText = "";
     if (hasInventoryContext) {
       try {
-        inventoryContextText = systemPrompt.split("INVENTORY CONTEXT:")[1]?.split("END INVENTORY")[0]?.trim() || "";
+        inventoryContextText =
+          systemPrompt.split("INVENTORY CONTEXT:")[1]?.split("END INVENTORY")[0]?.trim() || "";
       } catch {}
     }
+    const records = this.parseContext(inventoryContextText);
 
-    const isCostQuery = q.includes("cost") || q.includes("price") || q.includes("how much") || q.includes("pricing") || q.includes("expensive") || q.includes("cheap");
-    const isParacetamol = q.includes("paracetamol") || q.includes("acetaminophen");
-    const isIbuprofen = q.includes("ibuprofen");
+    const isCostQuery =
+      q.includes("cost") || q.includes("price") || q.includes("how much") ||
+      q.includes("pricing") || q.includes("expensive") || q.includes("cheap");
+    const isAvailability =
+      /do we have|do you have|is there|have .* available|is .* available|have .* in stock|is .* in stock|in stock|available/.test(q);
+    const isExpiring = q.includes("expire") || q.includes("expiry") || q.includes("expiring");
+    const isLowStock = q.includes("low") || q.includes("critical") || q.includes("shortage");
+    const isPartner =
+      q.includes("which hospital") || q.includes("who has") || q.includes("has ") ||
+      q.includes("partner") || q.includes("another hospital");
 
-    // Safety comes first: "how much paracetamol should I give my child" must
-    // not be answered by the pricing branch, which matches on "how much".
-    // Sets `content` and falls through to the shared return at the bottom.
+    // Safety first.
     if (this.detectPersonalAdviceRequest(q)) {
-      content = this.personalAdviceResponse();
-      return {
-        content,
-        tokens: { prompt: 0, completion: content.length / 4, total: content.length / 4 },
-        model: this.model,
-      };
+      return this._done(this.personalAdviceResponse());
     }
 
+    // Greeting / farewell / thanks / off-topic.
+    if (this.detectGreeting(q)) return this._done(this.greetingResponse());
+    if (this.detectFarewell(q)) return this._done(this.farewellResponse());
+    if (/\b(thanks?|thank you)\b/.test(q)) return this._done("You're welcome! Ask me anytime about stock, prices, expiries, or which partner hospital has a medicine.");
+    if (this.detectOffTopic(q)) return this._done(this.offTopicResponse(query));
+
+    // ---------- Low stock ----------
+    // Checked first so "what is low in stock" is a low-stock question, not an
+    // availability question. Raw context blocks read as-is.
+    if (isLowStock) {
+      if (/No low or critical stock|healthy|None found|No medicines found/i.test(inventoryContextText)) {
+        return this._done("No low or critical stock right now — your inventory is healthy.");
+      }
+      return this._done(
+        inventoryContextText
+          ? `Low / critical stock:\n\n${inventoryContextText}\n\nAsk \"Which hospital has [medicine]?\" to see partner hospitals that may stock it.`
+          : "I couldn't load stock levels just now.",
+      );
+    }
+
+    // ---------- Expiring ----------
+    if (isExpiring) {
+      if (/No medicines expiring|None found|No medicines found|nothing is expiring/i.test(inventoryContextText)) {
+        return this._done("No medicines are expiring in the next 30 days. Your inventory is clear on expiry.");
+      }
+      return this._done(
+        inventoryContextText
+          ? `Expiring soon:\n\n${inventoryContextText}\n\nPlan usage or an exchange before the date passes.`
+          : "I couldn't load expiry data just now. Check the Expiry Alerts on the Dashboard.",
+      );
+    }
+
+    // ---------- Availability ("Do we have X?") ----------
+    if (isAvailability) {
+      const wanted = this._extractMedicine(query);
+      if (!wanted) {
+        return this._done(
+          hasInventoryContext
+            ? "I can check availability, but I need the exact medicine name. Which medicine do you want to check?"
+            : "I can tell you what's in stock if you name a medicine. Which one?",
+        );
+      }
+      const found = this.findMedicine(records, wanted);
+      const header = /INVENTORY SEARCH FOR/i.test(inventoryContextText)
+        ? "INVENTORY SEARCH FOR"
+        : null;
+      const notFound = header || /No exact matching medicine|not found|None found/i.test(
+        inventoryContextText,
+      );
+      if (found && found.qty != null && !notFound) {
+        const exp = found.expiry ? `, expires ${found.expiry}` : "";
+        const price = found.price ? `, unit price ${found.price}` : "";
+        return this._done(
+          `Yes — you have **${found.qty} ${found.unit || "units"}** of ${this._cap(found.name)} in stock${exp}${price}.${found.batch ? ` (Batch: ${found.batch})` : ""}`,
+        );
+      }
+      return this._done(
+        `No — your hospital's live inventory has no batch of **${this._cap(wanted)}** in stock right now.` +
+          "\n\nAsk \"Which hospital has " + this._cap(wanted) + "?\" to see partner hospitals that may have it, and raise an Exchange Request."
+      );
+    }
+
+    // ---------- Cost / pricing ----------
     if (isCostQuery) {
       if (hasInventoryContext && inventoryContextText) {
-        if (inventoryContextText.includes("Not found") || inventoryContextText.includes("No medicines found")) {
-          content = `I checked your live MedBridge inventory, but **could not find pricing** for that medicine in your hospital.
-
-${inventoryContextText}
-
-**What you can do:**
-- Check Inventory page for all medicines with prices
-- Request stock from partner hospitals via Exchange Requests
-- Prices vary by supplier, batch, and hospital — always confirm with procurement
-
-If you tell me the exact medicine name, I can search again.`;
-        } else if (inventoryContextText.includes("Unit Price") || inventoryContextText.includes("Price: $") || inventoryContextText.includes("$")) {
-          content = `Based on **live MedBridge inventory pricing** for your hospital:
-
-${inventoryContextText}
-
-**Pricing Notes:**
-- **Unit Price** = cost per unit (tablet, vial, box) — see batch details above
-- **Terminology:** 
-  - *Generic name* = active ingredient (e.g., Paracetamol)
-  - *Batch* = manufacturing lot number
-  - *Unit* = how it's counted (boxes, strips, vials)
-  - *Unit Price* = price per unit from inventory system
-  - *Quantity* = how many units you have in stock
-  - *Total value* = quantity × unit price
-- Prices may vary by supplier/hospital and over time — check with pharmacy/procurement for final billing
-- You can view all pricing in **Inventory** page
-
-Need cost for another medicine? Just ask "How much does [medicine] cost?"`;
-        } else {
-          content = `I tried to fetch live pricing from your MedBridge inventory, but no pricing context was available.
-
-${inventoryContextText}
-
-**General pricing info:** Medicine costs vary by generic vs brand, strength, dosage form, supplier and hospital contract, batch and expiry. Please check Inventory page where unit price is shown per batch.`;
+        if (/COST\/PRICING/i.test(inventoryContextText) || records.some((r) => r.price)) {
+          const lines = records
+            .map((r) => `- ${this._cap(r.name)}: ${r.price}${r.expiry ? ` (exp ${r.expiry})` : ""}`)
+            .join("\n");
+          return this._done(
+            `Live pricing from your inventory:\n\n${lines || inventoryContextText}\n\nPrices are per unit and vary by supplier/batch — confirm with procurement.`,
+          );
         }
-      } else {
-        if (isParacetamol) {
-          content = `**Paracetamol cost — general info + how to check live pricing:**
-
-**General market range (varies widely):**
-- Nepal: Often NPR 1-5 per tablet for generic 500mg, but depends on brand
-- US: $0.02-$0.10 per 500mg tablet generic
-
-**For YOUR hospital's actual price:**
-Based on your query, I should have fetched inventory with unitPrice. Ask "How much does Paracetamol cost?" and I will query your MedBridge inventory database which has exact batch-wise pricing:
-
-Example:
-- Paracetamol | Batch: B123 | Unit Price: $0.05 per tablet | Qty: 100 tablets | Expiry: 2026-12-01
-
-**Terminology for cost:**
-- *Unit Price* = price per single unit
-- *Quantity* = stock count
-- *Total Value* = unit price × quantity
-- *Batch* = lot number
-
-Check **Inventory** page → search Paracetamol → you will see Unit Price column.
-
-*Prices change - always confirm with pharmacy.*`;
-        } else {
-          content = `**Medicine cost / pricing:**
-
-Medicine prices in MedBridge come from **live inventory (unitPrice field)**:
-- Each batch has its own unit price per unit (box/strip/vial)
-- To get exact cost, ask: "How much does [medicine name] cost?" — I will then query your hospital's live inventory
-
-**Example questions:**
-- "How much does Paracetamol cost?"
-- "What is the price of Amoxicillin?"
-- "Show Insulin pricing"
-
-**Medical terminology for cost:**
-- *Generic name* = Paracetamol
-- *Brand name* = e.g., Tylenol
-- *Strength* = 500mg
-- *Dosage form* = tablet
-- *Unit* = boxes, strips, tablets
-- *Unit Price* = $ per unit
-- *Batch* = BATCH-001
-
-Try asking for a specific medicine now!`;
-        }
+        return this._done(
+          "I checked your live inventory but couldn't find a price for that medicine.\n\nTell me the exact medicine name and I'll search again.",
+        );
       }
-      return {
-        content: content + "\n\n*Pricing from live inventory; general info not medical advice. Consult pharmacy for billing.*",
-        tokens: { prompt: 0, completion: content.length / 4, total: content.length / 4 },
-        model: this.model,
-      };
+      return this._done(
+        "I need live inventory data to give an exact price. On the Inventory page each medicine shows a unit price per batch.\n\n*Pricing from live inventory; not medical advice.*",
+      );
     }
 
-    if (isParacetamol) {
-      content = `**Paracetamol (Acetaminophen)** — *Generic name:* Paracetamol, *Brand examples:* Tylenol, *Category:* Analgesic/Antipyretic, *Form:* Tablet 500mg, Syrup, Injection
-
-**What it does (Indications):**
-- Reduces fever (antipyretic) by acting on hypothalamus
-- Relieves mild-moderate pain (analgesic): headache, toothache, muscle ache, cold symptoms
-
-**Terminology:**
-- *Dosage form* = tablet/capsule/syrup
-- *Strength* = e.g., 500mg per tablet
-- *Indication* = reason to use
-- *Contraindication* = reason NOT to use
-- *Side effect* = unwanted effect
-
-**Important safety:**
-- Follow label dosage; adult max often 4g/day but lower if liver disease/alcohol use
-- **Overdose → liver damage (hepatotoxicity)** — emergency
-- Contraindicated: severe liver disease (consult clinician)
-
-**Side effects (Adverse reactions):** Rare at normal dose: nausea, rash; overdose: liver failure
-**Storage:** Below 30°C, dry place, check expiry (batch expiry date in inventory)
-**Cost:** Ask "How much does Paracetamol cost?" — I will show live unitPrice from your inventory with batch details.
-
-*General info, not medical advice.*`;
-
-      if (q.includes("ibuprofen") || (messages.length > 2 && messages[messages.length-3]?.content?.toLowerCase()?.includes("ibuprofen"))) {
-        content += `\n\n**Paracetamol + Ibuprofen interaction:** Different mechanisms (Paracetamol central, Ibuprofen NSAID peripheral). Sometimes alternated for fever per clinician advice, but check contraindications: NSAIDs ↑ risk of stomach ulcer, kidney injury, bleeding, especially with anticoagulants. Ask pharmacist/doctor.`;
+    // ---------- Partner hospitals ----------
+    if (isPartner) {
+      if (/PARTNER HOSPITALS/i.test(inventoryContextText)) {
+        return this._done(
+          `${inventoryContextText}\n\nExact quantities and prices are private to each hospital — raise an Exchange Request to confirm availability.`,
+        );
       }
-    } else if (isIbuprofen) {
-      content = `**Ibuprofen** — *Generic:* Ibuprofen, *Brand:* Advil, *Category:* NSAID, *Form:* 200mg/400mg tablet
-
-**Uses:** Pain, fever, inflammation
-**Terminology:** *NSAID* = Non-Steroidal Anti-Inflammatory Drug, *Contraindication* = ulcer, severe kidney disease
-**Side effects:** Stomach upset, ulcer/bleed risk, raised BP, kidney injury with long use
-**Storage:** <30°C, check batch expiry
-**Cost:** Ask "Ibuprofen price" for live pricing.
-
-*Not personal advice.*`;
-    } else if (q.includes("hypertension") || q.includes("high blood pressure")) {
-      content = `**Hypertension** = persistently high BP (often ≥130/80 mmHg). Terminology: Systolic/Diastolic, mmHg, essential vs secondary. Why matters: ↑ risk heart disease, stroke. Management: DASH diet low salt, exercise, weight, limit alcohol. Emergency: chest pain/severe headache → emergency services. *Educational only.*`;
-    } else if (q.includes("diabetes")) {
-      content = `**Diabetes** — hyperglycemia. Terminology: Type 1 autoimmune insulin deficiency, Type 2 insulin resistance, HbA1c, fasting glucose. Symptoms: Polyuria, polydipsia, polyphagia. Management: diet, exercise, monitoring. *Consult clinician.*`;
-    } else if (q.includes("antibiotic")) {
-      content = `**Antibiotic** — treats bacterial infections (not viral). Terminology: Generic, Spectrum, Resistance, Batch, Expiry. Take as prescribed, complete course, check expiry. Side effects: nausea, diarrhea. *Follow clinician.*`;
-    } else if (this.detectGreeting(q)) {
-      content = this.greetingResponse();
-    } else if (this.detectFarewell(q)) {
-      content = this.farewellResponse();
-    } else if (this.detectOffTopic(q)) {
-      content = this.offTopicResponse(query);
-    } else if (hasInventoryContext) {
-      // Reached when live inventory data was injected but the question matched
-      // no medicine keyword above. Answering with that data beats showing the
-      // generic capability card, which previously swallowed questions like
-      // "Which hospital has Ceftriaxone?" and "What is low in stock?".
-      const { label, followUp } = this.describeInventoryContext(inventoryContextText);
-      content = `Here is ${label} from your hospital's live MedBridge inventory:
-
-${inventoryContextText}
-
-${followUp}`;
-    } else {
-      content = `I'm **MedBridge AI** — understands medical terminologies: generic name, brand name, dosage form, strength, batch, expiry, unit, unit price, category, indications, contraindications, side effects, interactions, storage.
-
-**Medical:** What does Paracetamol do? Side effects of Ibuprofen? Can Paracetamol + Ibuprofen be taken together?
-**Cost/Pricing (live):** How much does Paracetamol cost? Price of Amoxicillin? Show Insulin pricing - I will show batch-wise unitPrice, quantity, expiry
-**Inventory :** Show available medicines, Which medicines expire this month?, Do we have Insulin?, Which hospital has Ceftriaxone?
-
-**Safety:** General info only, not diagnosis/prescription. Consult professional.`;
+      return this._done(
+        inventoryContextText
+          ? inventoryContextText
+          : "I couldn't find partner-hospital availability just now. Check the Hospitals page and raise an Exchange Request.",
+      );
     }
 
+    // ---------- General medicine info (concise) ----------
+    const medicalInfo = this.conciseMedicalInfo(query);
+    if (medicalInfo) return this._done(medicalInfo);
+
+    // ---------- Fallback with context ----------
+    if (hasInventoryContext && inventoryContextText) {
+      const lines = records.map((r) => `- ${r.name}: ${r.qty ?? "?"} ${r.unit || "units"}${r.expiry ? `, exp ${r.expiry}` : ""}`).join("\n");
+      return this._done(
+        lines
+          ? `Here's what I found from your hospital's live inventory:\n\n${lines}`
+          : inventoryContextText,
+      );
+    }
+
+    return this._done(
+      "I'm MedBridge AI. Ask me about stock levels, medicine prices, expiries, low stock, or which partner hospital has a medicine.",
+    );
+  }
+
+  conciseMedicalInfo(q) {
+    const lower = q.toLowerCase();
+    if (lower.includes("paracetamol") || lower.includes("acetaminophen")) {
+      return "**Paracetamol (acetaminophen)** is a pain reliever and fever reducer. It's used for headache, toothache, and cold symptoms.\n\nFollow the label dose and don't exceed the recommended amount — overdose can damage the liver.\n\n*General information, not medical advice. Consult a qualified healthcare professional.*";
+    }
+    if (lower.includes("ibuprofen")) {
+      return "**Ibuprofen** is a non-steroidal anti-inflammatory (NSAID) used for pain, fever, and inflammation.\n\nCommon side effects: stomach upset and, with long use, ulcer or kidney issues. Avoid in severe kidney disease or ulcers.\n\n*General information, not medical advice. Consult a qualified healthcare professional.*";
+    }
+    if (lower.includes("hypertension") || lower.includes("high blood pressure")) {
+      return "**High blood pressure (hypertension)** is persistently elevated blood pressure (often ≥130/80 mmHg), which raises the risk of heart disease and stroke.\n\nManagement includes a low-salt diet, exercise, and weight control. Emergency signs (chest pain, severe headache) need urgent care. *Educational only.*";
+    }
+    if (lower.includes("diabetes")) {
+      return "**Diabetes** is high blood sugar — type 1 is insulin deficiency, type 2 is insulin resistance.\n\nSymptoms can include increased thirst, urination, and hunger. Management is diet, exercise, and monitoring. *Consult a clinician.*";
+    }
+    if (lower.includes("antibiotic")) {
+      return "**Antibiotics** treat bacterial infections, not viral ones. Take the full course as prescribed and check the batch expiry. Side effects can include nausea and diarrhea. *Follow your clinician.*";
+    }
+    return null;
+  }
+
+  _extractMedicine(query) {
+    // Try explicit "Do we have X?", "is X in stock", "X available"
+    const patterns = [
+      /do we have (?:any |some )?(?:of )?([a-z]+)\b/i,
+      /do you have (?:any |some )?(?:of )?([a-z]+)\b/i,
+      /is there (?:any |some )?(?:of )?([a-z]+)\b/i,
+      /is (?:a |an )?([a-z]+) (?:in stock|available)/i,
+      /(?:have|got) (?:any |some )?([a-z]+)(?: in stock| available)?/i,
+      /([a-z]+) available/i,
+      /([a-z]+) in stock/i,
+    ];
+    const stop = new Set([
+      "much", "does", "cost", "price", "the", "an", "a", "is", "of", "all",
+      "my", "our", "inventory", "medicine", "medicines", "stock", "drug",
+      "drugs", "show", "list", "view", "display", "available", "hospital",
+      "hospitals", "how", "what", "which", "who", "when", "and", "or", "to", "we",
+    ]);
+    for (const re of patterns) {
+      const m = query.match(re);
+      if (m && m[1]) {
+        const w = m[1].toLowerCase();
+        if (!stop.has(w) && w.length > 2) return w;
+      }
+    }
+    // Fall back to the parser's medicine list if one medicine is present in context
+    return null;
+  }
+
+  _cap(name) {
+    const s = String(name || "").trim();
+    return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+  }
+
+  _done(content) {
     return {
       content,
       tokens: { prompt: 0, completion: content.length / 4, total: content.length / 4 },
