@@ -28,7 +28,14 @@
 .topbar-search-wrap {
   position: relative;
   flex: 1;
+  min-width: 0;
   max-width: 28rem;
+}
+
+/* On very small screens shrink the search so the bell/avatar don't overflow. */
+@media (max-width: 480px) {
+  .topbar-search-wrap { max-width: none; }
+  .topbar-search-input { font-size: 0.8125rem; }
 }
 
 .topbar-search-results {

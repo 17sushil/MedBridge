@@ -3,6 +3,35 @@
   overflow: hidden;
 }
 
+/* Responsive report-form grid: 1 col on narrow screens, 3 cols on wider. */
+.rep-form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  padding: 20px;
+}
+@media (min-width: 640px) {
+  .rep-form-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (min-width: 1024px) {
+  .rep-form-grid { grid-template-columns: 1fr 1fr 1fr; }
+}
+
+.rep-form-label {
+  display: grid;
+  gap: 4px;
+  font-size: 13px;
+}
+
+.rep-form-input,
+.rep-form-select {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  width: 100%;
+}
+
 .rep-loading-pad {
   padding: 1.25rem;
   display: flex;

@@ -3,10 +3,10 @@
   grid-template-columns: 1fr;
   gap: 1rem;
 }
-@media (min-width: 640px) {
+@media (min-width: 520px) {
   .dash-stat-grid { grid-template-columns: repeat(2, 1fr); }
 }
-@media (min-width: 1280px) {
+@media (min-width: 1024px) {
   .dash-stat-grid { grid-template-columns: repeat(4, 1fr); }
 }
 
@@ -21,14 +21,15 @@
   gap: 1rem;
   margin-top: 1rem;
 }
-@media (min-width: 1280px) {
+@media (min-width: 1024px) {
   .dash-charts-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
 .dash-trend-card {
   padding: 1.25rem;
+  min-width: 0;
 }
-@media (min-width: 1280px) {
+@media (min-width: 1024px) {
   .dash-trend-card { grid-column: span 2 / span 2; }
 }
 
@@ -71,9 +72,14 @@
   gap: 1rem;
   margin-top: 1rem;
 }
-@media (min-width: 1280px) {
+@media (min-width: 1024px) {
+  .dash-bottom-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1400px) {
   .dash-bottom-grid { grid-template-columns: repeat(3, 1fr); }
 }
+.dash-bottom-grid .dash-panel,
+.dash-bottom-grid > * { min-width: 0; }
 
 .dash-panel {
   padding: 1.25rem;
