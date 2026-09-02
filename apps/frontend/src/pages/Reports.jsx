@@ -148,31 +148,31 @@ export default function Reports() {
                 {formError}
               </div>
             )}
-            <div className="rep-form-grid">
-              <label className="rep-form-label">
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 , padding:20}}>
+              <label style={{ display: "grid", gap: 4, fontSize: 13 }}>
                 <span>Report name</span>
                 <input
-                  className="rep-form-input"
                   value={form.name}
                   onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
                   placeholder="Monthly Inventory Summary"
+                  style={{ padding: "8px 10px", borderRadius: 6, border: "1px solid var(--line)", background: "var(--surface)" }}
                 />
               </label>
-              <label className="rep-form-label">
+              <label style={{ display: "grid", gap: 4, fontSize: 13 }}>
                 <span>Period</span>
                 <input
-                  className="rep-form-input"
                   value={form.period}
                   onChange={(e) => setForm((f) => ({ ...f, period: e.target.value }))}
                   placeholder="Aug 2026"
+                  style={{ padding: "8px 10px", borderRadius: 6, border: "1px solid var(--line)", background: "var(--surface)" }}
                 />
               </label>
-              <label className="rep-form-label">
+              <label style={{ display: "grid", gap: 4, fontSize: 13 }}>
                 <span>Type</span>
                 <select
-                  className="rep-form-select"
                   value={form.type}
                   onChange={(e) => setForm((f) => ({ ...f, type: e.target.value }))}
+                  style={{ padding: "8px 10px", borderRadius: 6, border: "1px solid var(--line)", background: "var(--surface)" }}
                 >
                   {REPORT_TYPES.map((t) => (
                     <option key={t.value} value={t.value}>

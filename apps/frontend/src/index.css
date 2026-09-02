@@ -181,15 +181,6 @@ img {
   display: block;
 }
 
-/* Prevent accidental horizontal scroll on small screens (wide charts/tables
-   are handled by their own local scroll containers). */
-html,
-body,
-#root {
-  max-width: 100%;
-  overflow-x: clip;
-}
-
 ::selection {
   background: var(--teal-100);
   color: var(--teal-900);
