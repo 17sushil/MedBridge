@@ -149,3 +149,25 @@
   background: rgba(179, 192, 217, 0.15);
   color: var(--navy-200);
 }
+/* --------------------------------------------------------------------- */
+/* Phone/tablet-portrait: the card row is a grid item whose min-width      */
+/* defaults to auto, so the nowrap title plus the non-wrapping right       */
+/* block (date + badge + Approve/Decline) stretched every card to 415px    */
+/* and the whole page scrolled sideways — measured 111px of page           */
+/* overflow at 320px, 56px at 375px, 59px at 640px.                        */
+/* --------------------------------------------------------------------- */
+
+/* Grid blowout guard: let cards shrink to the column width; the ellipsis  */
+/* rules already present on title/sub then kick in.                        */
+.ex-list > * {
+  min-width: 0;
+}
+
+/* Below 640px the card stacks; let the right block (date / badge /        */
+/* actions) wrap onto rows instead of forcing the card wider.              */
+@media (max-width: 639px) {
+  .ex-card-right {
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+  }
+}
