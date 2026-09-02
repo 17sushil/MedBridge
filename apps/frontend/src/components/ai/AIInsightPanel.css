@@ -137,4 +137,5 @@
   line-height: 1.5;
   padding-top: 0.75rem;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
+  overflow-wrap: break-word;
 }

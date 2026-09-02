@@ -30,15 +30,26 @@ function CustomTooltip({ active, payload, label }) {
 export default function InventoryTrendChart({ data }) {
   return (
     <ResponsiveContainer width="100%" height={260}>
-      <LineChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -16 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#E4E9EE" vertical={false} />
+      <LineChart
+        data={data}
+        margin={{ top: 8, right: 8, bottom: 0, left: 0 }}
+      >
+        <CartesianGrid
+          strokeDasharray="3 3"
+          stroke="#E4E9EE"
+          vertical={false}
+        />
         <XAxis
           dataKey="day"
           tick={{ fontSize: 12, fill: "#8A94A3" }}
           axisLine={{ stroke: "#E4E9EE" }}
           tickLine={false}
         />
-        <YAxis tick={{ fontSize: 12, fill: "#8A94A3" }} axisLine={false} tickLine={false} />
+        <YAxis
+          tick={{ fontSize: 12, fill: "#8A94A3" }}
+          axisLine={false}
+          tickLine={false}
+        />
         <Tooltip content={<CustomTooltip />} />
         <Line
           type="monotone"

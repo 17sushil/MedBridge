@@ -89,3 +89,15 @@
 .hosp-actions-btn {
   flex: 1;
 }
+
+/* Grid blowout guard: without min-width:0 the nowrap .hosp-name's          */
+/* max-content stretched the card (and the whole grid column) to 575px —    */
+/* measured 271px of page overflow at 320px, 176px at 640px, 56px at 768px.  */
+/* With the guard the card shrinks to its column and the existing ellipsis  */
+/* on .hosp-name kicks in.                                                  */
+.hosp-grid > * {
+  min-width: 0;
+}
+.hosp-head > * {
+  min-width: 0;
+}
