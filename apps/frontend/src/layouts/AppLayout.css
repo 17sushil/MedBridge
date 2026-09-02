@@ -13,13 +13,19 @@
 
 .app-layout-content {
   flex: 1;
-  padding: 1rem;
-  max-width: 1600px;
   width: 100%;
+  min-width: 0;
+  padding: 1rem;
   margin: 0 auto;
 }
+/* Fluid width with a generous cap so very large monitors don't stretch cards
+   into a single unusably-wide line, while still filling the viewport on
+   ordinary screens. */
 @media (min-width: 768px) {
-  .app-layout-content { padding: 1.5rem; }
+  .app-layout-content {
+    padding: 1.5rem 2rem;
+    max-width: 1440px;
+  }
 }
 
 .app-layout-fallback {

@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import clsx from "clsx";
-import { Bell, ChevronDown, Menu, Search } from "lucide-react";
+import { ChevronDown, Menu, Search } from "lucide-react";
 import { useApp } from "../../context/AppContext";
 import { useAuth } from "../../context/AuthContext";
 import { api } from "../../services/api";
 import "./Topbar.css";
 import ThemeToggle from "../ui/ThemeToggle";
+import NotificationPanel from "./NotificationPanel";
 
 export default function Topbar() {
-  const { user, unreadCount, setSidebarMobileOpen } = useApp();
+  const { user, setSidebarMobileOpen } = useApp();
   const { logout } = useAuth();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -119,10 +120,8 @@ export default function Topbar() {
       {/* ADDED: the theme toggle button, placed before the notification bell */}
       <ThemeToggle />
 
-      <Link to="/notifications" className="topbar-icon-btn">
-        <Bell size={18} />
-        {unreadCount > 0 && <span className="topbar-bell-badge">{unreadCount}</span>}
-      </Link>
+      {/* App-like notification panel: bell toggles the panel open/closed. */}
+      <NotificationPanel />
 
       <div className="topbar-user-menu-wrap">
         <button onClick={() => setMenuOpen((v) => !v)} className="topbar-user-btn">
