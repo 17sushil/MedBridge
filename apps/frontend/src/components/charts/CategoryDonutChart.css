@@ -44,3 +44,9 @@
   font-weight: 500;
   color: var(--navy-800);
 }
+
+.donut-empty {
+  font-size: 0.875rem;
+  color: var(--ink-faint);
+  margin: 0;
+}
