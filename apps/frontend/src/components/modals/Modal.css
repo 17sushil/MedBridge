@@ -12,7 +12,11 @@
 .modal-panel {
   width: 100%;
   max-width: 480px;
+  /* dvh accounts for the mobile browser's actual visible area (address bar,
+     virtual keyboard, etc); vh is kept as a fallback for older browsers
+     that don't support dvh yet. */
   max-height: 90vh;
+  max-height: 90dvh;
   overflow-y: auto;
   background: var(--surface);
   border-radius: var(--radius-xl);
@@ -46,8 +50,11 @@
   border: none;
   background: var(--canvas);
   color: var(--ink-soft);
-  width: 2rem;
-  height: 2rem;
+  /* Bumped from 2rem (32px) to 2.75rem (44px) - 32px falls below Apple's
+     and Google's minimum recommended touch target size, making it easy to
+     mis-tap or miss entirely on a real phone. */
+  width: 2.75rem;
+  height: 2.75rem;
   border-radius: var(--radius-full);
   cursor: pointer;
   display: flex;
@@ -85,7 +92,11 @@
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
   font: inherit;
-  font-size: 0.9rem;
+  /* 16px is the magic number: any input font-size below this makes iOS
+     Safari auto-zoom the whole page in when the field is focused, which is
+     the "messy"/jumpy feeling on phones. Desktop appearance is unaffected
+     since 1rem is still a normal, modest input size on larger screens. */
+  font-size: 1rem;
 }
 
 .modal-input:focus,
@@ -121,6 +132,25 @@
 @media (max-width: 540px) {
   .modal-row {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Small phones (older/smaller devices, ~400px and under): the fixed
+   padding was eating a disproportionate share of a narrow screen's width,
+   and stacked actions give buttons more room to breathe without shrinking
+   their text. */
+@media (max-width: 400px) {
+  .modal-backdrop {
+    padding: 0.5rem;
+  }
+  .modal-panel {
+    padding: 1.125rem;
+  }
+  .modal-actions {
+    flex-direction: column-reverse;
+  }
+  .modal-actions > * {
+    width: 100%;
   }
 }
 
