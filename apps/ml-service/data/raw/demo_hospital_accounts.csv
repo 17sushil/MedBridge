@@ -1,9 +1,0 @@
-hospital_id,hospital_name,facility_type,province,district,ecoregion,bed_capacity,demo_username,specialty_focus,demo_password,login_role
-HOSP-BG-001,Bir Hospital,Central_Hospital,Bagmati,Kathmandu,Hill,460,hosp_bg_001,General / Emergency / Referral,MedBridge@2026,hospital_admin
-HOSP-BG-002,Tribhuvan University Teaching Hospital (TUTH),Teaching_Hospital,Bagmati,Kathmandu,Hill,700,hosp_bg_002,Teaching / Multi-specialty,MedBridge@2026,hospital_admin
-HOSP-BG-003,Bhaktapur Cancer Hospital,Cancer_Hospital,Bagmati,Bhaktapur,Hill,120,hosp_bg_003,Oncology / Chemotherapy / Palliative,MedBridge@2026,hospital_admin
-HOSP-BG-004,Kanti Children's Hospital,Children_Hospital,Bagmati,Kathmandu,Hill,350,hosp_bg_004,Pediatrics / Neonatal / Vaccines,MedBridge@2026,hospital_admin
-HOSP-BG-005,Paropakar Maternity & Women's Hospital,Maternity_Hospital,Bagmati,Kathmandu,Hill,415,hosp_bg_005,OBGYN / Labor / Blood bank,MedBridge@2026,hospital_admin
-HOSP-KP-002,Koshi Hospital,Regional_Hospital,Koshi,Morang,Terai,350,hosp_kp_002,Regional general / Monsoon load,MedBridge@2026,hospital_admin
-HOSP-GD-001,Pokhara Academy of Health Sciences,Regional_Hospital,Gandaki,Kaski,Hill,500,hosp_gd_001,Regional / Trauma / Tourism corridor,MedBridge@2026,hospital_admin
-HOSP-KR-002,Jumla District Hospital,District_Hospital,Karnali,Jumla,Mountain,50,hosp_kr_002,Remote mountain / Access-limited,MedBridge@2026,hospital_admin

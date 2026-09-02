@@ -28,20 +28,26 @@ React SPA ──HTTP──▶ Express API ──Prisma──▶ PostgreSQL
 cd apps/ml-service
 python -m venv venv && source venv/bin/activate   # Windows: venv\Scripts\activate
 pip install -r requirements.txt
-python3 training/generate_ledger_data.py          # event ledger + leakage-safe features
-python3 training/train_xgb.py                     # audited training + saved model
+python training/generate_ledger_data.py           # generates data/raw CSVs + features
+python training/train_xgb.py                      # trains + saves the model
+# (or open notebooks/01–04 for EDA, model comparison, training & evaluation)
 uvicorn app.api.server:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 ### 2. Backend
 ```bash
 cd apps/backend
-npm install
+npm install                     # also auto-generates the Prisma client (postinstall)
 cp .env.example .env            # set DATABASE_URL + a strong JWT_SECRET
-npx prisma migrate dev
-npm run seed                    # imports the 8 demo hospitals from ML CSVs
+npm run db:setup                # applies migrations + seeds the 8 demo hospitals
 npm run dev                     # http://localhost:4000
 ```
+
+> **Database setup is a single step.** The schema is a single squashed
+> baseline migration (`prisma/migrations/20260831000000_baseline`), so
+> `npm run db:setup` works against any fresh database with zero drift prompts.
+> Other handy commands: `npm run db:migrate` (apply pending), `npm run
+> db:studio` (browse tables), `npm run db:reset` (wipe + rebuild).
 
 ### 3. Frontend
 ```bash
@@ -57,11 +63,11 @@ first). All use password **`MedBridge@2026`**:
 
 | Hospital | Login |
 |---|---|
-| HOSP-BG-001 Bir Hospital | `admin@hosp-bg-001.medbridge.local` |
-| HOSP-BG-002 TUTH | `admin@hosp-bg-002.medbridge.local` |
-| Other six demo hospitals | Run `cd apps/backend && npm run verify:demo-logins` |
+| DEMO-01 Bir Hospital | `admin@demo-01.medbridge.local` |
+| DEMO-02 TUTH | `admin@demo-02.medbridge.local` |
+| DEMO-03 … DEMO-08 | `admin@demo-0X.medbridge.local` |
 
-All demo administrators use `MedBridge@2026`. Legacy login: `sarah.johnson@cityhospital.org` / `password123`.
+Legacy single login: `sarah.johnson@cityhospital.org` / `password123`.
 
 ## AI Assistant
 
