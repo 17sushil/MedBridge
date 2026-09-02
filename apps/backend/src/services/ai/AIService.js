@@ -86,13 +86,12 @@ class AIService {
     const refContext = contextManager.buildReferenceContext(chatMessages);
     const finalSystem = refContext ? `${system}\n\n${refContext}` : system;
 
-    // 6. Call provider. A low temperature keeps the model on the exact
-    // question (fewer digressions) while still curating concise answers.
+    // 6. Call provider
     let response;
     try {
       response = await this.provider.chat(
         { systemPrompt: finalSystem, messages: chatMessages },
-        { temperature: 0.4, maxTokens: 1200 }
+        { temperature: 0.7, maxTokens: 2048 }
       );
     } catch (err) {
       console.error(`[AIService] Provider ${this.provider.name} error:`, err.message);
