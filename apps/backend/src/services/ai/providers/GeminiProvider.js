@@ -4,7 +4,14 @@ class GeminiProvider extends BaseProvider {
   constructor(config) {
     super(config);
     this.apiKey = config.apiKey || process.env.GEMINI_API_KEY;
-    this.model = config.model || process.env.GEMINI_MODEL || process.env.LLM_MODEL || "gemini-1.5-flash";
+    // Default to a currently-available model. The legacy gemini-1.5-flash / 2.5
+    // model names are no longer served for new accounts, which caused silent
+    // fallbacks to the mock provider. Override with GEMINI_MODEL in .env.
+    this.model =
+      config.model ||
+      process.env.GEMINI_MODEL ||
+      process.env.LLM_MODEL ||
+      "gemini-3.5-flash";
     this.baseUrl = "https://generativelanguage.googleapis.com/v1beta";
   }
 

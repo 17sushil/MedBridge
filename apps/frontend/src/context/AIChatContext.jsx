@@ -7,7 +7,7 @@ const AIChatContext = createContext(null);
 const WELCOME_MESSAGE = {
   id: "welcome",
   role: "assistant",
-  text: "Hi, I'm MedBridge AI — your intelligent healthcare inventory assistant.\n\nI can help with:\n- Medical info: medicines, side effects, interactions, diseases, first aid\n- Live inventory: expiring meds, low stock, costs, exchange requests, hospital search\n- Conversation memory: ask follow-ups like 'Can I take it with Ibuprofen?'\n- Costs: ask 'How much does Paracetamol cost?' for live pricing\n\nSafety: I provide general info only, not diagnosis or prescriptions.",
+  text: "Hi, I'm MedBridge AI.\n\nAsk me about your inventory, medicine prices, expiries, low stock, exchange requests, or general medicine questions — and I'll answer directly using your live hospital data.",
   timestamp: new Date(),
 };
 
