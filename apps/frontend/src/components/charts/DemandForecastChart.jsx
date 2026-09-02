@@ -13,7 +13,7 @@ import {
 export default function DemandForecastChart({ data }) {
   return (
     <ResponsiveContainer width="100%" height={300}>
-      <ComposedChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -16 }}>
+      <ComposedChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="#E4E9EE" vertical={false} />
         <XAxis
           dataKey="month"
