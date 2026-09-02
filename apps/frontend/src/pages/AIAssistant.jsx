@@ -1,73 +1,84 @@
 import { useRef, useEffect, useState } from "react";
-import { Sparkles, Send, Copy, Check, Trash2, Bot, User, Loader2, Database, Shield, Lightbulb } from "lucide-react";
+import clsx from "clsx";
+import {
+  Sparkles,
+  Send,
+  Copy,
+  Check,
+  RotateCcw,
+  Trash2,
+  Bot,
+  User,
+  AlertTriangle,
+  Loader2,
+  Database,
+  Shield,
+} from "lucide-react";
 import PageHeader from "../components/ui/PageHeader";
 import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
 import { useAIChat } from "../context/AIChatContext";
 import "./AIAssistant.css";
 
-// Good questions that can be asked - useful, productive, not useless
-const GOOD_QUESTIONS = [
-  { q: "Which medicines are critically low?", cat: "Low Stock", icon: "🚨" },
-  { q: "Show expiring in next 7 days with value", cat: "Expiry", icon: "⏰" },
-  { q: "How much does Insulin cost? Show batch", cat: "Cost", icon: "💰" },
-  { q: "Which hospital has excess Amoxicillin?", cat: "Exchange", icon: "🏥" },
-  { q: "Predict shortage for next month", cat: "Forecast", icon: "📈" },
-  { q: "What is total inventory value by category?", cat: "Analytics", icon: "📊" },
-  { q: "Show pending exchange requests", cat: "Exchange", icon: "📦" },
-  { q: "List medicines with expiry <14 days", cat: "Safety", icon: "⚠️" },
-  { q: "What is most consumed medicine this month?", cat: "Analytics", icon: "🔥" },
-  { q: "Show cost breakdown for antibiotics", cat: "Cost", icon: "💵" },
-  { q: "Which batches need disposal?", cat: "Safety", icon: "🗑️" },
-  { q: "Suggest reorder list with cost", cat: "Procurement", icon: "🛒" },
+const SAMPLE_PROMPTS = [
+  "What does Paracetamol do?",
+  "How much does Paracetamol cost?",
+  "Show medicines expiring this month",
+  "Do we have Insulin available?",
+  "What are side effects of Ibuprofen?",
+  "Which hospital has Ceftriaxone?",
 ];
 
-function SystematicOutput({ text }) {
+function SimpleMarkdown({ text }) {
   if (!text) return null;
-  
-  // Parse and render in systematic good format
-  const lines = text.split("\n");
-  return (
-    <div className="systematic-output">
-      {lines.map((line, idx) => {
-        if (!line.trim()) return <div key={idx} className="line-spacer" />;
-        
-        // Header: **Title**
-        if (line.trim().startsWith("**") && line.trim().endsWith("**")) {
-          const content = line.trim().slice(2, -2);
-          return <div key={idx} className="sys-header">{content}</div>;
-        }
-        
-        // Bullet: - or •
-        if (line.trim().startsWith("- ") || line.trim().startsWith("• ")) {
-          const content = line.trim().slice(2);
-          // Check if it looks like table row: contains |
-          if (content.includes("|")) {
-            const parts = content.split("|").map(p => p.trim()).filter(Boolean);
-            return (
-              <div key={idx} className="sys-table-row">
-                {parts.map((part, pi) => (
-                  <span key={pi} className="sys-cell">{part}</span>
-                ))}
-              </div>
-            );
+  const parts = text.split("\n").map((line, idx) => {
+    if (!line.trim()) return <div key={idx} style={{ height: 8 }} />;
+    const boldSplit = line.split(/(\*\*.*?\*\*)/g);
+    return (
+      <p key={idx} style={{ margin: "4px 0", whiteSpace: "pre-wrap", lineHeight: 1.6 }}>
+        {boldSplit.map((chunk, j) => {
+          if (chunk.startsWith("**") && chunk.endsWith("**")) {
+            return <strong key={j}>{chunk.slice(2, -2)}</strong>;
           }
-          return <div key={idx} className="sys-bullet"><span className="bullet-dot">•</span> {content}</div>;
-        }
-        
-        // Action line
-        if (line.toLowerCase().includes("action:") || line.toLowerCase().includes("next:")) {
-          return <div key={idx} className="sys-action">👉 {line}</div>;
-        }
-        
-        return <div key={idx} className="sys-text">{line}</div>;
-      })}
+          if (chunk.includes("`")) {
+            const codeSplit = chunk.split(/(`.*?`)/g);
+            return codeSplit.map((c, k) => {
+              if (c.startsWith("`") && c.endsWith("`")) {
+                return <code key={k} style={{ background: "var(--canvas)", padding: "2px 6px", borderRadius: 4, fontSize: "0.85em" }}>{c.slice(1, -1)}</code>;
+              }
+              return <span key={k}>{c}</span>;
+            });
+          }
+          return <span key={j}>{chunk}</span>;
+        })}
+      </p>
+    );
+  });
+  return <div>{parts}</div>;
+}
+
+function TypingDots() {
+  return (
+    <div className="ai-typing">
+      <span className="ai-typing-dot" />
+      <span className="ai-typing-dot" />
+      <span className="ai-typing-dot" />
     </div>
   );
 }
 
 export default function AIAssistant() {
-  const { messages, input, setInput, loading, conversationId, error, sendMessage, handleClear } = useAIChat();
+  const {
+    messages,
+    input,
+    setInput,
+    loading,
+    conversationId,
+    error,
+    sendMessage,
+    handleClear,
+  } = useAIChat();
+
   const [copiedId, setCopiedId] = useState(null);
   const endRef = useRef(null);
 
@@ -79,96 +90,94 @@ export default function AIAssistant() {
     try {
       await navigator.clipboard.writeText(text);
       setCopiedId(id);
-      setTimeout(() => setCopiedId(null), 1500);
+      setTimeout(() => setCopiedId(null), 2000);
     } catch {}
   };
 
   return (
-    <div className="ai-final-page">
+    <div className="ai-page ai-page-full">
       <PageHeader
         title="AI Assistant"
-        subtitle="Good questions, systematic format, fast, live inventory"
+        subtitle="MedBridge AI - Full screen, live inventory, pricing, medical knowledge"
         actions={
-          <Button variant="outline" size="sm" onClick={handleClear}>
-            <Trash2 size={14} /> Clear
-          </Button>
+          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            <Button variant="outline" size="sm" onClick={handleClear}>
+              <Trash2 size={14} /> Clear
+            </Button>
+          </div>
         }
       />
 
-      <div className="ai-final-layout">
-        {/* Good Questions Panel - Useful */}
-        <Card className="ai-questions-panel">
-          <h4><Lightbulb size={14} /> Good Questions to Ask</h4>
-          <p>Click any - systematic output, good format, live data</p>
-          <div className="questions-grid">
-            {GOOD_QUESTIONS.map((item) => (
-              <button key={item.q} onClick={() => sendMessage(item.q)} disabled={loading} className="question-chip" title={item.cat}>
-                <span className="q-icon">{item.icon}</span>
-                <span className="q-text">{item.q}</span>
-                <span className="q-cat">{item.cat}</span>
-              </button>
-            ))}
+      <Card className="ai-chat-card ai-chat-card-full">
+        <div className="ai-chat-head">
+          <div className="ai-chat-head-icon"><Sparkles size={16} color="#8DD3CA" /></div>
+          <div style={{ flex: 1 }}>
+            <div className="ai-chat-head-name">MedBridge AI</div>
+            <div className="ai-chat-head-status">
+              {loading ? (
+                <span style={{ display: "flex", gap: 4, alignItems: "center" }}><Loader2 size={12} className="spin" /> Thinking...</span>
+              ) : (
+                <span style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                  <span style={{ display: "flex", gap: 3, alignItems: "center" }}><Shield size={12} /> Safe</span>
+                  <span style={{ display: "flex", gap: 3, alignItems: "center" }}><Database size={12} /> Live RAG</span>
+                </span>
+              )}
+            </div>
           </div>
+          {conversationId && <span style={{ fontSize: 10, color: "var(--ink-faint)" }}>{conversationId.slice(0, 8)}…</span>}
+        </div>
 
-          <div className="ai-capabilities-simple">
-            <h5>Systematic Format</h5>
-            <ul>
-              <li>📦 Inventory: Medicine | Batch | Qty | Price | Expiry in table</li>
-              <li>💰 Cost: Qty × Price = Total, Value at Risk</li>
-              <li>📈 Forecast: Predicted demand + Days Cover + Action</li>
-              <li>🏥 Exchange: Hospital | Stock Level | Distance</li>
-            </ul>
-          </div>
-        </Card>
-
-        {/* Chat - Simple, Attractive, Interactive */}
-        <Card className="ai-chat-final">
-          <div className="ai-chat-head">
-            <div className="ai-head-icon"><Sparkles size={14} /></div>
-            <div style={{ flex: 1 }}>
-              <div className="ai-head-name">MedBridge AI</div>
-              <div className="ai-head-status">
-                {loading ? <span><Loader2 size={10} className="spin" /> Analyzing...</span> : <span><Shield size={10} /> Safe <Database size={10} /> Live Inventory</span>}
+        <div className="ai-chat-messages">
+          {messages.map((m) => (
+            <div key={m.id} className={clsx("ai-chat-row", m.role === "user" ? "ai-chat-row-user" : "ai-chat-row-assistant")}>
+              <div className="ai-chat-avatar">{m.role === "user" ? <User size={14} /> : <Bot size={14} />}</div>
+              <div className={clsx("ai-chat-bubble", m.role === "user" ? "ai-chat-bubble-user" : "ai-chat-bubble-assistant", m.isError && "ai-chat-bubble-error")}>
+                {m.role === "assistant" && m.text === "" && m.streaming ? <TypingDots /> : (
+                  <>
+                    {m.role === "user" ? <div className="ai-chat-text">{m.text}</div> : <SimpleMarkdown text={m.text} />}
+                    <div className="ai-chat-meta">
+                      <span>{m.timestamp?.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
+                      {m.model && <span>{m.provider} {m.model?.slice(0, 18)}</span>}
+                      {m.contextUsed?.length > 0 && <span>RAG: {m.contextUsed.join(", ")}</span>}
+                    </div>
+                  </>
+                )}
+                {m.role === "assistant" && !m.streaming && m.text && (
+                  <div className="ai-chat-actions">
+                    <button className="ai-chat-action-btn" onClick={() => handleCopy(m.id, m.text)} title="Copy">
+                      {copiedId === m.id ? <Check size={12} /> : <Copy size={12} />}
+                    </button>
+                    <button className="ai-chat-action-btn" onClick={() => {
+                      const idx = messages.findIndex(mm => mm.id === m.id);
+                      const userMsg = idx > 0 ? messages[idx-1] : null;
+                      if (userMsg) sendMessage(userMsg.text);
+                    }} title="Regenerate">
+                      <RotateCcw size={12} />
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
-            {conversationId && <span className="conv-id">{conversationId.slice(0, 6)}</span>}
-          </div>
+          ))}
+          {loading && !messages.some((m) => m.streaming) && <div className="ai-chat-row ai-chat-row-assistant"><div className="ai-chat-avatar"><Bot size={14} /></div><div className="ai-chat-bubble ai-chat-bubble-assistant"><TypingDots /></div></div>}
+          {error && <div className="ai-error"><AlertTriangle size={14} /> {error}</div>}
+          <div ref={endRef} />
+        </div>
 
-          <div className="ai-messages">
-            {messages.map((m) => (
-              <div key={m.id} className={`ai-msg ${m.role}`}>
-                <div className="ai-avatar">{m.role === "user" ? <User size={12} /> : <Bot size={12} />}</div>
-                <div className={`ai-bubble ${m.role} ${m.isError ? "error" : ""}`}>
-                  {m.role === "user" ? <div className="user-text">{m.text}</div> : <SystematicOutput text={m.text} />}
-                  <div className="ai-meta">{m.timestamp?.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</div>
-                  {m.role === "assistant" && m.text && (
-                    <button className="copy-btn" onClick={() => handleCopy(m.id, m.text)}>
-                      {copiedId === m.id ? <Check size={10} /> : <Copy size={10} />}
-                    </button>
-                  )}
-                </div>
-              </div>
+        <div className="ai-chat-footer">
+          <div className="ai-chat-prompts">
+            {SAMPLE_PROMPTS.map((p) => (
+              <button key={p} onClick={() => sendMessage(p)} className="ai-chat-prompt-btn" disabled={loading}>{p}</button>
             ))}
-            {loading && (
-              <div className="ai-msg assistant">
-                <div className="ai-avatar"><Bot size={12} /></div>
-                <div className="ai-bubble assistant"><div className="typing"><span /><span /><span /></div></div>
-              </div>
-            )}
-            {error && <div className="ai-error">{error}</div>}
-            <div ref={endRef} />
           </div>
-
-          <div className="ai-footer">
-            <form onSubmit={(e) => { e.preventDefault(); sendMessage(); }} className="ai-form">
-              <input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Ask good question: which low stock, expiring, cost, hospital..." className="ai-input" disabled={loading} />
-              <button type="submit" className="ai-send" disabled={loading || !input.trim()}>
-                {loading ? <Loader2 size={14} className="spin" /> : <Send size={14} />}
-              </button>
-            </form>
-          </div>
-        </Card>
-      </div>
+          <form onSubmit={(e) => { e.preventDefault(); sendMessage(); }} className="ai-chat-form">
+            <input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Ask about cost, expiry, medicines..." className="ai-chat-input" disabled={loading} />
+            <button type="submit" className="ai-chat-send-btn" disabled={loading || !input.trim()}>
+              {loading ? <Loader2 size={16} className="spin" /> : <Send size={16} />}
+            </button>
+          </form>
+        </div>
+      </Card>
     </div>
   );
 }

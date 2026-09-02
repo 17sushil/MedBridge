@@ -66,15 +66,15 @@ async function startServer(portToUse) {
 
   server.on("error", (err) => {
     if (err.code === "EADDRINUSE") {
-      console.error(`✗ Port ${portToUse} is already in use.`);
-      console.error("  MedBridge will not switch ports automatically because Vite proxies /api to port 4000.");
-      console.error(`  macOS/Linux: lsof -ti :${portToUse} | xargs kill -9`);
-      console.error(`  Windows: netstat -ano | findstr :${portToUse}`);
-      console.error("           taskkill /PID <actual-number> /F");
-      process.exit(1);
+      console.error(`✗ Port ${portToUse} already in use!`);
+      console.error(`  Run: netstat -ano | findstr :${portToUse}`);
+      console.error(`  Then: taskkill /PID <actual_number> /F`);
+      console.error(`  Or: taskkill /IM node.exe /F`);
+      console.log(`  Trying port ${portToUse + 1}...`);
+      setTimeout(() => startServer(portToUse + 1), 1000);
+    } else {
+      console.error("Server error:", err);
     }
-    console.error("Server error:", err);
-    process.exit(1);
   });
 
   // Graceful shutdown

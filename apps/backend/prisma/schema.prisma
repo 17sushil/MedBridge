@@ -26,21 +26,25 @@ model Hospital {
   notifications    Notification[]
   reports          Report[]
   users            User[]
-  auditLogs AuditLog[]
+  auditLogs        AuditLog[]
 }
 
 model User {
-  id           String   @id @default(uuid())
-  name         String
-  email        String   @unique
-  passwordHash String
-  role         Role     @default(STAFF)
+  id             String         @id @default(uuid())
+  name           String
+  email          String         @unique
+  passwordHash   String
+  role           Role           @default(STAFF)
+  /// Whether the account may log in. Self-registered STAFF / INVENTORY_MANAGER
+  /// accounts start PENDING and only an ADMIN of the same hospital can approve.
   approvalStatus ApprovalStatus @default(PENDING)
-  avatarUrl    String?
-  createdAt    DateTime @default(now())
-  hospitalId   String
-  hospital     Hospital @relation(fields: [hospitalId], references: [id])
-  auditLogs AuditLog[]
+  avatarUrl      String?
+  createdAt      DateTime       @default(now())
+  hospitalId     String
+  hospital       Hospital       @relation(fields: [hospitalId], references: [id])
+  auditLogs      AuditLog[]
+
+  @@index([hospitalId, approvalStatus])
 }
 
 model Medicine {
@@ -123,7 +127,7 @@ model Report {
 
 model Conversation {
   id         String      @id @default(uuid())
-  title      String?     
+  title      String?
   userId     String
   hospitalId String
   createdAt  DateTime    @default(now())
@@ -137,10 +141,10 @@ model Conversation {
 model AIMessage {
   id             String   @id @default(uuid())
   conversationId String
-  role           String   // user, assistant, system
+  role           String // user, assistant, system
   content        String   @db.Text
-  tokens         Int?     
-  metadata       Json?    // context used, provider, etc
+  tokens         Int?
+  metadata       Json? // context used, provider, etc
   createdAt      DateTime @default(now())
 
   conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
@@ -152,6 +156,12 @@ enum Role {
   ADMIN
   INVENTORY_MANAGER
   STAFF
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 enum MedicineStatus {
@@ -191,6 +201,7 @@ enum MovementType {
   EXCHANGE_IN
   EXPIRY_WRITEOFF
 }
+
 model AuditLog {
   id         String   @id @default(uuid())
   hospitalId String
@@ -201,16 +212,11 @@ model AuditLog {
   oldValue   String?  @db.Text
   newValue   String?  @db.Text
   createdAt  DateTime @default(now())
-  hospital Hospital @relation(fields: [hospitalId], references: [id])
-  user     User?    @relation(fields: [userId], references: [id])
+  hospital   Hospital @relation(fields: [hospitalId], references: [id])
+  user       User?    @relation(fields: [userId], references: [id])
+
   @@index([hospitalId])
   @@index([userId])
   @@index([action])
   @@index([createdAt])
-}
-
-enum ApprovalStatus {
-  PENDING
-  APPROVED
-  REJECTED
 }
