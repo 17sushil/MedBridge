@@ -41,7 +41,7 @@ const REPORT_TYPE_LABEL = {
   COMPLIANCE: "Compliance",
 };
 
-const ROLE_LABEL = { ADMIN: "Admin", INVENTORY_MANAGER: "Inventory Manager", STAFF: "Staff" };
+const ROLE_LABEL = { ADMIN: "Admin", STAFF: "Staff" };
 
 const CATEGORY_COLORS = ["#233A5C", "#0E8C82", "#26A596", "#E8A23D", "#546E97", "#EBB35C"];
 
@@ -72,8 +72,6 @@ export function mapUser(user) {
     name: user.name,
     email: user.email,
     role: roleLabel(user.role),
-    roleKey: user.role, // raw enum (ADMIN / INVENTORY_MANAGER / STAFF) for gating
-    approvalStatus: user.approvalStatus,
     hospital: user.hospital?.name || "",
     hospitalId: user.hospitalId,
     avatar:
@@ -123,20 +121,34 @@ export function mapCategories(rows) {
   }));
 }
 
+// FIXED: Expiry logic - now correctly shows expired vs expiring
 export function mapExpiryAlert(m) {
   const expiry = new Date(m.expiry);
-  const daysLeft = Math.ceil((expiry - Date.now()) / (1000 * 60 * 60 * 24));
-  const isExpired = daysLeft < 0;
+  const now = new Date();
+  const diffMs = expiry - now;
+  const daysLeft = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+  // FIX: Don't hide expired with Math.max(0), show actual negative days
+  let severity = medicineStatusLabel(m.status);
+  let displayDays = daysLeft;
+
+  // If already expired, mark as critical and show how many days ago
+  if (daysLeft < 0) {
+    severity = "Critical";
+    displayDays = daysLeft; // Keep negative to show expired
+  }
 
   return {
     id: m.id,
     medicine: m.name,
-    daysLeft: isExpired ? 0 : daysLeft,
-    isExpired,
+    daysLeft: displayDays, // Can be negative for expired
+    isExpired: daysLeft < 0,
     expiry: expiry.toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" }),
-    severity: isExpired ? "Expired" : medicineStatusLabel(m.status),
+    expiryRaw: expiry,
+    severity,
   };
 }
+
 export function mapActivityFromNotifications(notifications) {
   return notifications.slice(0, 5).map((n) => ({
     id: n.id,
