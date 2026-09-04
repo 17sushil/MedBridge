@@ -1,183 +1,120 @@
 import { useRef, useEffect, useState } from "react";
-import clsx from "clsx";
-import {
-  Sparkles,
-  Send,
-  Copy,
-  Check,
-  RotateCcw,
-  Trash2,
-  Bot,
-  User,
-  AlertTriangle,
-  Loader2,
-  Database,
-  Shield,
-} from "lucide-react";
+import { Sparkles, Send, Trash2, Bot, User, Loader2, Package, Clock, DollarSign, Truck, AlertTriangle, BarChart3 } from "lucide-react";
 import PageHeader from "../components/ui/PageHeader";
 import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
 import { useAIChat } from "../context/AIChatContext";
 import "./AIAssistant.css";
 
-const SAMPLE_PROMPTS = [
-  "What does Paracetamol do?",
-  "How much does Paracetamol cost?",
-  "Show medicines expiring this month",
-  "Do we have Insulin available?",
-  "What are side effects of Ibuprofen?",
-  "Which hospital has Ceftriaxone?",
+const STAFF_QUESTIONS = [
+  { icon: Package, text: "Low stock medicines?", color: "#DC2626" },
+  { icon: Clock, text: "Expiring in 7 days?", color: "#D97706" },
+  { icon: DollarSign, text: "Total inventory value?", color: "#0E8C82" },
+  { icon: Truck, text: "Hospitals with Insulin?", color: "#2563EB" },
+  { icon: BarChart3, text: "Shortage risk next month?", color: "#7C3AED" },
+  { icon: AlertTriangle, text: "Critical medicines?", color: "#DC2626" },
 ];
 
-function SimpleMarkdown({ text }) {
-  if (!text) return null;
-  const parts = text.split("\n").map((line, idx) => {
-    if (!line.trim()) return <div key={idx} style={{ height: 8 }} />;
-    const boldSplit = line.split(/(\*\*.*?\*\*)/g);
+function ChatMessage({ msg, onCopy, copied }) {
+  if (msg.role === "user") {
     return (
-      <p key={idx} style={{ margin: "4px 0", whiteSpace: "pre-wrap", lineHeight: 1.6 }}>
-        {boldSplit.map((chunk, j) => {
-          if (chunk.startsWith("**") && chunk.endsWith("**")) {
-            return <strong key={j}>{chunk.slice(2, -2)}</strong>;
-          }
-          if (chunk.includes("`")) {
-            const codeSplit = chunk.split(/(`.*?`)/g);
-            return codeSplit.map((c, k) => {
-              if (c.startsWith("`") && c.endsWith("`")) {
-                return <code key={k} style={{ background: "var(--canvas)", padding: "2px 6px", borderRadius: 4, fontSize: "0.85em" }}>{c.slice(1, -1)}</code>;
-              }
-              return <span key={k}>{c}</span>;
-            });
-          }
-          return <span key={j}>{chunk}</span>;
-        })}
-      </p>
+      <div className="staff-msg user">
+        <div className="staff-bubble user">{msg.text}</div>
+        <div className="staff-avatar user"><User size={14} /></div>
+      </div>
     );
-  });
-  return <div>{parts}</div>;
-}
+  }
 
-function TypingDots() {
+  const lines = msg.text.split("\n").filter(l => l.trim());
   return (
-    <div className="ai-typing">
-      <span className="ai-typing-dot" />
-      <span className="ai-typing-dot" />
-      <span className="ai-typing-dot" />
+    <div className="staff-msg assistant">
+      <div className="staff-avatar assistant"><Bot size={14} /></div>
+      <div className="staff-bubble assistant">
+        {lines.map((line, i) => {
+          if (line.startsWith("**") && line.endsWith("**")) {
+            return <div key={i} className="staff-header">{line.slice(2, -2)}</div>;
+          }
+          if (line.startsWith("- ") || line.startsWith("• ")) {
+            return <div key={i} className="staff-line">• {line.slice(2)}</div>;
+          }
+          if (line.includes("|")) {
+            const parts = line.split("|").map(p => p.trim()).filter(Boolean);
+            if (parts.length >= 3) {
+              return <div key={i} className="staff-table-row">{parts.map((p, pi) => <span key={pi}>{p}</span>)}</div>;
+            }
+          }
+          return <div key={i} className="staff-text">{line}</div>;
+        })}
+        <div className="staff-meta">
+          <span>{msg.timestamp?.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
+          <button onClick={() => onCopy(msg.id, msg.text)} className="staff-copy">{copied === msg.id ? "Copied" : "Copy"}</button>
+        </div>
+      </div>
     </div>
   );
 }
 
 export default function AIAssistant() {
-  const {
-    messages,
-    input,
-    setInput,
-    loading,
-    conversationId,
-    error,
-    sendMessage,
-    handleClear,
-  } = useAIChat();
-
+  const { messages, input, setInput, loading, sendMessage, handleClear } = useAIChat();
   const [copiedId, setCopiedId] = useState(null);
   const endRef = useRef(null);
 
-  useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, loading]);
+  useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, loading]);
 
   const handleCopy = async (id, text) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopiedId(id);
-      setTimeout(() => setCopiedId(null), 2000);
-    } catch {}
+    try { await navigator.clipboard.writeText(text); setCopiedId(id); setTimeout(() => setCopiedId(null), 1500); } catch {}
   };
 
   return (
-    <div className="ai-page ai-page-full">
-      <PageHeader
-        title="AI Assistant"
-        subtitle="MedBridge AI - Full screen, live inventory, pricing, medical knowledge"
-        actions={
-          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-            <Button variant="outline" size="sm" onClick={handleClear}>
-              <Trash2 size={14} /> Clear
-            </Button>
+    <div className="staff-ai-page">
+      <PageHeader title="AI Assistant" subtitle="Hospital staff - quick inventory help" actions={<Button variant="outline" size="sm" onClick={handleClear}><Trash2 size={14} /> Clear</Button>} />
+
+      <div className="staff-ai-container">
+        <Card className="staff-questions-card">
+          <div className="staff-questions-header">
+            <Sparkles size={16} color="#0E8C82" />
+            <span>Ask for your hospital</span>
           </div>
-        }
-      />
-
-      <Card className="ai-chat-card ai-chat-card-full">
-        <div className="ai-chat-head">
-          <div className="ai-chat-head-icon"><Sparkles size={16} color="#8DD3CA" /></div>
-          <div style={{ flex: 1 }}>
-            <div className="ai-chat-head-name">MedBridge AI</div>
-            <div className="ai-chat-head-status">
-              {loading ? (
-                <span style={{ display: "flex", gap: 4, alignItems: "center" }}><Loader2 size={12} className="spin" /> Thinking...</span>
-              ) : (
-                <span style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                  <span style={{ display: "flex", gap: 3, alignItems: "center" }}><Shield size={12} /> Safe</span>
-                  <span style={{ display: "flex", gap: 3, alignItems: "center" }}><Database size={12} /> Live RAG</span>
-                </span>
-              )}
-            </div>
-          </div>
-          {conversationId && <span style={{ fontSize: 10, color: "var(--ink-faint)" }}>{conversationId.slice(0, 8)}…</span>}
-        </div>
-
-        <div className="ai-chat-messages">
-          {messages.map((m) => (
-            <div key={m.id} className={clsx("ai-chat-row", m.role === "user" ? "ai-chat-row-user" : "ai-chat-row-assistant")}>
-              <div className="ai-chat-avatar">{m.role === "user" ? <User size={14} /> : <Bot size={14} />}</div>
-              <div className={clsx("ai-chat-bubble", m.role === "user" ? "ai-chat-bubble-user" : "ai-chat-bubble-assistant", m.isError && "ai-chat-bubble-error")}>
-                {m.role === "assistant" && m.text === "" && m.streaming ? <TypingDots /> : (
-                  <>
-                    {m.role === "user" ? <div className="ai-chat-text">{m.text}</div> : <SimpleMarkdown text={m.text} />}
-                    <div className="ai-chat-meta">
-                      <span>{m.timestamp?.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
-                      {m.model && <span>{m.provider} {m.model?.slice(0, 18)}</span>}
-                      {m.contextUsed?.length > 0 && <span>RAG: {m.contextUsed.join(", ")}</span>}
-                    </div>
-                  </>
-                )}
-                {m.role === "assistant" && !m.streaming && m.text && (
-                  <div className="ai-chat-actions">
-                    <button className="ai-chat-action-btn" onClick={() => handleCopy(m.id, m.text)} title="Copy">
-                      {copiedId === m.id ? <Check size={12} /> : <Copy size={12} />}
-                    </button>
-                    <button className="ai-chat-action-btn" onClick={() => {
-                      const idx = messages.findIndex(mm => mm.id === m.id);
-                      const userMsg = idx > 0 ? messages[idx-1] : null;
-                      if (userMsg) sendMessage(userMsg.text);
-                    }} title="Regenerate">
-                      <RotateCcw size={12} />
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-          {loading && !messages.some((m) => m.streaming) && <div className="ai-chat-row ai-chat-row-assistant"><div className="ai-chat-avatar"><Bot size={14} /></div><div className="ai-chat-bubble ai-chat-bubble-assistant"><TypingDots /></div></div>}
-          {error && <div className="ai-error"><AlertTriangle size={14} /> {error}</div>}
-          <div ref={endRef} />
-        </div>
-
-        <div className="ai-chat-footer">
-          <div className="ai-chat-prompts">
-            {SAMPLE_PROMPTS.map((p) => (
-              <button key={p} onClick={() => sendMessage(p)} className="ai-chat-prompt-btn" disabled={loading}>{p}</button>
+          <div className="staff-questions-list">
+            {STAFF_QUESTIONS.map((q, i) => (
+              <button key={i} onClick={() => sendMessage(q.text)} disabled={loading} className="staff-question-btn">
+                <div className="staff-q-icon" style={{ background: `${q.color}15`, color: q.color }}><q.icon size={16} /></div>
+                <span>{q.text}</span>
+              </button>
             ))}
           </div>
-          <form onSubmit={(e) => { e.preventDefault(); sendMessage(); }} className="ai-chat-form">
-            <input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Ask about cost, expiry, medicines..." className="ai-chat-input" disabled={loading} />
-            <button type="submit" className="ai-chat-send-btn" disabled={loading || !input.trim()}>
-              {loading ? <Loader2 size={16} className="spin" /> : <Send size={16} />}
-            </button>
-          </form>
-        </div>
-      </Card>
+          <div className="staff-info">
+            <div className="staff-info-title">What I show:</div>
+            <div>• Exact stock, batch, expiry, price for your hospital only</div>
+            <div>• Partner hospitals: High/Medium/Low only (privacy-safe)</div>
+            <div>• Short answers, no long essays</div>
+          </div>
+        </Card>
+
+        <Card className="staff-chat-card">
+          <div className="staff-chat-header">
+            <div className="staff-chat-icon"><Bot size={16} /></div>
+            <div>
+              <div className="staff-chat-name">MedBridge AI</div>
+              <div className="staff-chat-sub">{loading ? "Checking inventory..." : "Ready • Live data"}</div>
+            </div>
+            {loading && <Loader2 size={14} className="spin" />}
+          </div>
+
+          <div className="staff-chat-messages">
+            {messages.map((m) => <ChatMessage key={m.id} msg={m} onCopy={handleCopy} copied={copiedId} />)}
+            {loading && <div className="staff-msg assistant"><div className="staff-avatar assistant"><Bot size={14} /></div><div className="staff-bubble assistant"><div className="typing"><span /><span /><span /></div></div></div>}
+            <div ref={endRef} />
+          </div>
+
+          <div className="staff-chat-input-area">
+            <form onSubmit={(e) => { e.preventDefault(); sendMessage(); }} className="staff-input-form">
+              <input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Ask: low stock, expiring, cost..." className="staff-input" disabled={loading} />
+              <button type="submit" disabled={loading || !input.trim()} className="staff-send"><Send size={16} /></button>
+            </form>
+          </div>
+        </Card>
+      </div>
     </div>
   );
 }
