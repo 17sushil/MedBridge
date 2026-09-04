@@ -16,7 +16,8 @@ export default function DemandForecast() {
     api.getDemandForecast().then(setData);
   }, []);
 
-  const fetcher = useCallback(() => aiService.getForecastInsight(), []);
+  const forecastFetcher = useCallback(() => aiService.getForecastInsight(), []);
+  const smartMatchFetcher = useCallback(() => aiService.getSmartMatchSuggestions(), []);
 
   return (
     <div>
@@ -39,24 +40,10 @@ export default function DemandForecast() {
         </Card>
 
         <div className="forecast-side">
-          <AIInsightPanel title="Forecast Insight" fetcher={fetcher} />
-          <Card className="forecast-info-card">
-            <h3 className="forecast-info-title">How forecasting will work</h3>
-            <ul className="forecast-info-list">
-              <li className="forecast-info-item">
-                <span className="forecast-info-dot" />
-                Learns from past consumption and exchange history per medicine.
-              </li>
-              <li className="forecast-info-item">
-                <span className="forecast-info-dot" />
-                Flags predicted shortages before stock actually runs low.
-              </li>
-              <li className="forecast-info-item">
-                <span className="forecast-info-dot" />
-                Suggests which partner hospitals to request from first.
-              </li>
-            </ul>
-          </Card>
+          <AIInsightPanel title="Forecast Insight" fetcher={forecastFetcher} />
+          <div style={{ marginTop: "1rem" }}>
+            <AIInsightPanel title="Smart Match Insight" fetcher={smartMatchFetcher} />
+          </div>
         </div>
       </div>
     </div>

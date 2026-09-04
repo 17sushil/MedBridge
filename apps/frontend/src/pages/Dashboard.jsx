@@ -1,12 +1,6 @@
 import { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  Pill,
-  DollarSign,
-  AlertTriangle,
-  Repeat2,
-  ArrowRight,
-} from "lucide-react";
+import { Pill, DollarSign, AlertTriangle, Repeat2, ArrowRight } from "lucide-react";
 import { api } from "../services/api";
 import { aiService } from "../services/aiService";
 import { useAsyncData } from "../hooks/useAsyncData";
@@ -31,101 +25,36 @@ const getRecentActivity = () => api.getRecentActivity();
 
 export default function Dashboard() {
   const [period, setPeriod] = useState("week");
-  const getInventoryOverview = useCallback(
-    () => api.getInventoryOverview(period),
-    [period],
-  );
+  const getInventoryOverview = useCallback(() => api.getInventoryOverview(period), [period]);
 
-  const {
-    data: stats,
-    error: statsError,
-    reload: reloadStats,
-  } = useAsyncData(getDashboardStats);
-  const {
-    data: overview,
-    error: overviewError,
-    reload: reloadOverview,
-  } = useAsyncData(getInventoryOverview);
-  const {
-    data: categories,
-    error: categoriesError,
-    reload: reloadCategories,
-  } = useAsyncData(getMedicineCategories);
-  const {
-    data: medicines,
-    error: medicinesError,
-    reload: reloadMedicines,
-  } = useAsyncData(getRecentMedicines);
-  const {
-    data: alerts,
-    error: alertsError,
-    reload: reloadAlerts,
-  } = useAsyncData(getExpiryAlerts);
-  const {
-    data: activity,
-    error: activityError,
-    reload: reloadActivity,
-  } = useAsyncData(getRecentActivity);
+  const { data: stats, error: statsError, reload: reloadStats } = useAsyncData(getDashboardStats);
+  const { data: overview, error: overviewError, reload: reloadOverview } = useAsyncData(getInventoryOverview);
+  const { data: categories, error: categoriesError, reload: reloadCategories } = useAsyncData(getMedicineCategories);
+  const { data: medicines, error: medicinesError, reload: reloadMedicines } = useAsyncData(getRecentMedicines);
+  const { data: alerts, error: alertsError, reload: reloadAlerts } = useAsyncData(getExpiryAlerts);
+  const { data: activity, error: activityError, reload: reloadActivity } = useAsyncData(getRecentActivity);
 
   const forecastFetcher = useCallback(() => aiService.getForecastInsight(), []);
+  const smartMatchFetcher = useCallback(() => aiService.getSmartMatchSuggestions(), []);
 
   return (
     <div>
-      <PageHeader
-        title="Dashboard"
-        subtitle="Welcome back! Here's what's happening with your inventory."
-      />
+      <PageHeader title="Dashboard" subtitle="Welcome back! Here's what's happening with your inventory." />
 
       <div className="dash-stat-grid">
         {statsError ? (
           <Card className="dash-skeleton-card" style={{ gridColumn: "1 / -1" }}>
-            <ErrorState
-              title="Couldn't load dashboard stats"
-              description={statsError.message}
-              onRetry={reloadStats}
-            />
+            <ErrorState title="Couldn't load dashboard stats" description={statsError.message} onRetry={reloadStats} />
           </Card>
         ) : stats ? (
           <>
-            <StatCard
-              label="Total Medicines"
-              value={formatNumber(stats.totalMedicines.value)}
-              icon={Pill}
-              iconTone="navy"
-              delta={stats.totalMedicines.delta}
-              trend={stats.totalMedicines.trend}
-              helper="from last month"
-            />
-            <StatCard
-              label="Total Value"
-              value={formatCurrency(stats.totalValue.value)}
-              icon={DollarSign}
-              iconTone="teal"
-              delta={stats.totalValue.delta}
-              trend={stats.totalValue.trend}
-              helper="from last month"
-            />
-            <StatCard
-              label="Expiring Soon"
-              value={stats.expiringSoon.value}
-              icon={AlertTriangle}
-              iconTone="amber"
-              helper={`Within ${stats.expiringSoon.window}`}
-            />
-            <StatCard
-              label="Active Exchanges"
-              value={stats.activeExchanges.value}
-              icon={Repeat2}
-              iconTone="coral"
-              helper={stats.activeExchanges.label}
-            />
+            <StatCard label="Total Medicines" value={formatNumber(stats.totalMedicines.value)} icon={Pill} iconTone="navy" delta={stats.totalMedicines.delta} trend={stats.totalMedicines.trend} helper="from last month" />
+            <StatCard label="Total Value" value={formatCurrency(stats.totalValue.value)} icon={DollarSign} iconTone="teal" delta={stats.totalValue.delta} trend={stats.totalValue.trend} helper="from last month" />
+            <StatCard label="Expiring Soon" value={stats.expiringSoon.value} icon={AlertTriangle} iconTone="amber" helper={`Within ${stats.expiringSoon.window}`} />
+            <StatCard label="Active Exchanges" value={stats.activeExchanges.value} icon={Repeat2} iconTone="coral" helper={stats.activeExchanges.label} />
           </>
         ) : (
-          Array.from({ length: 4 }).map((_, i) => (
-            <Card key={i} className="dash-skeleton-card">
-              <Skeleton style={{ height: "100%", width: "100%" }} />
-            </Card>
-          ))
+          Array.from({ length: 4 }).map((_, i) => <Card key={i} className="dash-skeleton-card"><Skeleton style={{ height: "100%", width: "100%" }} /></Card>)
         )}
       </div>
 
@@ -133,44 +62,18 @@ export default function Dashboard() {
         <Card className="dash-trend-card">
           <div className="dash-card-head-row">
             <h3 className="dash-card-title">Inventory Overview</h3>
-            <select
-              className="dash-select"
-              value={period}
-              onChange={(e) => setPeriod(e.target.value)}
-            >
+            <select className="dash-select" value={period} onChange={(e) => setPeriod(e.target.value)}>
               <option value="week">This Week</option>
               <option value="month">This Month</option>
               <option value="quarter">This Quarter</option>
             </select>
           </div>
-          {overviewError ? (
-            <ErrorState
-              title="Couldn't load inventory overview"
-              description={overviewError.message}
-              onRetry={reloadOverview}
-            />
-          ) : overview ? (
-            <InventoryTrendChart data={overview} />
-          ) : (
-            <Skeleton
-              style={{ height: 260, width: "100%", marginTop: "0.5rem" }}
-            />
-          )}
+          {overviewError ? <ErrorState title="Couldn't load inventory overview" description={overviewError.message} onRetry={reloadOverview} /> : overview ? <InventoryTrendChart data={overview} /> : <Skeleton style={{ height: 260, width: "100%", marginTop: "0.5rem" }} />}
         </Card>
 
         <Card className="dash-categories-card">
           <h3 className="dash-categories-title">Medicine Categories</h3>
-          {categoriesError ? (
-            <ErrorState
-              title="Couldn't load categories"
-              description={categoriesError.message}
-              onRetry={reloadCategories}
-            />
-          ) : categories ? (
-            <CategoryDonutChart data={categories} />
-          ) : (
-            <Skeleton style={{ height: 132, width: "100%" }} />
-          )}
+          {categoriesError ? <ErrorState title="Couldn't load categories" description={categoriesError.message} onRetry={reloadCategories} /> : categories ? <CategoryDonutChart data={categories} /> : <Skeleton style={{ height: 132, width: "100%" }} />}
         </Card>
       </div>
 
@@ -178,137 +81,71 @@ export default function Dashboard() {
         <Card className="dash-panel">
           <div className="dash-panel-head">
             <h3 className="dash-panel-title">Expiry Alerts</h3>
-            <Link to="/inventory" className="dash-panel-link">
-              View all
-            </Link>
+            <Link to="/inventory" className="dash-panel-link">View all</Link>
           </div>
           <div className="dash-alert-list">
-            {alertsError ? (
-              <ErrorState
-                title="Couldn't load expiry alerts"
-                description={alertsError.message}
-                onRetry={reloadAlerts}
-              />
-            ) : alerts ? (
-              alerts.map((a) => (
-                <div key={a.id} className="dash-alert-row">
-                  <div
-                    className={`dash-alert-dial${a.isExpired ? " dash-alert-dial-expired" : ""}`}
-                  >
-                    {a.isExpired ? (
-                      <span className="dash-alert-dial-expired-label">
-                        Expired
-                      </span>
-                    ) : (
-                      <>
-                        <span className="dash-alert-dial-num">
-                          {a.daysLeft}
-                        </span>
-                        <span className="dash-alert-dial-label">days</span>
-                      </>
-                    )}
-                  </div>
-                  <div className="dash-alert-info">
-                    <div className="dash-alert-name">{a.medicine}</div>
-                    <div className="dash-alert-exp">Exp. {a.expiry}</div>
-                  </div>
-                  <Badge tone={statusTone(a.severity)}>{a.severity}</Badge>
+            {alertsError ? <ErrorState title="Couldn't load expiry alerts" description={alertsError.message} onRetry={reloadAlerts} /> : alerts ? alerts.map((a) => (
+              <div key={a.id} className="dash-alert-row">
+                <div className={`dash-alert-dial${a.isExpired ? " dash-alert-dial-expired" : ""}`}>
+                  {a.isExpired ? <span className="dash-alert-dial-expired-label">Expired</span> : <><span className="dash-alert-dial-num">{a.daysLeft}</span><span className="dash-alert-dial-label">days</span></>}
                 </div>
-              ))
-            ) : (
-              <Skeleton style={{ height: 96, width: "100%" }} />
-            )}
+                <div className="dash-alert-info">
+                  <div className="dash-alert-name">{a.medicine}</div>
+                  <div className="dash-alert-exp">Exp. {a.expiry}</div>
+                </div>
+                <Badge tone={statusTone(a.severity)}>{a.severity}</Badge>
+              </div>
+            )) : <Skeleton style={{ height: 96, width: "100%" }} />}
           </div>
         </Card>
 
         <Card className="dash-panel">
           <div className="dash-panel-head">
             <h3 className="dash-panel-title">Recent Activity</h3>
-            <Link to="/notifications" className="dash-panel-link">
-              View all
-            </Link>
+            <Link to="/notifications" className="dash-panel-link">View all</Link>
           </div>
           <div className="dash-activity-list">
-            {activityError ? (
-              <ErrorState
-                title="Couldn't load recent activity"
-                description={activityError.message}
-                onRetry={reloadActivity}
-              />
-            ) : activity ? (
-              activity.map((a) => (
-                <div key={a.id} className="dash-activity-row">
-                  <span className="dash-activity-dot" />
-                  <div>
-                    <div className="dash-activity-text">{a.text}</div>
-                    <span className="dash-activity-time">{a.time}</span>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <Skeleton style={{ height: 96, width: "100%" }} />
-            )}
+            {activityError ? <ErrorState title="Couldn't load recent activity" description={activityError.message} onRetry={reloadActivity} /> : activity ? activity.map((a) => (
+              <div key={a.id} className="dash-activity-row">
+                <span className="dash-activity-dot" />
+                <div><div className="dash-activity-text">{a.text}</div><span className="dash-activity-time">{a.time}</span></div>
+              </div>
+            )) : <Skeleton style={{ height: 96, width: "100%" }} />}
           </div>
         </Card>
 
-        <AIInsightPanel title="Forecast Insight" fetcher={forecastFetcher} />
+        <div className="dash-ai-stack">
+          <AIInsightPanel title="Forecast Insight" fetcher={forecastFetcher} />
+          <div style={{ marginTop: "1rem" }}>
+            <AIInsightPanel title="Smart Match Insight" fetcher={smartMatchFetcher} />
+          </div>
+        </div>
       </div>
 
       <Card className="dash-table-card">
         <div className="dash-panel-head">
           <h3 className="dash-panel-title">Recent Medicines</h3>
-          <Link
-            to="/inventory"
-            className="dash-panel-link dash-panel-link-icon"
-          >
-            View all <ArrowRight size={12} />
-          </Link>
+          <Link to="/inventory" className="dash-panel-link dash-panel-link-icon">View all <ArrowRight size={12} /></Link>
         </div>
-        {medicinesError ? (
-          <ErrorState
-            title="Couldn't load recent medicines"
-            description={medicinesError.message}
-            onRetry={reloadMedicines}
-          />
-        ) : (
-          <div className="dash-table-scroll">
+        <div className="dash-table-scroll">
+          {medicinesError ? <ErrorState title="Couldn't load medicines" description={medicinesError.message} onRetry={reloadMedicines} /> : medicines ? (
             <table className="dash-table">
-              <thead>
-                <tr>
-                  <th>Medicine Name</th>
-                  <th>Category</th>
-                  <th>Quantity</th>
-                  <th>Expiry Date</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
+              <thead><tr><th>Medicine</th><th>Batch</th><th>Category</th><th>Quantity</th><th>Expiry Date</th><th>Status</th></tr></thead>
               <tbody>
-                {(medicines || []).map((m) => (
+                {medicines.map((m) => (
                   <tr key={m.id}>
-                    <td>
-                      <div className="dash-med-cell">
-                        <div className="dash-med-icon">
-                          <Pill size={16} />
-                        </div>
-                        <span className="dash-med-name">{m.name}</span>
-                      </div>
-                    </td>
-                    <td>
-                      <Badge tone="navy">{m.category}</Badge>
-                    </td>
-                    <td className="dash-mono-cell">
-                      {m.quantity} {m.unit}
-                    </td>
-                    <td className="dash-muted-cell">{formatDate(m.expiry)}</td>
-                    <td>
-                      <Badge tone={statusTone(m.status)}>{m.status}</Badge>
-                    </td>
+                    <td><div className="dash-med-cell"><div className="dash-med-icon"><Pill size={16} /></div><span className="dash-med-name">{m.name}</span></div></td>
+                    <td>{m.batch}</td>
+                    <td><Badge tone="navy">{m.category}</Badge></td>
+                    <td>{m.quantity} {m.unit}</td>
+                    <td>{formatDate(m.expiry)}</td>
+                    <td><Badge tone={statusTone(m.status)}>{m.status}</Badge></td>
                   </tr>
                 ))}
               </tbody>
             </table>
-          </div>
-        )}
+          ) : <Skeleton style={{ height: 120, width: "100%" }} />}
+        </div>
       </Card>
     </div>
   );
