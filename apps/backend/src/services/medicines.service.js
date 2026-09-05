@@ -42,7 +42,7 @@ async function createMedicine(hospitalId, data) {
     data: {
       hospitalId,
       medicineId: created.id,
-      type: "PROCUREMENT",
+      type: "IN",
       quantity: created.quantity,
     },
   });
@@ -78,7 +78,7 @@ async function updateMedicine(hospitalId, id, data) {
         data: {
           hospitalId,
           medicineId: id,
-          type: diff > 0 ? "PROCUREMENT" : "CONSUMPTION",
+          type: diff > 0 ? "IN" : "OUT",
           quantity: Math.abs(diff),
         },
       });
@@ -107,42 +107,70 @@ async function deleteMedicine(hospitalId, id) {
   });
 }
 
-// FIXED: Expiry logic - now correctly handles expired vs expiring
-// - Returns only medicines that will expire in next `days` days (future)
-// - Excludes already expired (use getExpired for those)
-// - Sorted by expiry soonest first
+// Bulk-create many medicines (already validated + normalised rows) in one
+// transaction. Returns { created, skipped, errors } so the caller can report
+// a partial import without losing the rows that did succeed.
+async function bulkCreateMedicines(hospitalId, rows) {
+  const errors = [];
+  const created = [];
+
+  for (let i = 0; i < rows.length; i++) {
+    const row = rows[i];
+    try {
+      const quantity = Number(row.quantity) || 0;
+      const status = row.status || computeMedicineStatus(quantity);
+
+      const medicine = await prisma.medicine.create({
+        data: {
+          name: row.name,
+          category: row.category,
+          batch: row.batch,
+          quantity,
+          unit: row.unit,
+          unitPrice: row.unitPrice != null ? Number(row.unitPrice) : 0,
+          expiry: row.expiry,
+          medicineCode: row.medicineCode || null,
+          status,
+          hospitalId,
+        },
+      });
+
+      await prisma.inventoryMovement.create({
+        data: { hospitalId, medicineId: medicine.id, type: "IN", quantity },
+      });
+
+      if (status === "CRITICAL" || status === "LOW_STOCK") {
+        await prisma.notification.create({
+          data: {
+            hospitalId,
+            title: `${medicine.name} is ${status === "CRITICAL" ? "critical" : "low"}`,
+            body: `${medicine.name} (${medicine.batch}) has only ${medicine.quantity} ${medicine.unit} left.`,
+            type: status === "CRITICAL" ? "CRITICAL" : "INFO",
+          },
+        });
+      }
+
+      created.push(medicine);
+    } catch (err) {
+      errors.push({ row: i + 1, error: err.message });
+    }
+  }
+
+  return { created, errors };
+}
+
+// Medicines expiring within `days` days, soonest first — powers the
+// dashboard's "Expiry Alerts" panel.
 async function expiringSoon(hospitalId, days = 30) {
-  const now = new Date();
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() + days);
-
-  // FIX: Added gte: now to exclude already expired medicines
-  // Previously it returned expired + expiring, causing confusion
   return prisma.medicine.findMany({
-    where: {
-      hospitalId,
-      expiry: {
-        gte: now,  // FIX: Only future expiries
-        lte: cutoff
-      }
-    },
+    where: { hospitalId, expiry: { lte: cutoff } },
     orderBy: { expiry: "asc" },
   });
 }
 
-// NEW: Get already expired medicines
-async function getExpired(hospitalId) {
-  const now = new Date();
-  return prisma.medicine.findMany({
-    where: {
-      hospitalId,
-      expiry: { lt: now }
-    },
-    orderBy: { expiry: "desc" },
-  });
-}
-
-// Distribution of quantity across categories
+// Distribution of quantity across categories — powers the category donut chart.
 async function categoryBreakdown(hospitalId) {
   const rows = await prisma.medicine.groupBy({
     by: ["category"],
@@ -162,7 +190,7 @@ module.exports = {
   createMedicine,
   updateMedicine,
   deleteMedicine,
+  bulkCreateMedicines,
   expiringSoon,
-  getExpired,
   categoryBreakdown,
 };

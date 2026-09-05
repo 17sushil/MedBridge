@@ -4,7 +4,7 @@ const { computeMedicineStatus: calculateMedicineStatus } = require("../utils/med
 
 const TRANSITIONS = {
   PENDING: ["APPROVED", "DECLINED"],
-  APPROVED: ["IN_TRANSIT", "DECLINED"],
+  APPROVED: ["IN_TRANSIT"],
   IN_TRANSIT: ["COMPLETED"],
   COMPLETED: [],
   DECLINED: [],
@@ -43,13 +43,11 @@ async function listForHospital(hospitalId, { direction } = {}) {
 
 async function createRequest(requestingHospitalId, { medicine, quantity, unit, toHospitalId }) {
   if (toHospitalId === requestingHospitalId) throw new ApiError(400, "You can't request stock from your own hospital");
-  if (quantity <= 0) throw new ApiError(400, "Quantity must be positive");
-  if (quantity > 10000) throw new ApiError(400, "Quantity too large - max 10000");
-  
   const partner = await prisma.hospital.findUnique({ where: { id: toHospitalId } });
   if (!partner) throw new ApiError(404, "Partner hospital not found");
   const requestingHospital = await prisma.hospital.findUnique({ where: { id: requestingHospitalId } });
 
+  // fromHospital = supplier (partner), toHospital = recipient (requester)
   const created = await prisma.$transaction(async (tx) => {
     const req = await tx.exchangeRequest.create({
       data: {
@@ -71,7 +69,7 @@ async function createRequest(requestingHospitalId, { medicine, quantity, unit, t
       },
     });
 
-    // Audit log
+    // Audit log (best-effort — never affects the request creation)
     try {
       await tx.auditLog.create({
         data: {
@@ -118,9 +116,7 @@ function assertTransition(request, hospitalId, role, nextStatus) {
   }
 }
 
-// NEW: Stock reservation at APPROVED - prevents overselling (High Priority from audit)
-async function reserveStock(tx, request) {
-  // Find source medicine with enough stock, FIFO by expiry
+async function completeTransfer(tx, request) {
   const source = await tx.medicine.findFirst({
     where: {
       hospitalId: request.fromHospitalId,
@@ -130,26 +126,8 @@ async function reserveStock(tx, request) {
     },
     orderBy: { expiry: "asc" },
   });
-  
   if (!source) {
-    throw new ApiError(409, `Insufficient stock: ${request.medicine} requires ${request.quantity} ${request.unit}, but supplier has insufficient matching stock. Reservation failed.`);
-  }
-
-  // Check if already reserved for other approved requests (prevent oversell)
-  const approvedRequests = await tx.exchangeRequest.findMany({
-    where: {
-      fromHospitalId: request.fromHospitalId,
-      medicine: { equals: request.medicine, mode: "insensitive" },
-      status: { in: ["APPROVED", "IN_TRANSIT"] },
-      id: { not: request.id },
-    },
-    select: { quantity: true },
-  });
-  const totalReserved = approvedRequests.reduce((sum, r) => sum + r.quantity, 0);
-  const availableAfterReservation = source.quantity - totalReserved;
-  
-  if (availableAfterReservation < request.quantity) {
-    throw new ApiError(409, `Stock reservation failed: ${availableAfterReservation} units available after existing reservations (${totalReserved} reserved), but ${request.quantity} requested.`);
+    throw new ApiError(409, "Supplier no longer has enough matching stock to complete this transfer");
   }
 
   const sourceNewQty = source.quantity - request.quantity;
@@ -161,125 +139,47 @@ async function reserveStock(tx, request) {
   });
 
   await tx.inventoryMovement.create({
-    data: {
-      hospitalId: request.fromHospitalId,
-      medicineId: source.id,
-      type: "EXCHANGE_OUT",
-      quantity: request.quantity,
-    },
+    data: { hospitalId: request.fromHospitalId, medicineId: source.id, type: "OUT", quantity: request.quantity },
   });
 
-  return updatedSource;
-}
-
-// NEW: Release reservation when DECLINED after APPROVED
-async function releaseReservation(tx, request) {
-  // Find the medicine that was reserved (same batch logic)
-  // For simplicity, add back to first matching medicine
-  const source = await tx.medicine.findFirst({
+  let destination = await tx.medicine.findFirst({
     where: {
-      hospitalId: request.fromHospitalId,
-      name: { equals: request.medicine, mode: "insensitive" },
-      unit: request.unit,
+      hospitalId: request.toHospitalId,
+      name: { equals: source.name, mode: "insensitive" },
+      batch: source.batch,
+      unit: source.unit,
+      expiry: source.expiry,
     },
-    orderBy: { expiry: "asc" },
   });
 
-  if (source) {
-    const newQty = source.quantity + request.quantity;
-    const newStatus = calculateMedicineStatus(newQty);
-    await tx.medicine.update({
-      where: { id: source.id },
-      data: { quantity: newQty, status: newStatus },
+  if (destination) {
+    const destNewQty = destination.quantity + request.quantity;
+    const destNewStatus = calculateMedicineStatus(destNewQty);
+    destination = await tx.medicine.update({
+      where: { id: destination.id },
+      data: { quantity: destNewQty, status: destNewStatus },
     });
-
-    await tx.inventoryMovement.create({
+  } else {
+    destination = await tx.medicine.create({
       data: {
-        hospitalId: request.fromHospitalId,
-        medicineId: source.id,
-        type: "PROCUREMENT", // Restock from released reservation
-        quantity: request.quantity,
-      },
-    });
-  }
-}
-
-async function completeTransfer(tx, request) {
-  // Source already decremented at APPROVED stage (reservation), so we don't decrement again
-  // Just find source for reference and create destination
-  const source = await tx.medicine.findFirst({
-    where: {
-      hospitalId: request.fromHospitalId,
-      name: { equals: request.medicine, mode: "insensitive" },
-      unit: request.unit,
-    },
-    orderBy: { expiry: "asc" },
-  });
-
-  // If source was not found (should not happen if reservation worked), throw
-  if (!source && request.status !== "APPROVED" && request.status !== "IN_TRANSIT") {
-    // For backward compatibility, if request was approved before reservation feature, check stock now
-    const fallbackSource = await tx.medicine.findFirst({
-      where: {
-        hospitalId: request.fromHospitalId,
-        name: { equals: request.medicine, mode: "insensitive" },
-        unit: request.unit,
-        quantity: { gte: request.quantity },
-      },
-      orderBy: { expiry: "asc" },
-    });
-    if (!fallbackSource) {
-      throw new ApiError(409, "Supplier no longer has enough matching stock to complete this transfer");
-    }
-  }
-
-  let destination = null;
-  if (source) {
-    destination = await tx.medicine.findFirst({
-      where: {
-        hospitalId: request.toHospitalId,
-        name: { equals: source.name, mode: "insensitive" },
+        medicineCode: source.medicineCode,
+        name: source.name,
+        category: source.category,
         batch: source.batch,
-        unit: source.unit,
-        expiry: source.expiry,
-      },
-    });
-
-    if (destination) {
-      const destNewQty = destination.quantity + request.quantity;
-      const destNewStatus = calculateMedicineStatus(destNewQty);
-      destination = await tx.medicine.update({
-        where: { id: destination.id },
-        data: { quantity: destNewQty, status: destNewStatus },
-      });
-    } else {
-      destination = await tx.medicine.create({
-        data: {
-          medicineCode: source.medicineCode,
-          name: source.name,
-          category: source.category,
-          batch: source.batch,
-          quantity: request.quantity,
-          unit: source.unit,
-          unitPrice: source.unitPrice,
-          expiry: source.expiry,
-          status: calculateMedicineStatus(request.quantity),
-          hospitalId: request.toHospitalId,
-        },
-      });
-    }
-
-    await tx.inventoryMovement.create({
-      data: {
-        hospitalId: request.toHospitalId,
-        medicineId: destination.id,
-        type: "EXCHANGE_IN",
         quantity: request.quantity,
+        unit: source.unit,
+        unitPrice: source.unitPrice,
+        expiry: source.expiry,
+        status: calculateMedicineStatus(request.quantity),
+        hospitalId: request.toHospitalId,
       },
     });
   }
+  await tx.inventoryMovement.create({
+    data: { hospitalId: request.toHospitalId, medicineId: destination.id, type: "IN", quantity: request.quantity },
+  });
 
-  return { destination };
+  return { source: updatedSource, destination };
 }
 
 async function updateStatus(hospitalId, role, id, status) {
@@ -290,19 +190,7 @@ async function updateStatus(hospitalId, role, id, status) {
     });
     if (!request) throw new ApiError(404, "Exchange request not found");
     assertTransition(request, hospitalId, role, status);
-
-    // STOCK RESERVATION LOGIC (High Priority Fix)
-    if (status === "APPROVED") {
-      await reserveStock(tx, request);
-    }
-
-    if (status === "DECLINED" && ["APPROVED", "IN_TRANSIT"].includes(request.status)) {
-      await releaseReservation(tx, request);
-    }
-
-    if (status === "COMPLETED") {
-      await completeTransfer(tx, request);
-    }
+    if (status === "COMPLETED") await completeTransfer(tx, request);
 
     const updated = await tx.exchangeRequest.update({
       where: { id },
@@ -310,8 +198,10 @@ async function updateStatus(hospitalId, role, id, status) {
       include: { fromHospital: true, toHospital: true },
     });
 
+    // Notify the other party
     const recipientHospitalId = status === "COMPLETED" ? request.fromHospitalId : request.toHospitalId;
-    const notifyingHospitalName = status === "COMPLETED" ? request.toHospital.name : request.fromHospital.name;
+    const notifyingHospitalName =
+      status === "COMPLETED" ? request.toHospital.name : request.fromHospital.name;
 
     await tx.notification.create({
       data: {
@@ -322,6 +212,8 @@ async function updateStatus(hospitalId, role, id, status) {
       },
     });
 
+    // Also notify requester when supplier takes action? Already covered by recipient logic for APPROVED/DECLINED/IN_TRANSIT
+    // For COMPLETED we already notified supplier. Let's also create a success notification for recipient if completed?
     if (status === "COMPLETED") {
       await tx.notification.create({
         data: {
@@ -333,7 +225,7 @@ async function updateStatus(hospitalId, role, id, status) {
       });
     }
 
-    // Audit log
+    // Audit log (best-effort — never affects the status change)
     try {
       await tx.auditLog.create({
         data: {
@@ -365,4 +257,4 @@ async function updateStatus(hospitalId, role, id, status) {
   };
 }
 
-module.exports = { listForHospital, createRequest, updateStatus };
+module.exports = { listForHospital, createRequest, updateStatus, assertTransition };

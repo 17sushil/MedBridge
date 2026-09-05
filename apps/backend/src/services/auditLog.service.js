@@ -1,7 +1,12 @@
 const prisma = require("../config/db");
 
 /**
- * Audit Log Service - Tracks critical actions for security & compliance
+ * Audit Log Service — records critical actions for security & compliance.
+ *
+ * `createLog` is deliberately best-effort: if the AuditLog table has not yet
+ * been created by a migration (or a write fails for any other reason) the
+ * caller's main transaction/effect is NOT affected. Every call is wrapped so
+ * an audit write can never break a business operation.
  */
 
 async function createLog({ hospitalId, userId, action, entity, entityId, oldValue, newValue }) {
@@ -13,8 +18,8 @@ async function createLog({ hospitalId, userId, action, entity, entityId, oldValu
         action,
         entity,
         entityId,
-        oldValue: oldValue ? JSON.stringify(oldValue) : null,
-        newValue: newValue ? JSON.stringify(newValue) : null,
+        oldValue: oldValue != null ? JSON.stringify(oldValue) : null,
+        newValue: newValue != null ? JSON.stringify(newValue) : null,
       },
     });
   } catch (err) {
