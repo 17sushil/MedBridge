@@ -194,3 +194,12 @@
     grid-template-columns: 1fr;
   }
 }
+
+.auth-brand-logo {
+  display: block;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius-lg);
+  object-fit: cover;
+  flex-shrink: 0;
+}
