@@ -35,12 +35,35 @@ export default function ExchangeRequestModal({ preselectedHospitalId, onClose, o
     setError("");
     setSubmitting(true);
     try {
-      await api.createExchangeRequest({
+      const payload = {
         medicine: form.medicine,
         quantity: Number(form.quantity),
         unit: form.unit,
-        toHospitalId: form.toHospitalId,
-      });
+      };
+
+      // "General" = broadcast: one request per partner hospital.
+      if (form.toHospitalId === "GENERAL") {
+        if (hospitals.length === 0) {
+          throw new Error("No partner hospitals available to request from.");
+        }
+        const results = await Promise.allSettled(
+          hospitals.map((h) =>
+            api.createExchangeRequest({ ...payload, toHospitalId: h.id })
+          )
+        );
+        const failed = results.filter((r) => r.status === "rejected").length;
+        if (failed > 0) {
+          const first = results.find((r) => r.status === "rejected");
+          throw new Error(
+            failed === results.length
+              ? first.reason?.message || "Failed to create requests"
+              : `Created ${results.length - failed} of ${results.length} requests. ${first.reason?.message || ""}`
+          );
+        }
+      } else {
+        await api.createExchangeRequest({ ...payload, toHospitalId: form.toHospitalId });
+      }
+
       onCreated?.();
       onClose();
     } catch (err) {
@@ -63,6 +86,7 @@ export default function ExchangeRequestModal({ preselectedHospitalId, onClose, o
           <span className="modal-label">Request from hospital</span>
           <select className="modal-select" value={form.toHospitalId} onChange={update("toHospitalId")} required>
             <option value="">Select a hospital…</option>
+            <option value="GENERAL">General — request from all hospitals</option>
             {hospitals.map((h) => (
               <option key={h.id} value={h.id}>
                 {h.name} — {h.location}
