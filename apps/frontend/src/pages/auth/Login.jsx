@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import Button from "../../components/ui/Button";
 import "./Auth.css";
+import logo from "../../assets/logo.png"
 
 export default function Login() {
   const { login } = useAuth();
@@ -30,7 +31,7 @@ export default function Login() {
     <div className="auth-shell" data-theme="light">
       <div className="auth-card">
         <div className="auth-brand">
-          <div className="auth-brand-icon">M</div>
+          <img src={logo} alt="MedBridge" className="auth-brand-logo" />
           <span className="auth-brand-name">MedBridge</span>
         </div>
 
