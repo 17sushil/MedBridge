@@ -4,6 +4,8 @@ import { useAuth } from "../../context/AuthContext";
 import { api } from "../../services/api";
 import Button from "../../components/ui/Button";
 import "./Auth.css";
+import logo from "../../assets/logo.png"
+
 
 const ROLES = [
   { value: "STAFF", label: "Staff", hint: "Request stock and view inventory" },
@@ -55,7 +57,7 @@ export default function JoinHospital() {
       <div className="auth-shell">
         <div className="auth-card">
           <div className="auth-brand">
-            <div className="auth-brand-icon">M</div>
+            <img src={logo} alt="MedBridge" className="auth-brand-logo" />
             <span className="auth-brand-name">MedBridge</span>
           </div>
           <h1 className="auth-title">Request submitted</h1>
@@ -78,7 +80,7 @@ export default function JoinHospital() {
     <div className="auth-shell">
       <div className="auth-card auth-card-wide">
         <div className="auth-brand">
-          <div className="auth-brand-icon">M</div>
+          <img src={logo} alt="MedBridge" className="auth-brand-logo" />
           <span className="auth-brand-name">MedBridge</span>
         </div>
 
