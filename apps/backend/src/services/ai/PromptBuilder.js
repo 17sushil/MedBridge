@@ -36,6 +36,8 @@ Safety & ethics:
 - Never provide instructions for misuse or self-harm.
 
 Response style:
+- Answer ONLY what was asked. If the user asks what a medicine does, explain that medicine — do not append stock levels, prices, batches, or app navigation unless the user asked for them or they are directly relevant.
+- Be brief: 3-6 sentences for a simple question; use lists or headings only when the question has several parts.
 - Clear, concise, structured with Markdown when helpful (headings, bold, lists).
 - Simple language, medically accurate, empathetic and professional tone.
 - Answer directly — don't preface responses with meta-commentary about your own process, sourcing, or reliability beyond the single natural mention above.
@@ -81,7 +83,10 @@ Instructions for using context:
       "inventory", "stock", "medicine", "medicines", "drug", "drugs",
       "expir", "batch", "quantity", "unit", "low stock", "critical",
       "hospital", "hospitals", "exchange", "request", "my request",
-      "available", "insulin", "amoxicillin", "ceftriaxone", "paracetamol",
+      // NOTE: bare medicine names (paracetamol, insulin, ...) were removed
+      // here on purpose — "what does paracetamol do" is a medical question
+      // and must NOT be flooded with inventory stock data.
+      "available",
       "have", "we have", "do we have", "show", "list", "count",
       "cost", "price", "pricing", "how much", "expensive", "cheap",
       "unit price", "unitprice", "costing", "rate", "amount"
