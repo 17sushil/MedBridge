@@ -22,6 +22,14 @@ Total time: **~30 minutes**, most of it waiting for builds.
 | `render.yaml` | Blueprint for both Render services (API + ML). Builds generate the dataset, train XGBoost, migrate & seed the DB automatically. |
 | `apps/frontend/vercel.json` | SPA rewrite so React Router works on Vercel. |
 | `.github/workflows/ci.yml` | Free CI on every push: backend tests (with a Postgres service container), frontend build, ML generate→train→pytest→health smoke. |
+
+> **Pushing `.github/workflows/` requires a token with the `workflow` scope.**
+> GitHub refuses Personal Access Tokens that only have `Contents` permission
+> when a commit adds/changes workflow files. Options: create a fine-grained
+> PAT with **Workflows: Read and write** (plus Contents: Read and write), or
+> add the file manually from the GitHub web UI (Add file → Create new file →
+> path `.github/workflows/ci.yml` → paste the content). CI is optional for
+> deployment — Render and Vercel never read it.
 | `docker-compose.yml` + 3 `Dockerfile`s | Self-host the whole stack with one command (`docker compose up --build`). |
 | `scripts/bootstrap-local.sh` | One-command local setup (data + model + deps + DB + seed). |
 | `scripts/start-all.sh` / `stop-all.sh` | Start/stop all three services locally. |
