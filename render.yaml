@@ -9,9 +9,10 @@
 #
 # Database: use a free PostgreSQL (Neon recommended — see docs/DEPLOYMENT_GUIDE.md).
 # Set these "sync" env vars when prompted by the Blueprint:
-#   DATABASE_URL   e.g. postgresql://user:pass@ep-xxx.region.aws.neon.tech/medbridge?sslmode=require
-#   JWT_SECRET     run:  openssl rand -hex 32
-#   CLIENT_ORIGIN  your Vercel frontend URL, e.g. https://medbridge.vercel.app
+#   DATABASE_URL         e.g. postgresql://user:pass@ep-xxx.region.aws.neon.tech/medbridge?sslmode=require
+#   JWT_SECRET           run:  openssl rand -hex 32
+#   CLIENT_ORIGIN        your Vercel frontend URL, e.g. https://medbridge.vercel.app
+#   OPENROUTER_API_KEY   optional — real AI answers (sk-or-v1-...); omit to use mock
 #
 # The deploy profile below (demo-only hospitals, ~16 months of history) keeps
 # the build inside Render free tier limits (~512 MB RAM). It is generated
@@ -78,10 +79,21 @@ services:
           type: web
           name: medbridge-ml
           envVarKey: RENDER_EXTERNAL_URL
-      # Optional AI assistant credential — set to "groq" + a free GROQ_API_KEY,
-      # or keep "mock" for the built-in no-API-key assistant.
+      # AI assistant — real answers via OpenRouter (use your key; set in the
+      # dashboard when Blueprint asks for sync vars). Switch providers by
+      # changing LLM_PROVIDER (openai/gemini/claude/groq/deepseek/mock).
       - key: LLM_PROVIDER
-        value: "mock"
+        value: "openrouter"
+      - key: OPENROUTER_API_KEY
+        sync: false # sk-or-v1-... from openrouter.ai/keys
+      - key: OPENROUTER_MODEL
+        value: "openai/gpt-4o-mini"
+      - key: LLM_TEMPERATURE
+        value: "0.4"
+      - key: LLM_MAX_TOKENS
+        value: "1200"
+      - key: MOCK_LLM_ENABLED
+        value: "true"
       # Optional AdminJS panel (/admin) — credentials are auto-generated and
       # visible in the Render environment settings.
       - key: ADMIN_EMAIL
