@@ -1,0 +1,17 @@
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+# Generated at container start (and git-ignored anyway) — keep image small
+data/
+artifacts/
+artifacts/models/
+artifacts/encoders/
+artifacts/metrics/
+notebooks/
+reports/
+exports/
+tests/
+.git/
+README.md

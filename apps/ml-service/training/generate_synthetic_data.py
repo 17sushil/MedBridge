@@ -21,8 +21,21 @@ import pandas as pd
 
 RNG = np.random.default_rng(42)
 
-START_DATE = date(2023, 1, 2)
-END_DATE = date(2026, 6, 30)
+# Optional env overrides so CI / Render builds can control dataset size
+# (e.g. MEDBRIDGE_START_DATE=2024-01-01 MEDBRIDGE_END_DATE=2026-06-30).
+# Defaults are unchanged when the variables are absent.
+import os as _os
+
+START_DATE = (
+    date.fromisoformat(_os.environ["MEDBRIDGE_START_DATE"])
+    if _os.environ.get("MEDBRIDGE_START_DATE")
+    else date(2023, 1, 2)
+)
+END_DATE = (
+    date.fromisoformat(_os.environ["MEDBRIDGE_END_DATE"])
+    if _os.environ.get("MEDBRIDGE_END_DATE")
+    else date(2026, 6, 30)
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT_RAW = ROOT / "data" / "raw"

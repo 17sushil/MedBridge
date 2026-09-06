@@ -92,4 +92,33 @@ cd apps/backend && npm test      # node --test
 
 - `apps/backend/README.md` — API reference and adding-new-resource guide
 - `docs/data/data_dictionary.md` — the synthetic Nepal dataset schema
+- `docs/DEPLOYMENT_GUIDE.md` — **zero-cost deploy (Vercel + Render + Neon)**
+- `docs/ML_PIPELINE_GUIDE.md` — ML pipeline deep-dive
 - `RECOVERY_REPORT.md` — historical postmortem of a regression recovery pass
+
+## One-command local setup
+
+```bash
+bash scripts/bootstrap-local.sh   # deps + ML data/model + .env + DB schema + seed
+bash scripts/start-all.sh         # ML :8000 · API :4000 · frontend :5173
+bash scripts/verify-deploy.sh     # 6/6 end-to-end checks
+bash scripts/stop-all.sh
+```
+
+(`FULL=1 bash scripts/bootstrap-local.sh` regenerates the full 41-hospital
+dataset instead of the lightweight 8-hospital deploy profile.)
+
+## Deployment (zero cost)
+
+Everything is preconfigured — frontend → **Vercel**, API + ML → **Render
+Blueprint** (`render.yaml`), database → **Neon free**:
+
+- The Render builds **generate the dataset and train XGBoost automatically**
+  using a `MEDBRIDGE_DEMO_ONLY` profile sized for the free 512 MB instances.
+- `.github/workflows/ci.yml` runs backend tests, the frontend build, and the
+  full ML pipeline (generate → train → test → health smoke) on every push.
+- `docker-compose.yml` + per-app `Dockerfile`s let you self-host everything
+  with `docker compose up --build`.
+
+Follow **`docs/DEPLOYMENT_GUIDE.md`** — a click-by-click walkthrough with
+verification; `docs/ENV_REFERENCE.md` documents every environment variable.

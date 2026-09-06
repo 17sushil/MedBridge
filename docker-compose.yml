@@ -1,0 +1,98 @@
+# ---------------------------------------------------------------------------
+# MedBridge — self-hosted full stack (Docker Compose)
+# Mirrors production: Postgres + FastAPI/XGBoost + Express/Prisma + Nginx SPA.
+# Data + model are generated inside the ML container; the API seeds from them.
+#
+#   docker compose up --build
+#   Frontend: http://localhost:5173   API: http://localhost:4000   ML: http://localhost:8000
+#   (first boot takes ~2–3 min: data generation + training + seed)
+#
+# For a persistent database: docker compose down && docker compose up (named
+# volume keeps Postgres data). Wipe everything: docker compose down -v.
+# ---------------------------------------------------------------------------
+
+services:
+  # ---------------------------------------------------------------- database
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: medbridge
+      POSTGRES_PASSWORD: medbridge
+      POSTGRES_DB: medbridge
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U medbridge -d medbridge"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  # ------------------------------------------------------------ ML service
+  ml:
+    build: ./apps/ml-service
+    environment:
+      # Keep the small deploy profile (fits any machine / free-tier instance)
+      MEDBRIDGE_START_DATE: "2025-03-01"
+      MEDBRIDGE_END_DATE: "2026-06-30"
+      MEDBRIDGE_DEMO_ONLY: "1"
+    volumes:
+      # Generated CSVs + trained model shared with the API (for seeding).
+      # Written at container start so it is also fresh on every reboot.
+      - ml-data:/app/data
+      - artifacts:/app/artifacts
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3)",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 30
+      start_period: 180s
+    ports:
+      - "8000:8000"
+
+  # ------------------------------------------------------------ backend API
+  api:
+    build: ./apps/backend
+    environment:
+      DATABASE_URL: postgresql://medbridge:medbridge@db:5432/medbridge
+      ML_SERVICE_URL: http://ml:8000
+      CLIENT_ORIGIN: http://localhost:5173
+      JWT_SECRET: change-me-please-openssl-rand-hex-32
+      JWT_EXPIRES_IN: 7d
+      NODE_ENV: production
+      ADMIN_EMAIL: admin@medbridge.local
+      ADMIN_PASSWORD: medbridge-admin-password
+      ADMIN_SESSION_SECRET: medbridge-admin-session-secret
+      LLM_PROVIDER: mock
+      MOCK_LLM_ENABLED: "true"
+      # Seed the 8 demo hospitals on first start (idempotent; harmless re-runs)
+      SEED_ON_START: "1"
+    depends_on:
+      db:
+        condition: service_healthy
+      ml:
+        condition: service_healthy
+    volumes:
+      - ml-data:/app/ml-service/data:ro
+    ports:
+      - "4000:4000"
+
+  # ------------------------------------------------------------ frontend SPA
+  frontend:
+    build: ./apps/frontend
+    depends_on:
+      - api
+    ports:
+      - "5173:80"
+
+volumes:
+  db-data:
+  ml-data:
+  artifacts:

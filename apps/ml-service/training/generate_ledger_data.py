@@ -45,6 +45,7 @@ Run from apps/ml-service/:
 from __future__ import annotations
 
 import json
+import os
 import sys
 from pathlib import Path
 from datetime import date, timedelta
@@ -839,6 +840,13 @@ def main():
 
     hospitals = build_hospitals()
     medicines = build_medicines()
+    # Optional deploy profile: generate data only for the 8 demo hospitals
+    # (MEDBRIDGE_DEMO_ONLY=1) so builds fit small free-tier instances.
+    # Default behaviour is unchanged when the variable is absent.
+    if os.environ.get("MEDBRIDGE_DEMO_ONLY") == "1":
+        demo = hospitals[hospitals["is_demo"] == 1].copy()
+        print(f"[deploy profile] MEDBRIDGE_DEMO_ONLY: {len(hospitals)} -> {len(demo)} hospitals")
+        hospitals = demo
     # Keep the reference CSVs and demo credentials synchronized with the
     # Python builders, which are the actual source of truth.
     hospitals.to_csv(OUT_RAW / "hospitals.csv", index=False)

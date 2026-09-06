@@ -1,0 +1,92 @@
+# MedBridge — Render Blueprint (zero-cost deployment)
+#
+# Deploy: push this repo to GitHub → Render dashboard → "New → Blueprint"
+# → select the repo. Render reads this file automatically.
+#
+# Services (free plan):
+#   medbridge-ml       FastAPI + XGBoost (build regenerates data + trains the model)
+#   medbridge-api      Node/Express + Prisma API (build migrates + seeds the DB)
+#
+# Database: use a free PostgreSQL (Neon recommended — see docs/DEPLOYMENT_GUIDE.md).
+# Set these "sync" env vars when prompted by the Blueprint:
+#   DATABASE_URL   e.g. postgresql://user:pass@ep-xxx.region.aws.neon.tech/medbridge?sslmode=require
+#   JWT_SECRET     run:  openssl rand -hex 32
+#   CLIENT_ORIGIN  your Vercel frontend URL, e.g. https://medbridge.vercel.app
+#
+# The deploy profile below (demo-only hospitals, ~16 months of history) keeps
+# the build inside Render free tier limits (~512 MB RAM). It is generated
+# deterministically, so the ML service and the backend seed see identical data.
+
+services:
+  # ------------------------------------------------------------------ ML service
+  - type: web
+    name: medbridge-ml
+    runtime: python
+    rootDir: apps/ml-service
+    plan: free
+    buildCommand: |
+      python3 -m pip install -r requirements.txt
+      MEDBRIDGE_START_DATE=2025-03-01 MEDBRIDGE_END_DATE=2026-06-30 MEDBRIDGE_DEMO_ONLY=1 \
+        python3 training/generate_ledger_data.py
+      MEDBRIDGE_START_DATE=2025-03-01 MEDBRIDGE_END_DATE=2026-06-30 MEDBRIDGE_DEMO_ONLY=1 \
+        python3 training/train_xgb.py
+    startCommand: uvicorn app.api.server:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: MEDBRIDGE_START_DATE
+        value: "2025-03-01"
+      - key: MEDBRIDGE_END_DATE
+        value: "2026-06-30"
+      - key: MEDBRIDGE_DEMO_ONLY
+        value: "1"
+
+  # ------------------------------------------------------------------ Backend API
+  - type: web
+    name: medbridge-api
+    runtime: node
+    rootDir: apps/backend
+    plan: free
+    buildCommand: |
+      # 1) Generate the same ML CSVs the seed reads (needs only numpy+pandas;
+      #    generation is deterministic so API & ML see identical data)
+      python3 -m pip install --quiet --user numpy pandas
+      cd ../ml-service
+      MEDBRIDGE_START_DATE=2025-03-01 MEDBRIDGE_END_DATE=2026-06-30 MEDBRIDGE_DEMO_ONLY=1 \
+        python3 training/generate_ledger_data.py
+      cd ../backend
+      # 2) Install + apply DB migrations
+      npm install
+      npx prisma migrate deploy
+    preDeployCommand: node prisma/seed.js
+    startCommand: node src/index.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: NODE_ENV
+        value: "production"
+      - key: DATABASE_URL
+        sync: false # you supply the Neon (or other) PostgreSQL URL
+      - key: JWT_SECRET
+        sync: false # openssl rand -hex 32
+      - key: CLIENT_ORIGIN
+        sync: false # e.g. https://medbridge.vercel.app (exact origin, no trailing slash)
+      - key: ML_SERVICE_URL
+        fromService:
+          type: web
+          name: medbridge-ml
+          envVarKey: RENDER_EXTERNAL_URL
+      # Optional AI assistant credential — set to "groq" + a free GROQ_API_KEY,
+      # or keep "mock" for the built-in no-API-key assistant.
+      - key: LLM_PROVIDER
+        value: "mock"
+      # Optional AdminJS panel (/admin) — credentials are auto-generated and
+      # visible in the Render environment settings.
+      - key: ADMIN_EMAIL
+        value: "admin@medbridge.local"
+      - key: ADMIN_PASSWORD
+        generateValue: true
+      - key: ADMIN_SESSION_SECRET
+        generateValue: true
