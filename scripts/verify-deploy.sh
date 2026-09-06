@@ -76,10 +76,28 @@ echo "[6/6] Frontend"
 if [ -n "$FRONT_URL" ]; then
   T=$(curl -fsS --max-time 90 "$FRONT_URL/" 2>/dev/null | grep -o "<title>[^<]*</title>" | head -1) || T=""
   [ -n "$T" ] && ok "SPA served ($T)" || bad "frontend not reachable"
+
+  # Two supported topologies:
+  #  A) same-origin proxy (local Vite dev / Docker nginx): login via FRONT_URL/api
+  #  B) cross-origin (Vercel SPA → Render API): browser-simulated login from
+  #     the FRONT_URL origin directly to API_URL
   P=$(curl -fsS --max-time 60 -X POST "$FRONT_URL/api/auth/login" \
     -H "Content-Type: application/json" \
     -d "{\"email\":\"$LOGIN_EMAIL\",\"password\":\"$LOGIN_PASSWORD\"}" 2>/dev/null | jqget "d.get('token','')") || P=""
-  [ -n "$P" ] && ok "frontend → API proxy works (login via SPA origin)" || bad "proxy login failed — is VITE_API_URL set & CLIENT_ORIGIN correct?"
+  if [ -n "$P" ]; then
+    ok "frontend → API proxy works (login via SPA origin)"
+  else
+    C=$(curl -fsS --max-time 60 -D /tmp/verify_headers.txt -X POST "$API_URL/api/auth/login" \
+      -H "Content-Type: application/json" \
+      -H "Origin: $FRONT_URL" \
+      -d "{\"email\":\"$LOGIN_EMAIL\",\"password\":\"$LOGIN_PASSWORD\"}" 2>/dev/null | jqget "d.get('token','')") || C=""
+    CORSOK=$(grep -i "access-control-allow-origin: $FRONT_URL" /tmp/verify_headers.txt >/dev/null 2>&1 && echo yes || echo no)
+    if [ -n "$C" ]; then
+      ok "cross-origin login works (Vercel SPA → Render API, CORS $CORSOK)"
+    else
+      bad "login failed both via proxy and cross-origin — check VITE_API_URL & CLIENT_ORIGIN"
+    fi
+  fi
 else
   echo "  - skipped (set FRONT_URL to check the SPA + proxy)"
 fi
