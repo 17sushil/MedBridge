@@ -9,10 +9,9 @@
 #
 # Database: use a free PostgreSQL (Neon recommended — see docs/DEPLOYMENT_GUIDE.md).
 # Set these "sync" env vars when prompted by the Blueprint:
-#   DATABASE_URL         e.g. postgresql://user:pass@ep-xxx.region.aws.neon.tech/medbridge?sslmode=require
-#   JWT_SECRET           run:  openssl rand -hex 32
-#   CLIENT_ORIGIN        your Vercel frontend URL, e.g. https://medbridge.vercel.app
-#   OPENROUTER_API_KEY   optional — real AI answers (sk-or-v1-...); omit to use mock
+#   DATABASE_URL   e.g. postgresql://user:pass@ep-xxx.region.aws.neon.tech/medbridge?sslmode=require
+#   JWT_SECRET     run:  openssl rand -hex 32
+#   CLIENT_ORIGIN  your Vercel frontend URL, e.g. https://medbridge.vercel.app
 #
 # The deploy profile below (demo-only hospitals, ~16 months of history) keeps
 # the build inside Render free tier limits (~512 MB RAM). It is generated
@@ -60,10 +59,7 @@ services:
       # 2) Install + apply DB migrations
       npm install
       npx prisma migrate deploy
-      # 3) Seed the 8 demo hospitals on an EMPTY database only (free-tier
-      #    services have no preDeploy, so seed runs inside the build; the
-      #    guard keeps redeploys from wiping registered accounts)
-      node -e "const{PrismaClient}=require('@prisma/client');const p=new PrismaClient();p.hospital.count().then(n=>{console.log(n?('seed skipped ('+n+' hospitals already present)'):'empty DB — seeding');process.exit(n?0:1)}).catch(e=>{console.error(e.message);process.exit(1)}).finally(()=>p.\$disconnect())" || node prisma/seed.js
+    preDeployCommand: node prisma/seed.js
     startCommand: node src/index.js
     healthCheckPath: /health
     envVars:
@@ -82,21 +78,10 @@ services:
           type: web
           name: medbridge-ml
           envVarKey: RENDER_EXTERNAL_URL
-      # AI assistant — real answers via OpenRouter (use your key; set in the
-      # dashboard when Blueprint asks for sync vars). Switch providers by
-      # changing LLM_PROVIDER (openai/gemini/claude/groq/deepseek/mock).
+      # Optional AI assistant credential — set to "groq" + a free GROQ_API_KEY,
+      # or keep "mock" for the built-in no-API-key assistant.
       - key: LLM_PROVIDER
-        value: "openrouter"
-      - key: OPENROUTER_API_KEY
-        sync: false # sk-or-v1-... from openrouter.ai/keys
-      - key: OPENROUTER_MODEL
-        value: "openai/gpt-4o-mini"
-      - key: LLM_TEMPERATURE
-        value: "0.4"
-      - key: LLM_MAX_TOKENS
-        value: "1200"
-      - key: MOCK_LLM_ENABLED
-        value: "true"
+        value: "mock"
       # Optional AdminJS panel (/admin) — credentials are auto-generated and
       # visible in the Render environment settings.
       - key: ADMIN_EMAIL
