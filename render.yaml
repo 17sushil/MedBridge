@@ -60,7 +60,10 @@ services:
       # 2) Install + apply DB migrations
       npm install
       npx prisma migrate deploy
-    preDeployCommand: node prisma/seed.js
+      # 3) Seed the 8 demo hospitals on an EMPTY database only (free-tier
+      #    services have no preDeploy, so seed runs inside the build; the
+      #    guard keeps redeploys from wiping registered accounts)
+      node -e "const{PrismaClient}=require('@prisma/client');const p=new PrismaClient();p.hospital.count().then(n=>{console.log(n?('seed skipped ('+n+' hospitals already present)'):'empty DB — seeding');process.exit(n?0:1)}).catch(e=>{console.error(e.message);process.exit(1)}).finally(()=>p.\$disconnect())" || node prisma/seed.js
     startCommand: node src/index.js
     healthCheckPath: /health
     envVars:
