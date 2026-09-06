@@ -13,6 +13,13 @@ import {
   Loader2,
   Database,
   Shield,
+  Lightbulb,
+  Pill,
+  ShieldAlert,
+  Tag,
+  CalendarClock,
+  PackageCheck,
+  Building2,
 } from "lucide-react";
 import PageHeader from "../components/ui/PageHeader";
 import Card from "../components/ui/Card";
@@ -20,13 +27,23 @@ import Button from "../components/ui/Button";
 import { useAIChat } from "../context/AIChatContext";
 import "./AIAssistant.css";
 
-const SAMPLE_PROMPTS = [
-  "What does Paracetamol do?",
-  "How much does Paracetamol cost?",
-  "Show medicines expiring this month",
-  "Do we have Insulin available?",
-  "What are side effects of Ibuprofen?",
-  "Which hospital has Ceftriaxone?",
+const PROMPT_GROUPS = [
+  {
+    label: "Medicine knowledge",
+    items: [
+      { icon: Pill, text: "What does Paracetamol do?" },
+      { icon: ShieldAlert, text: "What are side effects of Ibuprofen?" },
+    ],
+  },
+  {
+    label: "Inventory & pricing",
+    items: [
+      { icon: Tag, text: "How much does Paracetamol cost?" },
+      { icon: CalendarClock, text: "Show medicines expiring this month" },
+      { icon: PackageCheck, text: "Do we have Insulin available?" },
+      { icon: Building2, text: "Which hospital has Ceftriaxone?" },
+    ],
+  },
 ];
 
 function SimpleMarkdown({ text }) {
@@ -80,10 +97,16 @@ export default function AIAssistant() {
   } = useAIChat();
 
   const [copiedId, setCopiedId] = useState(null);
+  const [sideOpen, setSideOpen] = useState(false);
   const endRef = useRef(null);
+  const msgsRef = useRef(null);
 
+  // Scroll only the messages container. scrollIntoView() would also scroll
+  // overflow:hidden ancestors (the card), which clipped the head/footer on
+  // small screens where the content is taller than the card.
   useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth" });
+    const box = msgsRef.current;
+    if (box) box.scrollTo({ top: box.scrollHeight, behavior: "smooth" });
   }, [messages, loading]);
 
   const handleCopy = async (id, text) => {
@@ -108,7 +131,30 @@ export default function AIAssistant() {
         }
       />
 
-      <Card className="ai-chat-card ai-chat-card-full">
+      <Card className={clsx("ai-chat-card ai-chat-card-full", sideOpen && "ai-side-open")}>
+        <aside className="ai-side">
+          <div className="ai-side-title"><Lightbulb size={14} /> Suggested questions</div>
+          {PROMPT_GROUPS.map((g) => (
+            <div className="ai-side-group" key={g.label}>
+              <div className="ai-side-group-label">{g.label}</div>
+              <div className="ai-side-list">
+                {g.items.map(({ icon: Icon, text }) => (
+                  <button
+                    key={text}
+                    className="ai-side-item"
+                    disabled={loading}
+                    onClick={() => { sendMessage(text); setSideOpen(false); }}
+                  >
+                    <Icon size={14} className="ai-side-item-icon" />
+                    <span>{text}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+          <p className="ai-side-note">Answers use your live inventory when relevant.</p>
+        </aside>
+        <div className="ai-main">
         <div className="ai-chat-head">
           <div className="ai-chat-head-icon"><Sparkles size={16} color="#8DD3CA" /></div>
           <div style={{ flex: 1 }}>
@@ -124,10 +170,17 @@ export default function AIAssistant() {
               )}
             </div>
           </div>
-          {conversationId && <span style={{ fontSize: 10, color: "var(--ink-faint)" }}>{conversationId.slice(0, 8)}…</span>}
+          <button
+            type="button"
+            className="ai-side-toggle"
+            onClick={() => setSideOpen((v) => !v)}
+          >
+            <Lightbulb size={12} /> {sideOpen ? "Hide tips" : "Tips"}
+          </button>
+          {conversationId && <span className="ai-chat-conv-id" style={{ fontSize: 10, color: "var(--ink-faint)" }}>{conversationId.slice(0, 8)}…</span>}
         </div>
 
-        <div className="ai-chat-messages">
+        <div className="ai-chat-messages" ref={msgsRef}>
           {messages.map((m) => (
             <div key={m.id} className={clsx("ai-chat-row", m.role === "user" ? "ai-chat-row-user" : "ai-chat-row-assistant")}>
               <div className="ai-chat-avatar">{m.role === "user" ? <User size={14} /> : <Bot size={14} />}</div>
@@ -165,17 +218,13 @@ export default function AIAssistant() {
         </div>
 
         <div className="ai-chat-footer">
-          <div className="ai-chat-prompts">
-            {SAMPLE_PROMPTS.map((p) => (
-              <button key={p} onClick={() => sendMessage(p)} className="ai-chat-prompt-btn" disabled={loading}>{p}</button>
-            ))}
-          </div>
           <form onSubmit={(e) => { e.preventDefault(); sendMessage(); }} className="ai-chat-form">
             <input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Ask about cost, expiry, medicines..." className="ai-chat-input" disabled={loading} />
             <button type="submit" className="ai-chat-send-btn" disabled={loading || !input.trim()}>
               {loading ? <Loader2 size={16} className="spin" /> : <Send size={16} />}
             </button>
           </form>
+        </div>
         </div>
       </Card>
     </div>
