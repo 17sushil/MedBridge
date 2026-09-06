@@ -245,6 +245,81 @@ I'm the **MedBridge assistant** — I work with medicine information and this ho
     };
   }
 
+  // --- Focused medical answers (offline mode) ---------------------------
+  // "What does Paracetamol do?" must answer ONLY that. The old mock dumped a
+  // terminology wall; now each drug has a small knowledge sheet and we return
+  // just the paragraph that matches the question's intent.
+
+  detectDrug(q) {
+    if (q.includes("paracetamol") || q.includes("acetaminophen")) return "paracetamol";
+    if (q.includes("ibuprofen")) return "ibuprofen";
+    if (q.includes("insulin")) return "insulin";
+    if (q.includes("amoxicillin") || q.includes("amoxycillin")) return "amoxicillin";
+    if (q.includes("ceftriaxone")) return "ceftriaxone";
+    return null;
+  }
+
+  detectMedicalIntent(q) {
+    if (/what (does|do) .+ do\b/.test(q) || q.includes("what does it do") || q.includes("how does it work") || q.includes("used for") || q.includes("uses of") || q.includes("indication")) return "does";
+    if (q.includes("side effect") || q.includes("adverse") || q.includes("allergic reaction")) return "sideEffects";
+    if (q.includes("together") || q.includes("interaction") || q.includes("combine") || q.includes("at the same time")) return "interaction";
+    if (/^(tell me about|about)\b/.test(q) || q.includes("explain")) return "overview";
+    return null;
+  }
+
+  drugKnowledgeBase() {
+    return {
+      paracetamol: {
+        title: "Paracetamol (Acetaminophen)",
+        does: "Reduces fever and relieves mild-to-moderate pain (headache, toothache, muscle ache, cold symptoms) by blocking prostaglandin production in the brain. It is gentle on the stomach, but overdose causes serious liver damage — never exceed the label dose.",
+        sideEffects: "Rare at normal doses (occasional nausea or rash). The real danger is overdose: too much causes severe liver damage, so keep within the daily limit and watch for combination products that also contain paracetamol.",
+        interaction: "Few interactions at normal doses. It can be taken with ibuprofen — they work differently — but never with other paracetamol-containing products. Regular heavy alcohol use or long-term warfarin use raises the risk; check with a pharmacist.",
+      },
+      ibuprofen: {
+        title: "Ibuprofen",
+        does: "An NSAID that reduces pain, fever and inflammation (muscle/joint pain, dental pain, period pain) by blocking COX enzymes at the site of inflammation. Take it with food to reduce stomach upset.",
+        sideEffects: "Common: stomach upset, heartburn. With regular or high doses: stomach ulcer or bleeding, raised blood pressure, kidney injury. Avoid in active ulcer, severe kidney disease and late pregnancy.",
+        interaction: "Do not combine with other NSAIDs or steroids (ulcer/bleeding risk). It can blunt blood-pressure medicines and adds bleeding risk with anticoagulants like warfarin. It can be taken with paracetamol, which works differently.",
+      },
+      insulin: {
+        title: "Insulin",
+        does: "Lowers blood glucose by letting cells take up sugar from the blood — essential in type 1 diabetes and used in advanced type 2 diabetes. Types range from rapid-acting to long-acting; dosing is individualised by a clinician.",
+        sideEffects: "The main risk is hypoglycaemia — shakiness, sweating, confusion — treated with fast-acting sugar. Injection-site reactions and weight gain can also occur.",
+        interaction: "Risk of low blood sugar rises with alcohol and with other glucose-lowering medicines. Dose changes must be made by the treating clinician.",
+      },
+      amoxicillin: {
+        title: "Amoxicillin",
+        does: "A penicillin-type antibiotic for chest, ear, throat, urinary and dental infections. It kills bacteria by blocking cell-wall construction. It does nothing against viral colds or flu.",
+        sideEffects: "Common: nausea, diarrhoea, rash. Stop and seek care for allergy signs — wheezing, facial swelling, severe rash. Prolonged use can cause thrush.",
+        interaction: "Allopurinol raises the chance of rash; it can interact with methotrexate. Complete the full course as prescribed.",
+      },
+      ceftriaxone: {
+        title: "Ceftriaxone",
+        does: "An injectable third-generation cephalosporin antibiotic for serious infections — pneumonia, sepsis, meningitis, gonorrhoea. Given IM/IV, usually once daily, covering a broad range of bacteria.",
+        sideEffects: "Diarrhoea, rash, injection-site pain; rarely biliary sludging or serious allergic reaction, including in some penicillin-allergic patients.",
+        interaction: "Must not be mixed with calcium-containing IV solutions. Caution with anticoagulants (can raise bleeding risk).",
+      },
+    };
+  }
+
+  focusedMedicalResponse(drug, intent, q) {
+    const sheet = this.drugKnowledgeBase()[drug];
+    let title = sheet.title;
+    if (intent === "interaction" && q.includes("paracetamol") && q.includes("ibuprofen")) {
+      title = "Paracetamol + Ibuprofen";
+    }
+    let body;
+    if (intent === "does") body = sheet.does;
+    else if (intent === "sideEffects") body = sheet.sideEffects;
+    else if (intent === "interaction") body = sheet.interaction;
+    else body = sheet.does + " **Main risks:** " + sheet.sideEffects;
+    return `**${title}**\n\n${body}\n\n*General information only — not medical advice.*`;
+  }
+
+  unknownDrugResponse() {
+    return `I don't have a built-in information sheet for that medicine in offline (mock) mode.\n\n**Options:**\n- Connect an LLM key (OpenRouter/Gemini) in the backend \`.env\` for full medical answers\n- Check the medicine's package leaflet or ask your pharmacist\n- Try stock/pricing instead: "Do we have [medicine]?" or "How much does [medicine] cost?"\n\n*General information only — not medical advice.*`;
+  }
+
   async chat({ systemPrompt, messages }, options = {}) {
     const lastUser = [...messages].reverse().find(m => m.role === "user");
     const query = (lastUser?.content || "");
@@ -369,45 +444,29 @@ Try asking for a specific medicine now!`;
       };
     }
 
-    if (isParacetamol) {
-      content = `**Paracetamol (Acetaminophen)** — *Generic name:* Paracetamol, *Brand examples:* Tylenol, *Category:* Analgesic/Antipyretic, *Form:* Tablet 500mg, Syrup, Injection
+    // Focused medical answers: match drug + intent, answer only that.
+    // Inventory-intent questions ("do we have paracetamol") carry no medical
+    // intent, so they fall through to the inventory branch below.
+    const drug = this.detectDrug(q);
+    const medIntent = this.detectMedicalIntent(q);
+    if (drug && medIntent) {
+      content = this.focusedMedicalResponse(drug, medIntent, q);
+      return {
+        content,
+        tokens: { prompt: 0, completion: content.length / 4, total: content.length / 4 },
+        model: this.model,
+      };
+    }
+    if (medIntent) {
+      content = this.unknownDrugResponse();
+      return {
+        content,
+        tokens: { prompt: 0, completion: content.length / 4, total: content.length / 4 },
+        model: this.model,
+      };
+    }
 
-**What it does (Indications):**
-- Reduces fever (antipyretic) by acting on hypothalamus
-- Relieves mild-moderate pain (analgesic): headache, toothache, muscle ache, cold symptoms
-
-**Terminology:**
-- *Dosage form* = tablet/capsule/syrup
-- *Strength* = e.g., 500mg per tablet
-- *Indication* = reason to use
-- *Contraindication* = reason NOT to use
-- *Side effect* = unwanted effect
-
-**Important safety:**
-- Follow label dosage; adult max often 4g/day but lower if liver disease/alcohol use
-- **Overdose → liver damage (hepatotoxicity)** — emergency
-- Contraindicated: severe liver disease (consult clinician)
-
-**Side effects (Adverse reactions):** Rare at normal dose: nausea, rash; overdose: liver failure
-**Storage:** Below 30°C, dry place, check expiry (batch expiry date in inventory)
-**Cost:** Ask "How much does Paracetamol cost?" — I will show live unitPrice from your inventory with batch details.
-
-*General info, not medical advice.*`;
-
-      if (q.includes("ibuprofen") || (messages.length > 2 && messages[messages.length-3]?.content?.toLowerCase()?.includes("ibuprofen"))) {
-        content += `\n\n**Paracetamol + Ibuprofen interaction:** Different mechanisms (Paracetamol central, Ibuprofen NSAID peripheral). Sometimes alternated for fever per clinician advice, but check contraindications: NSAIDs ↑ risk of stomach ulcer, kidney injury, bleeding, especially with anticoagulants. Ask pharmacist/doctor.`;
-      }
-    } else if (isIbuprofen) {
-      content = `**Ibuprofen** — *Generic:* Ibuprofen, *Brand:* Advil, *Category:* NSAID, *Form:* 200mg/400mg tablet
-
-**Uses:** Pain, fever, inflammation
-**Terminology:** *NSAID* = Non-Steroidal Anti-Inflammatory Drug, *Contraindication* = ulcer, severe kidney disease
-**Side effects:** Stomach upset, ulcer/bleed risk, raised BP, kidney injury with long use
-**Storage:** <30°C, check batch expiry
-**Cost:** Ask "Ibuprofen price" for live pricing.
-
-*Not personal advice.*`;
-    } else if (q.includes("hypertension") || q.includes("high blood pressure")) {
+    if (q.includes("hypertension") || q.includes("high blood pressure")) {
       content = `**Hypertension** = persistently high BP (often ≥130/80 mmHg). Terminology: Systolic/Diastolic, mmHg, essential vs secondary. Why matters: ↑ risk heart disease, stroke. Management: DASH diet low salt, exercise, weight, limit alcohol. Emergency: chest pain/severe headache → emergency services. *Educational only.*`;
     } else if (q.includes("diabetes")) {
       content = `**Diabetes** — hyperglycemia. Terminology: Type 1 autoimmune insulin deficiency, Type 2 insulin resistance, HbA1c, fasting glucose. Symptoms: Polyuria, polydipsia, polyphagia. Management: diet, exercise, monitoring. *Consult clinician.*`;
