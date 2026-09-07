@@ -17,18 +17,23 @@ import { canManageInventory } from "../utils/permissions";
 import { parseSpreadsheet, checkHeaders, normalizeRows, REQUIRED_HEADERS, downloadTemplate } from "../utils/excelImport";
 import "./Inventory.css";
 
-const FILTERS = ["All", "In Stock", "Low Stock", "Critical"];
+const FILTERS = ["All", "In Stock", "Low Stock", "Critical", "Expired"];
 
 export default function Inventory() {
   const { user } = useAuth();
   const canWrite = canManageInventory(user?.roleKey);
 
   const [medicines, setMedicines] = useState(null);
-  const [filter, setFilter] = useState("All");
   const [modal, setModal] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get("search") || "";
+  // Deep-linkable status filter: /inventory?status=Expired (used by the
+  // dashboard "Expired" panel's View all link).
+  const initialStatus = searchParams.get("status");
+  const [filter, setFilter] = useState(
+    FILTERS.includes(initialStatus) ? initialStatus : "All"
+  );
 
   const [importing, setImporting] = useState(false);
   const [importResult, setImportResult] = useState(null); // { imported, failed, errors }
@@ -44,8 +49,13 @@ export default function Inventory() {
     queueMicrotask(loadMedicines);
   }, [loadMedicines]);
 
+  // "Expired" is derived from the expiry date — the backend never stores it
+  // as a status.
+  const isExpiredMed = (m) => new Date(m.expiry).getTime() < Date.now();
+
   const filtered = useMemo(() => {
     if (!medicines) return [];
+    if (filter === "Expired") return medicines.filter(isExpiredMed);
     return medicines.filter((m) => filter === "All" || m.status === filter);
   }, [medicines, filter]);
 
@@ -184,7 +194,13 @@ export default function Inventory() {
             {FILTERS.map((f) => (
               <button
                 key={f}
-                onClick={() => setFilter(f)}
+                onClick={() => {
+                  setFilter(f);
+                  const next = new URLSearchParams(searchParams);
+                  if (f === "All") next.delete("status");
+                  else next.set("status", f);
+                  setSearchParams(next, { replace: true });
+                }}
                 className={clsx("inv-filter-btn", filter === f && "inv-filter-btn-active")}
               >
                 {f}
@@ -236,7 +252,7 @@ export default function Inventory() {
               <tbody>
                 {filtered.map((m) => (
                   <tr key={m.id}>
-                    <td>
+                    <td data-label="Medicine">
                       <div className="inv-med-cell">
                         <div className="inv-med-icon">
                           <Pill size={16} />
@@ -244,19 +260,19 @@ export default function Inventory() {
                         <span className="inv-med-name">{m.name}</span>
                       </div>
                     </td>
-                    <td className="inv-batch-cell">{m.batch}</td>
-                    <td>
+                    <td className="inv-batch-cell" data-label="Batch">{m.batch}</td>
+                    <td data-label="Category">
                       <Badge tone="navy">{m.category}</Badge>
                     </td>
-                    <td className="inv-mono-cell">
+                    <td className="inv-mono-cell" data-label="Quantity">
                       {m.quantity} {m.unit}
                     </td>
-                    <td className="inv-muted-cell">{formatDate(m.expiry)}</td>
-                    <td>
+                    <td className="inv-muted-cell" data-label="Expiry Date">{formatDate(m.expiry)}</td>
+                    <td data-label="Status">
                       <Badge tone={statusTone(m.status)}>{m.status}</Badge>
                     </td>
                     {canWrite && (
-                      <td>
+                      <td data-label="" className="inv-actions-cell">
                         <div className="inv-row-actions">
                           <button
                             type="button"

@@ -95,7 +95,7 @@ export default function JoinHospital() {
           <label className="auth-field">
             <span className="auth-label">Hospital</span>
             <select
-              className="auth-select"
+              className="auth-select auth-select-hospital"
               value={form.hospitalId}
               onChange={update("hospitalId")}
               required

@@ -19,7 +19,7 @@ import ErrorState from "../components/ui/ErrorState";
 import InventoryTrendChart from "../components/charts/InventoryTrendChart";
 import CategoryDonutChart from "../components/charts/CategoryDonutChart";
 import AIInsightPanel from "../components/ai/AIInsightPanel";
-import { formatCurrency, formatNumber, formatDate } from "../utils/format";
+import { formatCurrency, formatNepaliCurrency, formatNumber, formatDate } from "../utils/format";
 import { statusTone } from "../utils/expiry";
 import "./Dashboard.css";
 
@@ -100,7 +100,7 @@ export default function Dashboard() {
             />
             <StatCard
               label="Total Value"
-              value={formatCurrency(stats.totalValue.value)}
+              value={formatNepaliCurrency(stats.totalValue.value)}
               icon={DollarSign}
               iconTone="teal"
               delta={stats.totalValue.delta}
@@ -180,7 +180,7 @@ export default function Dashboard() {
         <Card className="dash-panel">
           <div className="dash-panel-head">
             <h3 className="dash-panel-title">Expired</h3>
-            <Link to="/inventory" className="dash-panel-link">
+            <Link to="/inventory?status=Expired" className="dash-panel-link">
               View all
             </Link>
           </div>
