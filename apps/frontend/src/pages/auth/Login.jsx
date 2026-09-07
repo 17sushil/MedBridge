@@ -71,11 +71,6 @@ export default function Login() {
             {submitting ? "Signing in…" : "Sign in"}
           </Button>
         </form>
-
-        <div className="auth-demo-hint">
-          Demo account: <code>sarah.johnson@cityhospital.org</code> / <code>password123</code>
-        </div>
-
         <p className="auth-footer">
           New hospital?{" "}
           <Link to="/register" className="auth-link">
