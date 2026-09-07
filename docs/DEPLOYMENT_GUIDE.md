@@ -110,8 +110,10 @@ git add -A && git commit -m "deploy: zero-cost hosting configs (Render+Vercel+Ne
      this later, then Render restarts the API automatically)
 6. **Create Resources** → builds start (~3 min each):
    - `medbridge-api`: installs Node deps → **generates the same ML dataset**
-     → `prisma migrate deploy` → `preDeployCommand` **seeds the 8 demo
-     hospitals** → serves Express. Requires that the Python generation
+     → `prisma migrate deploy` → **seeds the 8 demo hospitals** (only when the
+     database is empty, so redeploys never wipe registered accounts) →
+     serves Express. Free-tier services have no `preDeployCommand`, so the
+     seed runs inside the build instead. Requires that the Python generation
      succeeds (it needs only numpy+pandas; we trimmed it to keep builds fast).
    - `medbridge-ml`: installs Python deps → **generates the dataset and
      trains XGBoost during the build** (deploy profile ≈ 250 MB peak RAM,
@@ -212,7 +214,7 @@ Render's `CLIENT_ORIGIN` to match.
 |---|---|
 | **Deploy new code** | `git push` → Vercel auto-deploys frontend; Render auto-deploys both services. |
 | **Retrain the model** | Render → `medbridge-ml` → **Manual Deploy → Clear build cache & deploy**. Build regenerates data + retrains. (For real data first: run `bash apps/retrain.sh` locally after adding transactions, then deploy.) |
-| **Reset demo data** | Render → `medbridge-api` → **Manual Deploy** (seed runs at preDeploy). |
+| **Reset demo data** | Delete all rows (e.g. in Neon SQL editor: `DROP SCHEMA public CASCADE; CREATE SCHEMA public;` or just wipe the `Hospital` rows), then `medbridge-api` → **Manual Deploy** — the build re-migrates and re-seeds. |
 | **Rotate JWT_SECRET** | Edit in Render env → Save. All users re-login. |
 | **Disable /admin** | Delete `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `ADMIN_SESSION_SECRET` env vars. |
 | **Upgrade dataset locally** | `FULL=1 bash scripts/bootstrap-local.sh` (full 41-hospital, 3.5-year dataset). |

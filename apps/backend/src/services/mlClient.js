@@ -5,13 +5,34 @@
  * Override with ML_SERVICE_URL in .env
  */
 
-const DEFAULT_TIMEOUT_MS = 30000;
+const DEFAULT_TIMEOUT_MS = 120000;
+const RETRY_DELAY_MS = 5000;
+const MAX_RETRIES = 2;
 
 function baseUrl() {
   return (process.env.ML_SERVICE_URL || "http://localhost:8000").replace(/\/$/, "");
 }
 
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 async function mlFetch(path, { method = "GET", query, body, timeoutMs = DEFAULT_TIMEOUT_MS } = {}) {
+  let lastError = null;
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    if (attempt > 0) await sleep(RETRY_DELAY_MS * attempt);
+    try {
+      return await mlFetchOnce(path, { method, query, body, timeoutMs });
+    } catch (e) {
+      // Retry only transient failures: cold start (502/503/504/timeout/net).
+      const transient =
+        e.status === 502 || e.status === 503 || e.status === 504 || e.status === 0;
+      if (!transient) throw e;
+      lastError = e;
+    }
+  }
+  throw lastError;
+}
+
+async function mlFetchOnce(path, { method = "GET", query, body, timeoutMs = DEFAULT_TIMEOUT_MS }) {
   const url = new URL(path.startsWith("http") ? path : `${baseUrl()}${path}`);
   if (query && typeof query === "object") {
     for (const [k, v] of Object.entries(query)) {
