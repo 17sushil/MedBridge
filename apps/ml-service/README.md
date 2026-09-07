@@ -58,8 +58,10 @@ python3 -m pip install -r requirements.txt
 ## Generate, train, test, serve
 
 ```bash
-python3 training/generate_ledger_data.py
-python3 training/train_xgb.py
+python3 training/generate_ledger_data.py      # weekly ledger + features (41 hospitals)
+python3 training/train_xgb.py                 # weekly model
+python3 training/generate_daily_ledger.py     # day-level ledger (from the weekly ledger)
+python3 training/train_daily_xgb.py           # daily model
 python3 training/evaluate_model.py
 python3 training/analyze_residuals.py    # residual + test-set figures (Fig 1 & 2)
 python3 -m pytest -q
@@ -85,12 +87,42 @@ chronological hold-out split and produce:
   `per_hospital_holdout_r2.csv`, `test_predictions.csv` (predictions are git-ignored; regenerate with
   the script) and `residual_analysis_report.html` (self-contained report with all four figures).
 
+## Daily forecast (day-by-day values)
+
+The product shows demand per calendar day as well as per week. Two extra pipeline
+steps produce the daily model; the weekly model is **not** retrained or changed:
+
+```bash
+python3 training/generate_daily_ledger.py   # day-level ledger, Mon..Sun profiles
+python3 training/train_daily_xgb.py         # daily XGBoost + weekly roll-up metrics
+```
+
+- `generate_daily_ledger.py` splits each week's observed demand onto its seven
+  calendar days with deterministic category-aware weekday profiles (OPD/acute
+  items dip ~35–40% on Sat/Sun; chronic, maternity and blood products stay
+  flat; the dip is deeper at PHCs, shallower at 24/7 teaching/trauma
+  hospitals). The invariant `sum(days in week) == weekly demand` is verified to
+  machine precision, so daily and weekly views can never contradict.
+- `train_daily_xgb.py` trains XGBoost on day-level features (lags 1/2/3/7/14/30
+  days, rolling 7/14/30, EWMs, day-of-week sin/cos, month sin/cos,
+  monsoon/winter flags) with the same leakage discipline and the same
+  chronological split as the weekly model, and also reports the metrics when
+  daily predictions are rolled up to weeks.
+- Serving is a **hybrid anchor**: the daily model shapes the Mon–Sun curve, and
+  each ISO week's daily values are rescaled to sum exactly to the weekly
+  model's total for that week (`daily_anchored_forecast`).
+
+Metrics artefacts: `artifacts/metrics/daily_metrics.json`,
+`artifacts/metrics/daily_training_history.csv`,
+`artifacts/metrics/daily_feature_importance.csv`.
+
 ## Health and API docs
 
 - Health: <http://localhost:8000/health>
 - OpenAPI UI: <http://localhost:8000/docs>
 - Next-week forecast: `GET /forecast?hospital_id=HOSP-BG-001`
 - Forecast chart: `GET /forecast/chart?hospital_id=HOSP-BG-001&months=6`
+- Daily forecast: `GET /forecast/daily?hospital_id=HOSP-BG-001&days=30&top=10`
 - Metrics: `GET /metrics`
 
 ## Current validation result
@@ -101,6 +133,12 @@ The current leakage-audited chronological holdout run reports approximately:
 - test MAE: **31.07 weekly units**
 - test RMSE: **90.00 weekly units**
 - test WAPE: **22.91%**
+
+**Daily model** (same hold-out period, day-level):
+
+- daily test R²: **0.9789**, MAE **0.996 units/day**, WAPE **5.25%**, sMAPE **21.06%**
+- daily predictions rolled up to weeks: R² **0.9952**, MAE **5.26**, WAPE **4.27%**
+- early stopping at boosting round **687** of 700 (validation log-RMSE 0.1191)
 
 The model-selection comparison (notebook 02) shows XGBoost ahead of every alternative family on
 hold-out R² / MAE / WAPE; linear models are catastrophic (negative R²) on this heavy-tailed data.
@@ -126,10 +164,10 @@ Large files and model binaries are intentionally Git-ignored and regenerable:
 ```text
 data/raw/*.csv            (hospitals, medicines, transactions, inventory_state, ...)
 data/raw/*.json           (pending_arrivals)
-data/processed/           (demand_features.csv, by_hospital/)
-artifacts/models/
-artifacts/encoders/
-artifacts/metrics/
+data/processed/           (demand_features.csv, by_hospital/, daily_ledger.csv.gz, daily_by_hospital/)
+artifacts/models/         (xgb_demand_model.joblib, xgb_demand_daily.joblib)
+artifacts/encoders/       (label_encoders.joblib, daily_label_encoders.joblib)
+artifacts/metrics/        (training_metrics.json, daily_metrics.json, ...)
 ```
 
 A fresh clone must regenerate and retrain before the forecast endpoints become healthy.

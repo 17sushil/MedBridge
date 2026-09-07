@@ -6,4 +6,10 @@ const getForecast = asyncHandler(async (req, res) => {
   res.json(data);
 });
 
-module.exports = { getForecast };
+const getDailyForecast = asyncHandler(async (req, res) => {
+  const days = Math.min(Math.max(parseInt(req.query.days, 10) || 30, 1), 90);
+  const data = await service.getDailyForecast(req.user.hospitalId, days);
+  res.json(data);
+});
+
+module.exports = { getForecast, getDailyForecast };

@@ -31,6 +31,10 @@ services:
         python3 training/generate_ledger_data.py
       MEDBRIDGE_START_DATE=2025-03-01 MEDBRIDGE_END_DATE=2026-06-30 MEDBRIDGE_DEMO_ONLY=1 \
         python3 training/train_xgb.py
+      MEDBRIDGE_START_DATE=2025-03-01 MEDBRIDGE_END_DATE=2026-06-30 MEDBRIDGE_DEMO_ONLY=1 \
+        python3 training/generate_daily_ledger.py
+      MEDBRIDGE_START_DATE=2025-03-01 MEDBRIDGE_END_DATE=2026-06-30 MEDBRIDGE_DEMO_ONLY=1 \
+        python3 training/train_daily_xgb.py
     startCommand: uvicorn app.api.server:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /health
     envVars:

@@ -162,6 +162,10 @@ export const api = {
     return request("/demand-forecast");
   },
 
+  async getDailyDemandForecast(days = 30) {
+    return request(`/demand-forecast/daily?days=${days}`);
+  },
+
   async getReports() {
     const rows = await request("/reports");
     return rows.map(mapReport);

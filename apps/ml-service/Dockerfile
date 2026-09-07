@@ -22,4 +22,6 @@ EXPOSE 8000
 CMD ["sh", "-c", \
      "python training/generate_ledger_data.py && \
       python training/train_xgb.py && \
+      python training/generate_daily_ledger.py && \
+      python training/train_daily_xgb.py && \
       exec uvicorn app.api.server:app --host 0.0.0.0 --port 8000"]

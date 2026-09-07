@@ -100,6 +100,12 @@ async function getForecastDetail(hospitalCode, top = 50) {
   return mlFetch("/forecast", { query: { hospital_id: hospitalCode, top } });
 }
 
+async function getDailyForecast(hospitalCode, days = 30, top = 10) {
+  return mlFetch("/forecast/daily", {
+    query: { hospital_id: hospitalCode, days, top },
+  });
+}
+
 async function getExpiryAlerts(hospitalCode, days = 90, limit = 100) {
   return mlFetch("/expiry", {
     query: { hospital_id: hospitalCode || undefined, days, limit },
@@ -136,6 +142,7 @@ module.exports = {
   health,
   getForecastChart,
   getForecastDetail,
+  getDailyForecast,
   getExpiryAlerts,
   getLowStock,
   getSmartMatches,

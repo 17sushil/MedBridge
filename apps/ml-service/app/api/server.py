@@ -26,7 +26,9 @@ if str(ROOT) not in sys.path:
 from app.services.exchange_services import demo_exchange_plan, suggest_matches
 from app.services.forecast_services import (
     batch_forecast,
+    daily_anchored_forecast,
     load_bundle,
+    load_daily_bundle,
     next_week_forecast,
     recursive_forecast,
 )
@@ -86,6 +88,40 @@ def _load_hospital_features(hospital_id: str) -> pd.DataFrame:
     return all_features[all_features["hospital_id"] == hospital_id].copy()
 
 
+def _load_hospital_daily_features(hospital_id: str) -> pd.DataFrame:
+    """Daily history for one hospital (serving partition, else full table)."""
+    safe_id = "".join(
+        ch for ch in str(hospital_id) if ch.isalnum() or ch in ("-", "_")
+    )
+    partition = PROC / "daily_by_hospital" / f"{safe_id}.csv.gz"
+    if partition.exists() and partition.stat().st_size > 0:
+        frame = pd.read_csv(partition, parse_dates=["date"])
+    else:
+        full = PROC / "daily_ledger.csv.gz"
+        if not full.exists() or full.stat().st_size == 0:
+            raise HTTPException(
+                status_code=503,
+                detail="daily_ledger.csv.gz missing. Run: python3 training/generate_daily_ledger.py",
+            )
+        frame = pd.read_csv(
+            full, parse_dates=["date"],
+            dtype={
+                "hospital_id": "category",
+                "medicine_id": "category",
+                "category": "category",
+                "facility_type": "category",
+            },
+        )
+        frame = frame[frame["hospital_id"] == hospital_id].copy()
+    frame = frame.rename(columns={"demand_units": "target_demand"})
+    # Attach the human-readable name from the reference catalogue (serving only).
+    meds_path = RAW / "medicines.csv"
+    if meds_path.exists():
+        meds = pd.read_csv(meds_path, usecols=["medicine_id", "generic_name"])
+        frame = frame.merge(meds, on="medicine_id", how="left")
+    return frame.sort_values(["hospital_id", "medicine_id", "date"]).reset_index(drop=True)
+
+
 def _require_model() -> None:
     model = ART / "models" / "xgb_demand_model.joblib"
     enc = ART / "encoders" / "label_encoders.joblib"
@@ -98,6 +134,21 @@ def _require_model() -> None:
         raise HTTPException(
             status_code=503,
             detail="Encoders missing. Run: python training/train_xgb.py",
+        )
+
+
+def _require_daily_model() -> None:
+    model = ART / "models" / "xgb_demand_daily.joblib"
+    enc = ART / "encoders" / "daily_label_encoders.joblib"
+    if not model.exists() or model.stat().st_size == 0:
+        raise HTTPException(
+            status_code=503,
+            detail="Daily model missing. Run: python training/train_daily_xgb.py",
+        )
+    if not enc.exists() or enc.stat().st_size == 0:
+        raise HTTPException(
+            status_code=503,
+            detail="Daily encoders missing. Run: python training/train_daily_xgb.py",
         )
 
 
@@ -299,6 +350,127 @@ def forecast_chart(
         "available": True,
         "message": "Leakage-audited one-week model with recursive eight-week forecast",
     }
+
+@app.get("/forecast/daily")
+def forecast_daily(
+    hospital_id: str = Query(...),
+    days: int = Query(30, ge=1, le=90),
+    top: int = Query(10, ge=1, le=100),
+) -> dict[str, Any]:
+    """Hybrid daily demand forecast.
+
+    The daily XGBoost model shapes the day-by-day curve; within each ISO week
+    the curve is rescaled so the daily values sum EXACTLY to the weekly
+    model's forecast for that week (daily and weekly views cannot disagree).
+    """
+    _require_model()
+    _require_daily_model()
+    daily_history = _load_hospital_daily_features(hospital_id)
+    weekly_history = _load_hospital_features(hospital_id)
+    if daily_history.empty:
+        raise HTTPException(status_code=404, detail=f"No daily data for {hospital_id}")
+    if weekly_history.empty:
+        raise HTTPException(status_code=404, detail=f"No weekly data for {hospital_id}")
+
+    try:
+        daily = daily_anchored_forecast(daily_history, weekly_history, days=days)
+    except HTTPException:
+        raise
+    except Exception as error:
+        raise HTTPException(status_code=500, detail=f"Daily prediction failed: {error}") from error
+
+    if daily.empty:
+        raise HTTPException(status_code=500, detail="Daily forecast produced no rows")
+
+    # --- consistency guard: sum(daily in week) == week total ----------------
+    daily["week_start"] = pd.to_datetime(daily["week_start"])
+    sums = daily.groupby(
+        ["hospital_id", "medicine_id", "week_start"], observed=True, sort=False,
+        as_index=False,
+    )["predicted_daily"].sum()
+    sums["week_total"] = daily.groupby(
+        ["hospital_id", "medicine_id", "week_start"], observed=True, sort=False,
+    )["week_total"].first().to_numpy()
+    diff = float((sums["predicted_daily"] - sums["week_total"]).abs().max())
+
+    last_observed = pd.Timestamp(daily_history["date"].max())
+    first_day = pd.Timestamp(daily["date"].min())
+
+    # hospital-wide daily totals for the chart
+    totals = (
+        daily.groupby("date", as_index=False)
+        .agg(predicted_demand=("predicted_daily", "sum"),
+             week_start=("week_start", "first"))
+        .sort_values("date")
+    )
+    totals["weekday"] = totals["date"].dt.strftime("%a")
+
+    # week_total is per pair-week repeated on each day row: dedupe first,
+    # then sum across medicines (hospital-level weekly totals).
+    week_pairs = daily[["hospital_id", "medicine_id", "week_start", "week_total"]].drop_duplicates(
+        ["hospital_id", "medicine_id", "week_start"]
+    )
+    week_summary = (
+        week_pairs.groupby("week_start", as_index=False)["week_total"].sum()
+        .merge(
+            daily.groupby("week_start", as_index=False).agg(
+                days_covered=("date", "nunique"),
+                date_from=("date", "min"),
+                date_to=("date", "max"),
+            ),
+            on="week_start",
+            how="left",
+        )
+        .sort_values("week_start")
+    )
+
+    # per-medicine daily curves (top-N by first full week's forecast)
+    order = (
+        daily[daily["horizon_day"] <= 7]
+        .groupby("medicine_id", as_index=False)["predicted_daily"].sum()
+        .sort_values("predicted_daily", ascending=False)
+        .head(top)["medicine_id"].tolist()
+    )
+    items = []
+    generic = {}
+    medicine_cols = [c for c in daily.columns if c.startswith("generic")]
+    for medicine_id in order:
+        med = daily[daily["medicine_id"] == medicine_id].sort_values("date")
+        medicine_items = _df_records(
+            med[["date", "horizon_day", "predicted_daily", "week_total"]]
+        )
+        meta = med.iloc[0]
+        items.append({
+            "medicine_id": medicine_id,
+            "generic_name": meta.get("generic_name"),
+            "category": meta.get("category"),
+            "week_total": float(med["week_total"].iloc[0]),
+            "daily": medicine_items,
+        })
+        del medicine_items
+
+    bundle = load_daily_bundle()
+    return {
+        "hospital_id": hospital_id,
+        "daily_model": "XGBoostRegressor (daily, log1p-rmse)",
+        "weekly_model": "XGBoostRegressor (weekly, log1p-rmse)",
+        "anchor": "weekly totals with daily allocation (sums match exactly)",
+        "days": days,
+        "last_observed_date": str(last_observed.date()),
+        "first_forecast_date": str(first_day.date()),
+        "consistency_error": round(diff, 6),
+        "weekly_consistency_ok": diff <= 1e-3,
+        "daily_totals": _df_records(totals),
+        "week_summary": _df_records(week_summary),
+        "topMedicines": items,
+        "available": True,
+        "message": "Daily curve shaped by the daily model, anchored to weekly totals",
+        "daily_model_meta": {
+            "best_iteration": bundle.get("best_iteration"),
+            "split": bundle.get("split"),
+        },
+    }
+
 
 @app.get("/expiry")
 def expiry(

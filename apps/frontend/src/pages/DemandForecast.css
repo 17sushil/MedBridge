@@ -65,3 +65,80 @@
   margin-top: 0.375rem;
   flex-shrink: 0;
 }
+
+/* --- Daily / Weekly granularity toggle ---------------------------------- */
+.forecast-toggle {
+  display: inline-flex;
+  gap: 4px;
+  margin-left: auto;
+  background: #F1F4F8;
+  border-radius: 8px;
+  padding: 3px;
+}
+
+.forecast-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  background: transparent;
+  color: #5A6474;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.forecast-toggle-btn:hover {
+  color: #0B7269;
+}
+
+.forecast-toggle-btn--active {
+  background: #ffffff;
+  color: #0B7269;
+  box-shadow: 0 1px 4px rgba(20, 33, 61, 0.12);
+}
+
+/* --- Daily stats row ----------------------------------------------------- */
+.forecast-daily-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.forecast-daily-stat {
+  background: #F7FAFB;
+  border: 1px solid #E4E9EE;
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.forecast-daily-stat-label {
+  font-size: 11px;
+  color: #8A94A3;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.forecast-daily-stat-value {
+  font-size: 15px;
+  font-weight: 700;
+  color: #14213D;
+}
+
+.forecast-fallback-note {
+  margin: 10px 0 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: #FFF7E8;
+  border: 1px solid #F0D9AE;
+  color: #8A5A00;
+  font-size: 12px;
+}
