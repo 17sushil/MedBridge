@@ -61,6 +61,8 @@ export default function Dashboard() {
     error: alertsError,
     reload: reloadAlerts,
   } = useAsyncData(getExpiryAlerts);
+  const expiredAlerts = (alerts || []).filter((a) => a.isExpired);
+  const expiringAlerts = (alerts || []).filter((a) => !a.isExpired);
   const {
     data: activity,
     error: activityError,
@@ -177,6 +179,45 @@ export default function Dashboard() {
       <div className="dash-bottom-grid">
         <Card className="dash-panel">
           <div className="dash-panel-head">
+            <h3 className="dash-panel-title">Expired</h3>
+            <Link to="/inventory" className="dash-panel-link">
+              View all
+            </Link>
+          </div>
+          <div className="dash-alert-list">
+            {alertsError ? (
+              <ErrorState
+                title="Couldn't load expired medicines"
+                description={alertsError.message}
+                onRetry={reloadAlerts}
+              />
+            ) : alerts ? (
+              expiredAlerts.length ? (
+                expiredAlerts.map((a) => (
+                  <div key={a.id} className="dash-alert-row">
+                    <div className="dash-alert-dial dash-alert-dial-expired">
+                      <span className="dash-alert-dial-expired-label">
+                        Expired
+                      </span>
+                    </div>
+                    <div className="dash-alert-info">
+                      <div className="dash-alert-name">{a.medicine}</div>
+                      <div className="dash-alert-exp">Exp. {a.expiry}</div>
+                    </div>
+                    <Badge tone={statusTone(a.severity)}>{a.severity}</Badge>
+                  </div>
+                ))
+              ) : (
+                <div className="dash-empty">No expired medicines. Well done!</div>
+              )
+            ) : (
+              <Skeleton style={{ height: 96, width: "100%" }} />
+            )}
+          </div>
+        </Card>
+
+        <Card className="dash-panel">
+          <div className="dash-panel-head">
             <h3 className="dash-panel-title">Expiry Alerts</h3>
             <Link to="/inventory" className="dash-panel-link">
               View all
@@ -190,31 +231,25 @@ export default function Dashboard() {
                 onRetry={reloadAlerts}
               />
             ) : alerts ? (
-              alerts.map((a) => (
-                <div key={a.id} className="dash-alert-row">
-                  <div
-                    className={`dash-alert-dial${a.isExpired ? " dash-alert-dial-expired" : ""}`}
-                  >
-                    {a.isExpired ? (
-                      <span className="dash-alert-dial-expired-label">
-                        Expired
+              expiringAlerts.length ? (
+                expiringAlerts.map((a) => (
+                  <div key={a.id} className="dash-alert-row">
+                    <div className="dash-alert-dial">
+                      <span className="dash-alert-dial-num">
+                        {a.daysLeft}
                       </span>
-                    ) : (
-                      <>
-                        <span className="dash-alert-dial-num">
-                          {a.daysLeft}
-                        </span>
-                        <span className="dash-alert-dial-label">days</span>
-                      </>
-                    )}
+                      <span className="dash-alert-dial-label">days</span>
+                    </div>
+                    <div className="dash-alert-info">
+                      <div className="dash-alert-name">{a.medicine}</div>
+                      <div className="dash-alert-exp">Exp. {a.expiry}</div>
+                    </div>
+                    <Badge tone={statusTone(a.severity)}>{a.severity}</Badge>
                   </div>
-                  <div className="dash-alert-info">
-                    <div className="dash-alert-name">{a.medicine}</div>
-                    <div className="dash-alert-exp">Exp. {a.expiry}</div>
-                  </div>
-                  <Badge tone={statusTone(a.severity)}>{a.severity}</Badge>
-                </div>
-              ))
+                ))
+              ) : (
+                <div className="dash-empty">No medicines expiring in this window.</div>
+              )
             ) : (
               <Skeleton style={{ height: 96, width: "100%" }} />
             )}
@@ -251,7 +286,9 @@ export default function Dashboard() {
           </div>
         </Card>
 
-        <AIInsightPanel title="Forecast Insight" fetcher={forecastFetcher} />
+        <div className="dash-span-rest">
+          <AIInsightPanel title="Forecast Insight" fetcher={forecastFetcher} />
+        </div>
       </div>
 
       <Card className="dash-table-card">
