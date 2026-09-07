@@ -191,15 +191,65 @@
   flex-shrink: 0;
 }
 
-/* Phone: native select popups inherit the control's font size, so compact
-   the hospital dropdown (and its options where the browser allows) on
-   small screens only. Desktop stays untouched. */
+/* Custom hospital dropdown: unlike a native <select> popup, this list is
+   constrained to the card width and scrolls inside its own frame, so it can
+   never overflow the page on phones. */
+.auth-drop { position: relative; }
+.auth-drop-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  text-align: left;
+  cursor: pointer;
+}
+.auth-drop-btn > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.auth-drop-placeholder { color: var(--ink-faint); }
+.auth-drop-chev { color: var(--ink-faint); flex-shrink: 0; }
+.auth-drop-list {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 0.25rem);
+  left: 0;
+  right: 0;
+  max-height: 15rem;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0.25rem;
+  list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 24px rgba(15, 30, 60, 0.12);
+}
+.auth-drop-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  padding: 0.5rem 0.6rem;
+  text-align: left;
+  background: none;
+  border: 0;
+  border-radius: 0.4rem;
+  font: inherit;
+  font-size: 0.875rem;
+  color: var(--ink);
+  cursor: pointer;
+}
+.auth-drop-item:hover { background: var(--canvas); }
+.auth-drop-item[aria-selected="true"] { background: var(--teal-50); }
+.auth-drop-item small { color: var(--ink-faint); }
+.auth-drop-empty {
+  padding: 0.5rem 0.6rem;
+  font-size: 0.8125rem;
+  color: var(--ink-faint);
+}
 @media (max-width: 639px) {
-  .auth-select-hospital {
-    padding: 0.5rem 0.7rem;
-    font-size: 0.875rem;
-  }
-  .auth-select-hospital option {
-    font-size: 0.875rem;
-  }
+  .auth-drop-list { max-height: 11rem; }
+  .auth-drop-item { font-size: 0.8125rem; padding: 0.45rem 0.55rem; }
 }
