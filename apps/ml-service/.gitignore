@@ -13,3 +13,5 @@ artifacts/encoders/
 __pycache__/
 *.py[cod]
 .ipynb_checkpoints/
+test_predictions.csv
+reports/residual_analysis/test_predictions.csv

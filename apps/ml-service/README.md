@@ -61,11 +61,25 @@ python3 -m pip install -r requirements.txt
 python3 training/generate_ledger_data.py
 python3 training/train_xgb.py
 python3 training/evaluate_model.py
+python3 training/analyze_residuals.py    # residual + test-set figures (Fig 1 & 2)
 python3 -m pytest -q
 python3 -m uvicorn app.api.server:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 Do not run `generate_synthetic_data.py` directly. It is the reference-data library imported by the ledger generator.
+
+## Residual & test-set analysis
+
+`training/analyze_residuals.py` (and `notebooks/05_residual_and_test_analysis.ipynb`) rebuild the exact
+chronological hold-out split and produce:
+
+- `reports/residual_analysis/residual_distribution_and_error_analysis.png` — residual distribution
+  (actual − predicted) + MAE by medicine category and by hospital type
+- `reports/residual_analysis/actual_vs_predicted_test_set.png` — actual vs predicted weekly demand on
+  the hold-out test set (per-series hexbin + weekly aggregate time series)
+- `residual_stats.csv`, `error_by_category.csv`, `error_by_facility_type.csv`, `test_predictions.csv`
+  (predictions are git-ignored; regenerate with the script) and `residual_analysis_report.html`
+  (self-contained report with both figures).
 
 ## Health and API docs
 
