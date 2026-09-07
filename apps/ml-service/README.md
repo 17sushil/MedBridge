@@ -77,9 +77,13 @@ chronological hold-out split and produce:
   (actual − predicted) + MAE by medicine category and by hospital type
 - `reports/residual_analysis/actual_vs_predicted_test_set.png` — actual vs predicted weekly demand on
   the hold-out test set (per-series hexbin + weekly aggregate time series)
-- `residual_stats.csv`, `error_by_category.csv`, `error_by_facility_type.csv`, `test_predictions.csv`
-  (predictions are git-ignored; regenerate with the script) and `residual_analysis_report.html`
-  (self-contained report with both figures).
+- `reports/residual_analysis/per_hospital_holdout_r2.png` — per-hospital hold-out R² with the eight
+  demonstration hospitals highlighted (teal)
+- `reports/residual_analysis/training_validation_loss.png` — training vs validation loss (log-space
+  RMSE) per boosting round with the early-stopping iteration marked
+- `residual_stats.csv`, `error_by_category.csv`, `error_by_facility_type.csv`,
+  `per_hospital_holdout_r2.csv`, `test_predictions.csv` (predictions are git-ignored; regenerate with
+  the script) and `residual_analysis_report.html` (self-contained report with all four figures).
 
 ## Health and API docs
 

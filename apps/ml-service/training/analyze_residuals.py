@@ -233,6 +233,91 @@ def main() -> None:
     plt.close(fig)
     print(f"Saved {OUT / 'actual_vs_predicted_test_set.png'}")
 
+    # ================================================================== FIG 3
+    # Per-hospital hold-out R² (demo hospitals highlighted).
+    hospitals = pd.read_csv(ROOT / "data" / "raw" / "hospitals.csv")
+    demo_ids = set(hospitals.loc[hospitals["is_demo"] == 1, "hospital_id"])
+
+    per_hosp = []
+    for hid, grp in meta.groupby("hospital_id"):
+        r2 = np.nan
+        if grp["actual"].nunique() > 1 and len(grp) > 2:
+            r2 = 1 - ((grp["actual"] - grp["predicted"]) ** 2).sum() / (
+                (grp["actual"] - grp["actual"].mean()) ** 2).sum()
+        per_hosp.append({
+            "hospital_id": hid, "R2": r2,
+            "MAE": grp["abs_error"].mean(), "n": len(grp),
+        })
+    # Ascending so barh draws the best hospital at the top.
+    per_hosp = pd.DataFrame(per_hosp).dropna(subset=["R2"]).sort_values("R2", ascending=True)
+
+    fig, ax = plt.subplots(figsize=(11, max(6, 0.28 * len(per_hosp) + 2)))
+    colors = [TEAL if h in demo_ids else GREY for h in per_hosp["hospital_id"]]
+    ax.barh(per_hosp["hospital_id"], per_hosp["R2"], color=colors)
+    for i, (h, row) in enumerate(per_hosp.iterrows()):
+        ax.text(
+            row["R2"] + 0.004, i,
+            f"{row['R2']:.3f} · n={int(row['n']):,}" + (" ★" if h in demo_ids else ""),
+            va="center", fontsize=7.5, color=NAVY if h in demo_ids else GREY,
+        )
+    ax.axvline(0, color=CORAL, lw=1.2, ls="--")
+    ax.set_xlim(-0.05, 1.05)
+    ax.set_title("Per-hospital hold-out R²  (teal = demonstration hospitals)", fontweight="bold")
+    ax.set_xlabel("R² on the hold-out test set")
+    from matplotlib.patches import Patch
+    ax.legend(
+        handles=[Patch(color=TEAL, label="demo hospital (seeded login)"),
+                 Patch(color=GREY, label="network hospital")],
+        loc="lower right", fontsize=9,
+    )
+    ax.spines[["top", "right"]].set_visible(False)
+    plt.tight_layout()
+    fig.savefig(OUT / "per_hospital_holdout_r2.png", dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    print(f"Saved {OUT / 'per_hospital_holdout_r2.png'}")
+    per_hosp.to_csv(OUT / "per_hospital_holdout_r2.csv", index=False)
+    print("\nPer-hospital R² (demo marked):")
+    print(per_hosp.assign(demo=per_hosp["hospital_id"].isin(demo_ids).map({True: "★demo", False: ""}))
+          .head(10).to_string(index=False))
+
+    # ================================================================== FIG 4
+    # Training vs validation loss (log-space RMSE) per boosting round.
+    hist_path = ROOT / "artifacts" / "metrics" / "training_history.csv"
+    if hist_path.exists():
+        hist = pd.read_csv(hist_path)
+        best_iter = bundle.get("best_iteration") if bundle.get("best_iteration") is not None else None
+
+        fig, ax = plt.subplots(figsize=(10, 4.8))
+        ax.plot(hist["iteration"], hist["train_log_rmse"], color=GREY, lw=1.4,
+                label="training (log-space RMSE)")
+        ax.plot(hist["iteration"], hist["validation_log_rmse"], color=TEAL, lw=1.8,
+                label="validation (log-space RMSE)")
+        if best_iter is not None:
+            ax.axvline(best_iter, color=CORAL, ls="--", lw=1.6)
+            best_val = hist.loc[hist["iteration"] == best_iter, "validation_log_rmse"]
+            if len(best_val):
+                ax.scatter([best_iter], [best_val.iloc[0]], color=CORAL, zorder=5, s=45)
+            ax.annotate(
+                f"early stop @ iter {best_iter}\nval log-RMSE {hist.loc[hist['iteration'] == best_iter, 'validation_log_rmse'].iloc[0]:.4f}",
+                xy=(best_iter, hist.loc[hist["iteration"] == best_iter, "validation_log_rmse"].iloc[0]),
+                xytext=(best_iter - 180, ax.get_ylim()[1] * 0.72),
+                color=CORAL, fontsize=9, ha="right",
+                arrowprops=dict(arrowstyle="->", color=CORAL, lw=1.2),
+            )
+        ax.set_title("XGBoost learning curve — train vs validation loss (log1p RMSE)",
+                     fontweight="bold")
+        ax.set_xlabel("boosting iteration"); ax.set_ylabel("log1p space RMSE")
+        ax.legend(fontsize=9)
+        ax.grid(alpha=0.25); ax.spines[["top", "right"]].set_visible(False)
+        plt.tight_layout()
+        fig.savefig(OUT / "training_validation_loss.png", dpi=150, bbox_inches="tight")
+        plt.close(fig)
+        print(f"Saved {OUT / 'training_validation_loss.png'}")
+        print(f"  best_iteration={best_iter} | train log-RMSE last={hist['train_log_rmse'].iloc[-1]:.4f} "
+              f"| val @ best={hist.loc[hist['iteration'] == best_iter, 'validation_log_rmse'].iloc[0]:.4f}")
+    else:
+        print("training_history.csv not found — skipping Fig 4 (run training/train_xgb.py)")
+
     # ------------------------------------------------------------------ summary
     print("\n=== Error analysis summary ===")
     print("\nTop 6 categories by MAE:")
