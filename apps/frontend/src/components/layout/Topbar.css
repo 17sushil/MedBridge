@@ -37,7 +37,8 @@
   top: calc(100% + 0.375rem);
   left: 0;
   right: 0;
-  overflow: hidden;
+  max-height: min(20rem, calc(100vh - 6rem));
+  overflow-y: auto;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 0.5rem;
@@ -70,6 +71,7 @@
   top: 50%;
   transform: translateY(-50%);
   color: var(--ink-faint);
+  pointer-events: none; /* taps pass through to the input */
 }
 
 .topbar-search-input {
@@ -232,4 +234,27 @@
 }
 .topbar-dropdown-danger:hover {
   background: var(--coral-50);
+}
+
+/* Phone: the search fights the menu/toggle/bell/avatar for width and loses.
+   On focus it expands to overlay the whole topbar so the typed text and the
+   result names have room; it shrinks back when blurred. */
+@media (max-width: 639px) {
+  .topbar-spacer {
+    display: none; /* on phones the search takes the row; icons stay right */
+  }
+  .topbar-search-wrap {
+    max-width: none;
+  }
+  .topbar-search-input {
+    font-size: 1rem; /* legible, and prevents iOS focus-zoom */
+  }
+  .topbar-search-wrap:focus-within {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    right: 0.75rem;
+    max-width: none;
+    z-index: 45;
+  }
 }

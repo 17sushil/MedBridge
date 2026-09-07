@@ -17,6 +17,10 @@ export default function Topbar() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchError, setSearchError] = useState("");
+  // True after the user picks a result / presses Enter — hides the dropdown
+  // without clearing the typed text. Reset on the next keystroke, so a bogus
+  // term like "bdndon" still shows "No medicines found."
+  const [dismissed, setDismissed] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -52,6 +56,7 @@ export default function Topbar() {
   const handleSearchChange = (event) => {
     const nextQuery = event.target.value;
     setQuery(nextQuery);
+    setDismissed(false);
     if (nextQuery.trim().length < 2) {
       setResults([]);
       setSearchError("");
@@ -62,6 +67,7 @@ export default function Topbar() {
     const term = query.trim();
     if (term) navigate(`/inventory?search=${encodeURIComponent(term)}`);
     setResults([]);
+    setDismissed(true);
   };
 
 
@@ -87,7 +93,7 @@ export default function Topbar() {
           aria-label="Search your hospital medicines"
           className="topbar-search-input"
         />
-        {query.trim().length >= 2 && (
+        {query.trim().length >= 2 && !dismissed && (
           <div className="topbar-search-results" role="listbox">
             {loading && <div className="topbar-search-message">Searching…</div>}
             {!loading && searchError && <div className="topbar-search-message topbar-search-error">{searchError}</div>}
