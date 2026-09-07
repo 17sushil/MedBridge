@@ -3,6 +3,7 @@ const prisma = require("../config/db");
 const { signToken } = require("../utils/jwt");
 const { ApiError } = require("../utils/ApiError");
 const { seedNewHospitalHistory } = require("./seedNewHospital.service");
+const notifications = require("./notifications.service");
 
 const SALT_ROUNDS = 10;
 
@@ -92,6 +93,20 @@ async function registerMember({ name, email, password, hospitalId, role }) {
     },
     include: { hospital: true },
   });
+
+  // Alert the hospital so an admin sees the request without opening Users.
+  // A failure here must not undo the registration, hence the try/catch.
+  try {
+    await notifications.create(hospitalId, {
+      title: "New join request",
+      body: `${name} (${email}) requested to join as ${
+        role === "INVENTORY_MANAGER" ? "Inventory Manager" : "Staff"
+      }. Approve or reject it under Users.`,
+      type: "CRITICAL",
+    });
+  } catch (err) {
+    console.warn("[auth] join-request notification failed:", err.message);
+  }
 
   return {
     pending: true,

@@ -117,7 +117,7 @@ export default function Notifications() {
         ) : (
           <div className="notif-divide">
             {items.map((n) => {
-              const cfg = iconMap[n.type] || iconMap.info;
+              const cfg = iconMap[String(n.type || "").toLowerCase()] || iconMap.info;
               const Icon = cfg.icon;
               return (
                 <div

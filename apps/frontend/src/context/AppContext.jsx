@@ -16,6 +16,12 @@ export function AppProvider({ children }) {
       return;
     }
     api.getNotifications().then(setNotifications).catch(() => setNotifications([]));
+    // Keep the bell badge fresh so new events (join requests, low stock,
+    // exchanges) appear without waiting for a page reload.
+    const timer = setInterval(() => {
+      api.getNotifications().then(setNotifications).catch(() => {});
+    }, 30000);
+    return () => clearInterval(timer);
   }, [user]);
 
   const markAllNotificationsRead = useCallback(async () => {
