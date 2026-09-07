@@ -28,20 +28,6 @@
   margin-bottom: 1.5rem;
 }
 
-.auth-brand-icon {
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: var(--radius-lg);
-  background: linear-gradient(135deg, var(--navy-600), var(--teal-500));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.1rem;
-}
-
 .auth-brand-name {
   font-family: var(--font-display);
   font-size: 1.25rem;
@@ -195,6 +181,7 @@
   }
 }
 
+/* Logo image replaces the old gradient "M" box; same 2.5rem footprint. */
 .auth-brand-logo {
   display: block;
   width: 2.5rem;
@@ -202,4 +189,17 @@
   border-radius: var(--radius-lg);
   object-fit: cover;
   flex-shrink: 0;
+}
+
+/* Phone: native select popups inherit the control's font size, so compact
+   the hospital dropdown (and its options where the browser allows) on
+   small screens only. Desktop stays untouched. */
+@media (max-width: 639px) {
+  .auth-select-hospital {
+    padding: 0.5rem 0.7rem;
+    font-size: 0.875rem;
+  }
+  .auth-select-hospital option {
+    font-size: 0.875rem;
+  }
 }
