@@ -21,8 +21,6 @@
   gap: 1rem;
   margin-top: 1rem;
 }
-/* ADDED — tablet gets 2 columns instead of staying 1 until 1280px.
-   Must come BEFORE the 1280px rule, or desktop would get 2 instead of 3. */
 @media (min-width: 1024px) {
   .dash-charts-grid { grid-template-columns: repeat(2, 1fr); }
 }
@@ -41,8 +39,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.5rem;          /* ADDED */
-  flex-wrap: wrap;      /* ADDED — title + control wrap instead of squeezing */
+  gap: 0.5rem;
+  flex-wrap: wrap;
   margin-bottom: 0.25rem;
 }
 
@@ -78,12 +76,12 @@
   gap: 1rem;
   margin-top: 1rem;
 }
-/* ADDED — same tablet step for the bottom panels. */
 @media (min-width: 1024px) {
   .dash-bottom-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (min-width: 1280px) {
   .dash-bottom-grid { grid-template-columns: repeat(3, 1fr); }
+  .dash-span-rest { grid-column: 1 / -1; }
 }
 
 .dash-panel {
@@ -94,8 +92,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.5rem;          /* ADDED */
-  flex-wrap: wrap;      /* ADDED */
+  gap: 0.5rem;
+  flex-wrap: wrap;
   margin-bottom: 0.75rem;
 }
 
@@ -294,6 +292,9 @@
 
 .dash-alert-dial-expired {
   background: var(--coral-100);
+  width: auto;            /* was locked to 2.75rem square — let it grow */
+  min-width: 2.75rem;     /* stays same size as the days dials */
+  padding: 0 0.625rem;    /* the breathing room you asked for */
 }
 
 .dash-alert-dial-expired-label {
@@ -303,11 +304,11 @@
   color: var(--coral-700);
   text-transform: uppercase;
   letter-spacing: 0.02em;
+  white-space: nowrap;    /* "EXPIRED" stays on one line inside the pill */
 }
-
 /* --------------------------------------------------------------------- */
-/* ADDED — Phone: the donut is a fixed 132px, so beside a legend it        */
-/* starves the category names down to a few characters. Stack them.        */
+/* Phone: the donut is a fixed 132px, so beside a legend it starves the    */
+/* category names down to a few characters. Stack them instead.            */
 /* --------------------------------------------------------------------- */
 @media (max-width: 559px) {
   .donut-wrap {
@@ -320,14 +321,26 @@
     align-self: center;
   }
 
-  /* Pull the wide table in from the card padding so it uses full width.
-     Overrides the -1.25rem above; being later in the file is what wins. */
+  /* Pull the wide table in from the card padding so it uses full width. */
   .dash-table-scroll {
     margin: 0 -1rem;
   }
 }
+
+/* --------------------------------------------------------------------- */
+/* A grid item's default min-width is auto, so a single unbreakable string  */
+/* in one card stretches the whole column and pushes every sibling card    */
+/* past the right edge. Measured at 320px: all three bottom cards rendered */
+/* 300.8px wide inside a 288px track. min-width: 0 lets the track shrink.  */
+/* --------------------------------------------------------------------- */
 .dash-stat-grid > *,
 .dash-charts-grid > *,
 .dash-bottom-grid > * {
   min-width: 0;
+}
+
+.dash-empty {
+  padding: 0.5rem 0;
+  font-size: 0.8rem;
+  color: var(--ink-faint);
 }
