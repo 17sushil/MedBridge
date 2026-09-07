@@ -282,60 +282,72 @@ def main() -> None:
 
     # ================================================================== FIG 4
     # Training vs validation loss (log-space RMSE) per boosting round.
+    # Clean single image, two side-by-side panels (no overlapping inset):
+    #   left  — full learning curve (0 → n_rounds), early-stop marked
+    #   right — zoom of the tail where train/val nearly touch (~0.001 gap)
     hist_path = ROOT / "artifacts" / "metrics" / "training_history.csv"
     if hist_path.exists():
         hist = pd.read_csv(hist_path)
         best_iter = bundle.get("best_iteration") if bundle.get("best_iteration") is not None else None
+        bv = float(hist.loc[hist["iteration"] == best_iter, "validation_log_rmse"].iloc[0])
+        bt = float(hist.loc[hist["iteration"] == best_iter, "train_log_rmse"].iloc[0])
 
-        fig, ax = plt.subplots(figsize=(12, 6))
-        ax.plot(hist["iteration"], hist["train_log_rmse"], color=GREY, lw=2.2,
-                label="training (log-space RMSE)")
-        ax.plot(hist["iteration"], hist["validation_log_rmse"], color=TEAL, lw=2.6,
-                label="validation (log-space RMSE)")
-        if best_iter is not None:
-            best_row = hist.loc[hist["iteration"] == best_iter]
-            bv = float(best_row["validation_log_rmse"].iloc[0])
-            ax.axvline(best_iter, color=CORAL, ls="--", lw=1.8)
-            ax.scatter([best_iter], [bv], color=CORAL, zorder=5, s=70)
+        fig, (axL, axR) = plt.subplots(
+            1, 2, figsize=(14, 5.4),
+            gridspec_kw={"width_ratios": [1.35, 1.0], "wspace": 0.22},
+        )
 
-            # Annotation sits in clear space to the right of the marker, so it
-            # never overlaps the zoom inset.
-            ax.annotate(
-                f"early stop @ iter {best_iter}\nval log-RMSE {bv:.4f}",
-                xy=(best_iter, bv),
-                xytext=(best_iter + 20, 0.62),
-                color=CORAL, fontsize=11.5, ha="left", va="center", fontweight="bold",
-                arrowprops=dict(arrowstyle="->", color=CORAL, lw=1.8),
-            )
+        # ---- left: full curve ------------------------------------------------
+        axL.plot(hist["iteration"], hist["train_log_rmse"], color=GREY, lw=2.2,
+                 label="training (log-space RMSE)")
+        axL.plot(hist["iteration"], hist["validation_log_rmse"], color=TEAL, lw=2.6,
+                 label="validation (log-space RMSE)")
+        axL.axvline(best_iter, color=CORAL, ls="--", lw=1.8)
+        axL.scatter([best_iter], [bv], color=CORAL, zorder=5, s=65)
+        axL.annotate(f"early stop @ iter {best_iter}", xy=(best_iter, bv),
+                     xytext=(best_iter - 30, 1.05), color=CORAL, fontsize=11,
+                     ha="right", fontweight="bold",
+                     arrowprops=dict(arrowstyle="->", color=CORAL, lw=1.6))
+        axL.set_xlim(-20, best_iter + 40)
+        axL.set_ylim(0.30, 1.95)
+        axL.set_title("Full learning curve", fontweight="bold", fontsize=13)
+        axL.set_xlabel("boosting iteration", fontsize=12)
+        axL.set_ylabel("log1p space RMSE", fontsize=12)
+        axL.tick_params(labelsize=10)
+        axL.legend(fontsize=10, loc="upper right", framealpha=0.95)
+        axL.grid(alpha=0.3)
+        axL.spines[["top", "right"]].set_visible(False)
 
-            # --- Zoom inset on the tail where the curves nearly touch ---------
-            axins = ax.inset_axes([0.06, 0.08, 0.42, 0.30])
-            zoom = hist[hist["iteration"] >= max(0, best_iter - 400)].copy()
-            axins.plot(zoom["iteration"], zoom["train_log_rmse"], color=GREY, lw=2.2,
-                       label="training")
-            axins.plot(zoom["iteration"], zoom["validation_log_rmse"], color=TEAL, lw=2.6,
-                       label="validation")
-            axins.axvline(best_iter, color=CORAL, ls="--", lw=1.6)
-            axins.scatter([best_iter], [bv], color=CORAL, zorder=5, s=55)
-            axins.set_ylim(bv - 0.012, bv + 0.012)   # ±0.012 → the ~0.001 gap is visible
-            axins.set_xlim(zoom["iteration"].min() - 15, best_iter + 20)
-            axins.set_title("zoom: last 400 rounds (train−val gap ≈ 0.001)", fontsize=10, color=NAVY)
-            axins.tick_params(labelsize=9)
-            axins.grid(alpha=0.35)
-            axins.legend(fontsize=8.5, loc="lower right", framealpha=0.95)
-            ax.indicate_inset_zoom(axins, edgecolor=NAVY, lw=1.3, alpha=0.85)
+        # ---- right: zoomed tail (no overlap) --------------------------------
+        zoom = hist[hist["iteration"] >= max(0, best_iter - 400)].copy()
+        axR.plot(zoom["iteration"], zoom["train_log_rmse"], color=GREY, lw=2.4,
+                 label="training")
+        axR.plot(zoom["iteration"], zoom["validation_log_rmse"], color=TEAL, lw=2.8,
+                 label="validation")
+        axR.axvline(best_iter, color=CORAL, ls="--", lw=1.8)
+        axR.scatter([best_iter], [bv], color=CORAL, zorder=5, s=70)
+        axR.set_ylim(bv - 0.008, bv + 0.010)      # ± ~0.01 → the ~0.001 gap is obvious
+        axR.set_xlim(zoom["iteration"].min() - 15, best_iter + 25)
+        axR.set_title("Zoom: last 400 rounds", fontweight="bold", fontsize=13)
+        axR.set_xlabel("boosting iteration", fontsize=12)
+        axR.set_ylabel("log1p space RMSE", fontsize=12)
+        axR.tick_params(labelsize=10)
+        axR.grid(alpha=0.35)
+        axR.spines[["top", "right"]].set_visible(False)
+        axR.legend(fontsize=10, loc="upper right", framealpha=0.95)
+        # annotate the gap at the early-stop point
+        axR.annotate(
+            f"train {bt:.4f}\nval   {bv:.4f}\ngap ≈ {bv - bt:.4f}",
+            xy=(best_iter, (bt + bv) / 2),
+            xytext=(best_iter - 155, bv + 0.006), color=NAVY, fontsize=10,
+            ha="center", fontweight="bold",
+            arrowprops=dict(arrowstyle="->", color=NAVY, lw=1.2),
+        )
 
-        ax.set_title("XGBoost learning curve — train vs validation loss (log1p RMSE)",
-                     fontweight="bold", fontsize=16, pad=12)
-        ax.set_xlabel("boosting iteration", fontsize=13)
-        ax.set_ylabel("log1p space RMSE", fontsize=13)
-        ax.tick_params(labelsize=11)
-        ax.set_xlim(-20, best_iter + 190)   # headroom for the annotation
-        ax.set_ylim(0.30, 1.95)
-        ax.legend(fontsize=11.5, loc="upper right", framealpha=0.95)
-        ax.grid(alpha=0.3)
-        ax.spines[["top", "right"]].set_visible(False)
-        plt.tight_layout()
+        fig.suptitle("XGBoost learning curve — train vs validation loss (log1p RMSE), "
+                     "early stopping marked",
+                     fontweight="bold", fontsize=15, y=1.0)
+        plt.tight_layout(rect=(0, 0, 1, 0.94))
         fig.savefig(OUT / "training_validation_loss.png", dpi=200, bbox_inches="tight")
         plt.close(fig)
         print(f"Saved {OUT / 'training_validation_loss.png'}")
