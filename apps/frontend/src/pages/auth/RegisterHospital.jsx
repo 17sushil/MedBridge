@@ -3,8 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import Button from "../../components/ui/Button";
 import "./Auth.css";
-import logo from "../../assets/logo.png"
-
+import logo from "../../assets/logo.png";
 
 const HOSPITAL_TYPES = ["General", "Specialty", "Teaching", "Regional", "Clinic"];
 
@@ -39,7 +38,7 @@ export default function RegisterHospital() {
   };
 
   return (
-    <div className="auth-shell">
+    <div className="auth-shell" data-theme="light">
       <div className="auth-card auth-card-wide">
         <div className="auth-brand">
           <img src={logo} alt="MedBridge" className="auth-brand-logo" />
