@@ -292,9 +292,11 @@
 
 .dash-alert-dial-expired {
   background: var(--coral-100);
-  width: auto;            /* was locked to 2.75rem square — let it grow */
-  min-width: 2.75rem;     /* stays same size as the days dials */
-  padding: 0 0.625rem;    /* the breathing room you asked for */
+  /* "EXPIRED" never fits a 44px square — let the dial grow into a pill
+     with real horizontal padding instead of squeezing the label. */
+  width: auto;
+  min-width: 2.75rem;
+  padding: 0 0.625rem;
 }
 
 .dash-alert-dial-expired-label {
@@ -304,8 +306,9 @@
   color: var(--coral-700);
   text-transform: uppercase;
   letter-spacing: 0.02em;
-  white-space: nowrap;    /* "EXPIRED" stays on one line inside the pill */
+  white-space: nowrap;
 }
+
 /* --------------------------------------------------------------------- */
 /* Phone: the donut is a fixed 132px, so beside a legend it starves the    */
 /* category names down to a few characters. Stack them instead.            */
