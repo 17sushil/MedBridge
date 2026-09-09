@@ -88,6 +88,18 @@ here for completeness only.*
 | Decision Tree | 0.831 | 39.66 | 122.4 | 29.25% | 50.20% | 3.6 s |
 | Linear Regression (excluded from figure) | −101.86 | 189.39 | 3,017 | 139.67% | 75.53% | 0.5 s |
 
+**Naive persistence baselines on the same test rows (for context):**
+
+| Baseline | R² (units) | MAE | RMSE | WAPE | sMAPE |
+|---|---|---|---|---|---|
+| Naive: 4-week mean | 0.872 | 35.89 | 106.6 | 26.47% | 46.14% |
+| Naive: last week | 0.844 | 41.26 | 117.5 | 30.43% | 50.82% |
+
+> Reading the table honestly: only **XGBoost** beats the 4-week-mean baseline on R² and
+> WAPE. Random Forest and Decision Tree fall below it — for a smooth 13-week horizon,
+> simple persistence is a surprisingly strong baseline, and the comparison shows the
+> boost comes from gradient boosting, not from the shared hyperparameter values.
+
 ---
 
 ## Why these hyperparameters? (answer you can give)

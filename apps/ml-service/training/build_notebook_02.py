@@ -312,16 +312,21 @@ plt.show()
 md("""
 ## Interpretation — what the real training shows
 
-XGBoost is the strongest family on **every** metric: highest R², lowest MAE / RMSE / WAPE /
-sMAPE. The Random Forest — same depth, same 800 trees, same leaf constraint — sits clearly
-behind it, which shows the gain comes from boosting (learn-rate 0.03 with early-stopped
-validation) rather than from the hyperparameter values alone.
-
-Linear Regression is a **log-linear** model here: on the original-unit test set its pooled R²
-is poor because weekly demand is heavy-tailed and multiplicative — log-space errors translate
-into large unit errors on the biggest hospitals. A single Decision Tree overfits nothing here
-but generalises worse than either ensemble. The naive baselines (last week, 4-week mean)
-remain far behind all trained families, so the models are adding real signal over persistence.
+1. **XGBoost wins on every metric** — R² 0.908 (vs 0.846 Random Forest, 0.831 Decision
+   Tree), MAE 31.07, RMSE 90.0, WAPE 22.91%, sMAPE 46.29% — and is the **only** trained
+   family that beats the persistent baselines: naive 4-week-mean R² 0.872 / WAPE 26.47%,
+   naive last-week R² 0.844 / WAPE 30.43%.
+2. **The gain comes from boosting, not from the shared knob values.** Random Forest has
+   the same depth, the same 800 trees and the same leaf constraint, yet clearly sits
+   behind: bagging + feature subsampling helps (RF > DT), but gradient boosting with a
+   slow learning rate (0.03) and early stopping on the validation split adds the most.
+3. **Honest limits.** Random Forest (0.846) and Decision Tree (0.831) do **not** beat the
+   naive 4-week-mean baseline (0.872) on R² or WAPE — for a smooth 13-week horizon simple
+   persistence is a deceptively strong baseline. Only XGBoost earns its keep.
+4. **Linear Regression is excluded from the figure**: its unit-scale R² is **−101.9** —
+   log-linear predictions on a heavy-tailed multiplicative target turn into huge unit
+   errors on the biggest hospitals. It stays documented in `model_comparison.csv` and in
+   `reports/model_comparison_hyperparameters.md`.
 
 **Conclusion.** Keep XGBoost as the production model (`training/train_xgb.py`); the comparison
 endorsed it rather than merely assuming it.
