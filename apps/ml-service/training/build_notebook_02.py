@@ -227,8 +227,9 @@ md("""
 The figure below is saved to `reports/model_comparison_figure.png` (200 DPI):
 
 - **Left** — accuracy: hold-out R² in demand units (higher is better).
-  Linear Regression's unit-scale R² is **−101.9** (far off the axis) so it is annotated
-  instead of drawn.
+  **Linear Regression is excluded** from the figure — its hold-out R² is **−101.9**
+  (negative: worse than predicting the mean); it stays documented in the CSV and in
+  `reports/model_comparison_hyperparameters.md`.
 - **Middle** — absolute errors: MAE and RMSE in demand units. **Log scale** because the
   Linear Regression RMSE (3,017 units) dwarfs the boosted models (~90 units).
 - **Right** — relative errors: WAPE % and sMAPE % (log scale for the same reason).
@@ -238,10 +239,11 @@ Naive baselines (last week, 4-week mean) are computed and stored in
 """)
 
 code("""
-show = comparison[comparison["Model"].isin(MODEL_NAMES)].copy()
+PLOT_MODELS = [m for m in MODEL_NAMES if m != "Linear Regression"]
+show = comparison[comparison["Model"].isin(PLOT_MODELS)].copy()
 for c in ["R2", "MAE", "RMSE", "WAPE_pct", "sMAPE_pct"]:
     show[c] = pd.to_numeric(show[c], errors="coerce")
-show["order"] = show["Model"].map({m: i for i, m in enumerate(MODEL_NAMES)})
+show["order"] = show["Model"].map({m: i for i, m in enumerate(PLOT_MODELS)})
 show = show.sort_values("order").reset_index(drop=True)
 names = show["Model"].tolist()
 x = np.arange(len(names)); w = 0.5
@@ -249,21 +251,16 @@ r2_units = show["R2"].to_numpy()
 mae = show["MAE"].to_numpy(); rmse = show["RMSE"].to_numpy()
 wape = show["WAPE_pct"].to_numpy(); smape = show["sMAPE_pct"].to_numpy()
 
-MODEL_COLORS = {"XGBoost": TEAL, "Random Forest": NAVY,
-                "Decision Tree": AMBER, "Linear Regression": CORAL}
+MODEL_COLORS = {"XGBoost": TEAL, "Random Forest": NAVY, "Decision Tree": AMBER}
 
 fig, axes = plt.subplots(1, 3, figsize=(14.6, 4.4))
 
 # --- Panel 1: accuracy (R² in units) ---
 ax = axes[0]
-ax.bar(x, np.maximum(r2_units, 0.0), w, color=[MODEL_COLORS[m] for m in names])
+ax.bar(x, r2_units, w, color=[MODEL_COLORS[m] for m in names])
 for i, val in enumerate(r2_units):
-    if val < 0:
-        ax.text(i, 0.02, f"R\u00b2 = {val:.0f}\\n(off scale)", ha="center", va="bottom",
-                fontsize=7.5, color=CORAL, fontweight="bold")
-    else:
-        ax.text(i, val + 0.015, f"{val:.3f}", ha="center", va="bottom",
-                fontsize=9.5, color=NAVY, fontweight="bold")
+    ax.text(i, val + 0.015, f"{val:.3f}", ha="center", va="bottom",
+            fontsize=9.5, color=NAVY, fontweight="bold")
 ax.set_xticks(x); ax.set_xticklabels(names, rotation=16, ha="right", fontsize=9.5)
 ax.set_ylim(0, 1.12)
 ax.set_ylabel("R\u00b2 (units)  \u00b7  higher is better", fontsize=10.5)
@@ -302,7 +299,7 @@ ax.set_title("Relative errors", fontweight="bold", fontsize=12)
 ax.legend(fontsize=8.5, loc="upper left"); ax.grid(axis="x", visible=False)
 
 fig.suptitle(
-    "Weekly demand model \\u2014 Linear Regression vs Decision Tree vs Random Forest vs XGBoost "
+    "Weekly demand model \\u2014 Decision Tree vs Random Forest vs XGBoost "
     "(n = 38,376 hold-out test rows)",
     fontweight="bold", fontsize=13, y=1.0)
 fig.tight_layout(rect=(0, 0, 1, 0.97))

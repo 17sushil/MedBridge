@@ -9,9 +9,10 @@ Draws the final 3-panel comparison figure from reports/model_comparison.csv
   Panel 2  absolute err  MAE and RMSE (log scale)             lower  = better
   Panel 3  relative err  WAPE % and sMAPE % (log scale)       lower  = better
 
-Linear Regression is off the unit scale (R² = -101.9, RMSE = 3,017 units) so
-its unit-scale bar is annotated instead of drawn. Naive baselines are
-listed/saved but omitted from the bars. No footnote clutter on the figure.
+Linear Regression is EXCLUDED from the figure (its hold-out R² = -101.9 is
+negative / off-scale); it remains documented in the CSV and in
+reports/model_comparison_hyperparameters.md. Naive baselines are saved in the
+CSV but omitted from the bars. No footnote clutter on the figure.
 """
 from __future__ import annotations
 
@@ -36,12 +37,11 @@ OUT = REPORTS / "model_comparison_figure.png"
 NAVY, TEAL, AMBER, CORAL, GREY, LIGHT = (
     "#233A5C", "#0E8C82", "#E8A23D", "#D96C5F", "#8A94A3", "#E4E9EE",
 )
-MODEL_ORDER = ["XGBoost", "Random Forest", "Decision Tree", "Linear Regression"]
+MODEL_ORDER = ["XGBoost", "Random Forest", "Decision Tree"]
 MODEL_COLORS = {
     "XGBoost": TEAL,
     "Random Forest": NAVY,
     "Decision Tree": AMBER,
-    "Linear Regression": CORAL,
 }
 
 
@@ -62,14 +62,10 @@ def main() -> None:
     ax = axes[0]
     r2 = show["R2"].to_numpy()
     colors = [MODEL_COLORS[m] for m in names]
-    ax.bar(x, np.maximum(r2, 0.0), w, color=colors)
+    ax.bar(x, r2, w, color=colors)
     for i, val in enumerate(r2):
-        if val < 0:
-            ax.text(i, 0.02, f"R² = {val:.0f}\n(off scale)", ha="center", va="bottom",
-                    fontsize=7.5, color=CORAL, fontweight="bold")
-        else:
-            ax.text(i, val + 0.015, f"{val:.3f}", ha="center", va="bottom",
-                    fontsize=9.5, color=NAVY, fontweight="bold")
+        ax.text(i, val + 0.015, f"{val:.3f}", ha="center", va="bottom",
+                fontsize=9.5, color=NAVY, fontweight="bold")
     ax.set_xticks(x)
     ax.set_xticklabels(names, rotation=16, ha="right", fontsize=9.5)
     ax.set_ylim(0, 1.12)
@@ -119,7 +115,7 @@ def main() -> None:
     ax.grid(axis="x", visible=False)
 
     fig.suptitle(
-        "Weekly demand model — Linear Regression vs Decision Tree vs Random Forest vs XGBoost "
+        "Weekly demand model — Decision Tree vs Random Forest vs XGBoost "
         "(n = 38,376 hold-out test rows)",
         fontweight="bold", fontsize=13, y=1.0,
     )

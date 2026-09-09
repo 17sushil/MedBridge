@@ -9,6 +9,11 @@ Identical 51 features for every family. See `notebooks/02_model_comparison.ipynb
 
 ## 1. Linear Regression — `sklearn.linear_model.LinearRegression`
 
+> **Excluded from the comparison figure** — its hold-out R² is **−101.9** (negative,
+> i.e. worse than predicting the mean). It remains here for completeness and is
+> kept in `model_comparison.csv`; the plotted comparison shows the three models
+> with positive R² only.
+
 | Parameter | Value |
 |---|---|
 | fit_intercept | True (default) |
@@ -73,12 +78,15 @@ Linear Regression has no tunable hyperparameters — it is the honest linear bas
 
 ## Results on the hold-out test set (identical split / features / target)
 
+*The figure shows the three models with positive R²; Linear Regression is reported
+here for completeness only.*
+
 | Model | R² (units) | MAE | RMSE | WAPE | sMAPE | Train time |
 |---|---|---|---|---|---|---|
 | **XGBoost** | **0.908** | **31.07** | **90.0** | **22.91%** | **46.29%** | 24.0 s |
 | Random Forest | 0.846 | 37.38 | 116.6 | 27.56% | 49.46% | 639.0 s |
 | Decision Tree | 0.831 | 39.66 | 122.4 | 29.25% | 50.20% | 3.6 s |
-| Linear Regression | −101.86 | 189.39 | 3,017 | 139.67% | 75.53% | 0.5 s |
+| Linear Regression (excluded from figure) | −101.86 | 189.39 | 3,017 | 139.67% | 75.53% | 0.5 s |
 
 ---
 
