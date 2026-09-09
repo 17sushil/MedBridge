@@ -102,7 +102,7 @@ here for completeness only.*
 
 ---
 
-## Why these hyperparameters? (answer you can give)
+## Why these hyperparameters?
 
 **Principle: defaults from domain experience, then validated — not tuned to a
 split was chosen on purpose.** We started from a deliberately balanced
