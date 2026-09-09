@@ -266,8 +266,9 @@ for i, val in enumerate(r2_units):
             fontsize=8, color=TEAL, fontweight="bold")
 ax.set_xticks(x); ax.set_xticklabels(names, rotation=16, ha="right", fontsize=9.5)
 ax.set_ylim(0, 1.12); ax.set_ylabel("R²  (higher is better)", fontsize=10.5)
-ax.set_title("Accuracy on the hold-out test set", fontweight="bold", fontsize=12)
-ax.legend(fontsize=8.5, loc="upper right"); ax.grid(axis="x", visible=False)
+ax.set_title("Accuracy on the hold-out test set", fontweight="bold", fontsize=12, pad=26)
+ax.legend(fontsize=8.5, loc="lower center", bbox_to_anchor=(0.5, 1.02), ncol=2)
+ax.grid(axis="x", visible=False)
 ax.axhline(0, color=GREY, lw=0.9)
 
 # --- Panel 2: absolute errors (log scale) ---
