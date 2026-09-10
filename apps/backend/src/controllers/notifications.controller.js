@@ -2,12 +2,12 @@ const { asyncHandler } = require("../utils/asyncHandler");
 const service = require("../services/notifications.service");
 
 const list = asyncHandler(async (req, res) => {
-  const notifications = await service.listForHospital(req.user.hospitalId);
+  const notifications = await service.listForHospital(req.user.hospitalId, req.user.role);
   res.json(notifications);
 });
 
 const markAllRead = asyncHandler(async (req, res) => {
-  const notifications = await service.markAllRead(req.user.hospitalId);
+  const notifications = await service.markAllRead(req.user.hospitalId, req.user.role);
   res.json(notifications);
 });
 

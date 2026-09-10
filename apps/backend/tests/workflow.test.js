@@ -1,5 +1,6 @@
 const assert = require("node:assert/strict");
 const test = require("node:test");
+const { isJoinRequestNotification } = require("../src/services/notifications.service");
 
 // We test pure logic extracted from services without DB
 
@@ -155,6 +156,31 @@ test("markAllRead should set all unread to read", () => {
 
   assert.equal(notifications.every((n) => n.read), true);
   assert.equal(notifications.filter((n) => !n.read).length, 0);
+});
+
+// ---- Join request notifications are correctly identified and gated ----
+test("isJoinRequestNotification detects member join requests", () => {
+  const joinNotif1 = {
+    title: "New join request",
+    body: "John Doe (john@hospital.org) requested to join as Staff. Approve or reject it under Users.",
+  };
+  const joinNotif2 = {
+    title: "New join request",
+    body: "Jane Doe (jane@hospital.org) requested to join as Inventory Manager. Approve or reject it under Users.",
+  };
+  const inventoryNotif = {
+    title: "Exchange request approved",
+    body: "Paracetamol × 100 boxes is now approved by Central Hospital.",
+  };
+  const stockNotif = {
+    title: "Low stock alert",
+    body: "Amoxicillin is running critically low (3 boxes remaining).",
+  };
+
+  assert.equal(isJoinRequestNotification(joinNotif1), true);
+  assert.equal(isJoinRequestNotification(joinNotif2), true);
+  assert.equal(isJoinRequestNotification(inventoryNotif), false);
+  assert.equal(isJoinRequestNotification(stockNotif), false);
 });
 
 // ---- Exchange status enum mapping ----
