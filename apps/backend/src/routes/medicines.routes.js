@@ -12,14 +12,16 @@ router.use(requireAuth);
 router.get("/meta/expiring-soon", controller.expiringSoon);
 router.get("/meta/categories", controller.categories);
 
-// Read access for any authenticated user (Staff can view + search).
+// Read access for any authenticated user.
 router.get("/", controller.list);
 router.get("/:id", controller.getOne);
 
-// Write access restricted to Admin + Inventory Manager.
+// Add / Import / Edit restricted to Admin + Inventory Manager.
 router.post("/", requireRole("ADMIN", "INVENTORY_MANAGER"), validate(createMedicineSchema), controller.create);
 router.post("/bulk", requireRole("ADMIN", "INVENTORY_MANAGER"), controller.bulkImport);
 router.patch("/:id", requireRole("ADMIN", "INVENTORY_MANAGER"), validate(updateMedicineSchema), controller.update);
-router.delete("/:id", requireRole("ADMIN", "INVENTORY_MANAGER"), controller.remove);
+
+// Delete restricted strictly to Admin.
+router.delete("/:id", requireRole("ADMIN"), controller.remove);
 
 module.exports = router;

@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import Button from "../../components/ui/Button";
 import "./Auth.css";
-import logo from "../../assets/logo.png"
+import logo from "../../assets/logo.png";
 
 export default function Login() {
   const { login } = useAuth();
@@ -18,8 +18,9 @@ export default function Login() {
     setError("");
     setSubmitting(true);
     try {
-      await login(email, password);
-      navigate("/", { replace: true });
+      const user = await login(email, password);
+      const target = user?.roleKey === "INVENTORY_MANAGER" ? "/inventory" : "/";
+      navigate(target, { replace: true });
     } catch (err) {
       setError(err.message || "Login failed");
     } finally {

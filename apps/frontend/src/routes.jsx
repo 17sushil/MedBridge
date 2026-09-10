@@ -35,27 +35,27 @@ export const routes = [
   {
     path: "/",
     element: Dashboard,
-    nav: { label: "Dashboard", icon: LayoutDashboard, group: "Overview" },
+    nav: { label: "Dashboard", icon: LayoutDashboard, group: "Overview", roles: ["ADMIN", "STAFF"] },
   },
   {
     path: "/inventory",
     element: Inventory,
-    nav: { label: "Inventory", icon: PackageSearch, group: "Operations" },
+    nav: { label: "Inventory", icon: PackageSearch, group: "Operations", roles: ["ADMIN", "INVENTORY_MANAGER", "STAFF"] },
   },
   {
     path: "/exchange-requests",
     element: ExchangeRequests,
-    nav: { label: "Exchange Requests", icon: Repeat2, group: "Operations" },
+    nav: { label: "Exchange Requests", icon: Repeat2, group: "Operations", roles: ["ADMIN", "STAFF"] },
   },
   {
     path: "/my-requests",
     element: MyRequests,
-    nav: { label: "My Requests", icon: ClipboardList, group: "Operations" },
+    nav: { label: "My Requests", icon: ClipboardList, group: "Operations", roles: ["ADMIN", "STAFF"] },
   },
   {
     path: "/demand-forecast",
     element: DemandForecast,
-    nav: { label: "Demand Forecast", icon: LineChart, group: "Insights" },
+    nav: { label: "Demand Forecast", icon: LineChart, group: "Insights", roles: ["ADMIN", "STAFF"] },
   },
   {
     path: "/ai-assistant",
@@ -64,28 +64,28 @@ export const routes = [
       label: "AI Assistant",
       icon: Sparkles,
       group: "Insights",
-
+      roles: ["ADMIN", "STAFF"],
     },
   },
   {
     path: "/reports",
     element: Reports,
-    nav: { label: "Reports", icon: FileBarChart2, group: "Insights" },
+    nav: { label: "Reports", icon: FileBarChart2, group: "Insights", roles: ["ADMIN", "STAFF"] },
   },
   {
     path: "/notifications",
     element: Notifications,
-    nav: { label: "Notifications", icon: Bell, group: "Network" },
+    nav: { label: "Notifications", icon: Bell, group: "Network", roles: ["ADMIN"] },
   },
   {
     path: "/hospitals",
     element: Hospitals,
-    nav: { label: "Hospitals", icon: Building2, group: "Network" },
+    nav: { label: "Hospitals", icon: Building2, group: "Network", roles: ["ADMIN", "STAFF"] },
   },
   {
     path: "/settings",
     element: Settings,
-    nav: { label: "Settings", icon: SettingsIcon, group: "System" },
+    nav: { label: "Settings", icon: SettingsIcon, group: "System", roles: ["ADMIN", "INVENTORY_MANAGER", "STAFF"] },
   },
   {
     path: "/users",

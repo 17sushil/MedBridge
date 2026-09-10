@@ -1,13 +1,14 @@
 const express = require("express");
 const controller = require("../controllers/notifications.controller");
-const { requireAuth } = require("../middleware/auth");
+const { requireAuth, requireRole } = require("../middleware/auth");
 
 const router = express.Router();
 
 router.use(requireAuth);
 
-router.get("/", controller.list);
-router.patch("/read-all", controller.markAllRead);
-router.patch("/:id/read", controller.markOneRead);
+// Admin-only: notifications of exchange requests and operational alerts.
+router.get("/", requireRole("ADMIN"), controller.list);
+router.patch("/read-all", requireRole("ADMIN"), controller.markAllRead);
+router.patch("/:id/read", requireRole("ADMIN"), controller.markOneRead);
 
 module.exports = router;

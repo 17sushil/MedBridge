@@ -13,7 +13,7 @@ import MedicineFormModal from "../components/modals/MedicineFormModal";
 import { formatDate } from "../utils/format";
 import { statusTone } from "../utils/expiry";
 import { useAuth } from "../context/AuthContext";
-import { canManageInventory } from "../utils/permissions";
+import { canManageInventory, canDeleteInventory } from "../utils/permissions";
 import { parseSpreadsheet, checkHeaders, normalizeRows, REQUIRED_HEADERS, downloadTemplate } from "../utils/excelImport";
 import "./Inventory.css";
 
@@ -22,6 +22,7 @@ const FILTERS = ["All", "In Stock", "Low Stock", "Critical", "Expired"];
 export default function Inventory() {
   const { user } = useAuth();
   const canWrite = canManageInventory(user?.roleKey);
+  const canDelete = canDeleteInventory(user?.roleKey);
 
   const [medicines, setMedicines] = useState(null);
   const [modal, setModal] = useState(null);
@@ -282,15 +283,17 @@ export default function Inventory() {
                           >
                             <Pencil size={14} />
                           </button>
-                          <button
-                            type="button"
-                            className="inv-action-btn inv-action-btn-danger"
-                            title="Delete"
-                            disabled={deletingId === m.id}
-                            onClick={() => handleDelete(m.id)}
-                          >
-                            <Trash2 size={14} />
-                          </button>
+                          {canDelete && (
+                            <button
+                              type="button"
+                              className="inv-action-btn inv-action-btn-danger"
+                              title="Delete"
+                              disabled={deletingId === m.id}
+                              onClick={() => handleDelete(m.id)}
+                            >
+                              <Trash2 size={14} />
+                            </button>
+                          )}
                         </div>
                       </td>
                     )}

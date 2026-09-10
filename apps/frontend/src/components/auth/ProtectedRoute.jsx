@@ -17,8 +17,17 @@ export function ProtectedRoute() {
   return <Outlet />;
 }
 
+export function RoleGuard({ roles, children }) {
+  const { user } = useAuth();
+  if (roles && roles.length > 0 && user?.roleKey && !roles.includes(user.roleKey)) {
+    const fallback = user.roleKey === "INVENTORY_MANAGER" ? "/inventory" : "/";
+    return <Navigate to={fallback} replace />;
+  }
+  return children;
+}
+
 export function GuestRoute() {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, user } = useAuth();
 
   if (loading) {
     return (
@@ -28,6 +37,9 @@ export function GuestRoute() {
     );
   }
 
-  if (isAuthenticated) return <Navigate to="/" replace />;
+  if (isAuthenticated) {
+    const target = user?.roleKey === "INVENTORY_MANAGER" ? "/inventory" : "/";
+    return <Navigate to={target} replace />;
+  }
   return <Outlet />;
 }

@@ -1,6 +1,6 @@
 const express = require("express");
 const controller = require("../controllers/exchangeRequests.controller");
-const { requireAuth } = require("../middleware/auth");
+const { requireAuth, requireRole } = require("../middleware/auth");
 const { validate } = require("../middleware/validate");
 const {
   createExchangeRequestSchema,
@@ -11,8 +11,8 @@ const router = express.Router();
 
 router.use(requireAuth);
 
-router.get("/", controller.list);
-router.post("/", validate(createExchangeRequestSchema), controller.create);
-router.patch("/:id/status", validate(updateStatusSchema), controller.updateStatus);
+router.get("/", requireRole("ADMIN", "STAFF"), controller.list);
+router.post("/", requireRole("ADMIN", "STAFF"), validate(createExchangeRequestSchema), controller.create);
+router.patch("/:id/status", requireRole("ADMIN"), validate(updateStatusSchema), controller.updateStatus);
 
 module.exports = router;

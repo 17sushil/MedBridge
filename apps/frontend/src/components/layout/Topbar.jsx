@@ -5,6 +5,7 @@ import { Bell, ChevronDown, Menu, Search } from "lucide-react";
 import { useApp } from "../../context/AppContext";
 import { useAuth } from "../../context/AuthContext";
 import { api } from "../../services/api";
+import { canAccessNotifications } from "../../utils/permissions";
 import "./Topbar.css";
 import ThemeToggle from "../ui/ThemeToggle";
 
@@ -22,10 +23,13 @@ export default function Topbar() {
   // term like "bdndon" still shows "No medicines found."
   const [dismissed, setDismissed] = useState(false);
 
+  const showNotifications = canAccessNotifications(user?.roleKey);
+
   const handleLogout = () => {
     logout();
     navigate("/login", { replace: true });
   };
+
   useEffect(() => {
     const term = query.trim();
     if (term.length < 2) return undefined;
@@ -69,7 +73,6 @@ export default function Topbar() {
     setResults([]);
     setDismissed(true);
   };
-
 
   return (
     <header className="topbar">
@@ -122,13 +125,16 @@ export default function Topbar() {
 
       <div className="topbar-spacer" />
 
-      {/* ADDED: the theme toggle button, placed before the notification bell */}
+      {/* Theme toggle */}
       <ThemeToggle />
 
-      <Link to="/notifications" className="topbar-icon-btn">
-        <Bell size={18} />
-        {unreadCount > 0 && <span className="topbar-bell-badge">{unreadCount}</span>}
-      </Link>
+      {/* Admin-only notification bell */}
+      {showNotifications && (
+        <Link to="/notifications" className="topbar-icon-btn" aria-label="Notifications">
+          <Bell size={18} />
+          {unreadCount > 0 && <span className="topbar-bell-badge">{unreadCount}</span>}
+        </Link>
+      )}
 
       <div className="topbar-user-menu-wrap">
         <button onClick={() => setMenuOpen((v) => !v)} className="topbar-user-btn">
@@ -152,9 +158,11 @@ export default function Topbar() {
             <Link to="/settings" className="topbar-dropdown-item" onClick={() => setMenuOpen(false)}>
               Account settings
             </Link>
-            <Link to="/hospitals" className="topbar-dropdown-item" onClick={() => setMenuOpen(false)}>
-              Partner hospitals
-            </Link>
+            {user?.roleKey !== "INVENTORY_MANAGER" && (
+              <Link to="/hospitals" className="topbar-dropdown-item" onClick={() => setMenuOpen(false)}>
+                Partner hospitals
+              </Link>
+            )}
             <div className="topbar-dropdown-divider" />
             <button
               type="button"

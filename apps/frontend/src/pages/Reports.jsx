@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { FileBarChart2, Download, Plus, X, Trash2 } from "lucide-react";
 import { api } from "../services/api";
+import { useAuth } from "../context/AuthContext";
+import { canGenerateReports } from "../utils/permissions";
 import PageHeader from "../components/ui/PageHeader";
 import Card from "../components/ui/Card";
 import Badge from "../components/ui/Badge";
@@ -70,6 +72,9 @@ async function exportReport(report) {
 }
 
 export default function Reports() {
+  const { user } = useAuth();
+  const canGenerate = canGenerateReports(user?.roleKey);
+
   const [reports, setReports] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ name: "", period: "", type: "INVENTORY" });
@@ -86,6 +91,7 @@ export default function Reports() {
 
   const handleGenerate = async (e) => {
     e.preventDefault();
+    if (!canGenerate) return;
     if (!form.name.trim() || !form.period.trim()) {
       setFormError("Name and period are required.");
       return;
@@ -116,6 +122,7 @@ export default function Reports() {
   };
 
   const handleDelete = async (id) => {
+    if (!canGenerate) return;
     if (!window.confirm("Delete this report?")) return;
     setDeletingId(id);
     try {
@@ -132,15 +139,17 @@ export default function Reports() {
     <div>
       <PageHeader
         title="Reports"
-        subtitle="Generated summaries of inventory, exchanges, and compliance."
+        subtitle="Summaries of inventory, exchanges, and compliance."
         actions={
-          <Button variant="teal" onClick={() => setShowForm((v) => !v)}>
-            {showForm ? <X size={16} /> : <Plus size={16} />} {showForm ? "Cancel" : "Generate Report"}
-          </Button>
+          canGenerate ? (
+            <Button variant="teal" onClick={() => setShowForm((v) => !v)}>
+              {showForm ? <X size={16} /> : <Plus size={16} />} {showForm ? "Cancel" : "Generate Report"}
+            </Button>
+          ) : undefined
         }
       />
 
-      {showForm && (
+      {canGenerate && showForm && (
         <Card style={{ marginBottom: 16 }}>
           <form onSubmit={handleGenerate} style={{ display: "grid", gap: 12 }}>
             {formError && (
@@ -148,7 +157,7 @@ export default function Reports() {
                 {formError}
               </div>
             )}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 , padding:20}}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, padding: 20 }}>
               <label style={{ display: "grid", gap: 4, fontSize: 13 }}>
                 <span>Report name</span>
                 <input
@@ -202,11 +211,13 @@ export default function Reports() {
           <EmptyState
             icon={FileBarChart2}
             title="No reports yet"
-            description="Generate a report to see it here."
+            description="Reports generated for your hospital will appear here."
             action={
-              <Button variant="teal" size="sm" onClick={() => setShowForm(true)}>
-                <Plus size={16} /> Generate Report
-              </Button>
+              canGenerate ? (
+                <Button variant="teal" size="sm" onClick={() => setShowForm(true)}>
+                  <Plus size={16} /> Generate Report
+                </Button>
+              ) : undefined
             }
           />
         ) : (
@@ -233,14 +244,16 @@ export default function Reports() {
                 >
                   <Download size={14} /> {exportingId === r.id ? "Exporting…" : "Export"}
                 </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => handleDelete(r.id)}
-                  disabled={deletingId === r.id}
-                >
-                  <Trash2 size={14} />
-                </Button>
+                {canGenerate && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleDelete(r.id)}
+                    disabled={deletingId === r.id}
+                  >
+                    <Trash2 size={14} />
+                  </Button>
+                )}
               </div>
             ))}
           </div>

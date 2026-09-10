@@ -11,12 +11,31 @@ export function isAdmin(roleKey) {
   return roleKey === ROLES.ADMIN;
 }
 
-// Admin + Inventory Manager may create/edit/delete medicines (incl. Excel import).
+export function isInventoryManager(roleKey) {
+  return roleKey === ROLES.INVENTORY_MANAGER;
+}
+
+// Admin + Inventory Manager may add and edit medicines (incl. Excel import).
 export function canManageInventory(roleKey) {
   return roleKey === ROLES.ADMIN || roleKey === ROLES.INVENTORY_MANAGER;
 }
 
-// Only admin may manage users (approve / delete accounts).
+// Only Admin may delete medicines from inventory.
+export function canDeleteInventory(roleKey) {
+  return roleKey === ROLES.ADMIN;
+}
+
+// Only Admin may generate or delete reports.
+export function canGenerateReports(roleKey) {
+  return roleKey === ROLES.ADMIN;
+}
+
+// Only Admin may access notifications and view request activity.
+export function canAccessNotifications(roleKey) {
+  return roleKey === ROLES.ADMIN;
+}
+
+// Only Admin may manage users (approve / delete accounts).
 export function canManageUsers(roleKey) {
   return roleKey === ROLES.ADMIN;
 }
