@@ -6,9 +6,10 @@ const router = express.Router();
 
 router.use(requireAuth);
 
-// Admin-only: notifications of exchange requests and operational alerts.
-router.get("/", requireRole("ADMIN"), controller.list);
-router.patch("/read-all", requireRole("ADMIN"), controller.markAllRead);
-router.patch("/:id/read", requireRole("ADMIN"), controller.markOneRead);
+// Admin and Staff receive notifications of exchange requests and operational alerts.
+// Inventory Manager is scoped strictly to inventory operations.
+router.get("/", requireRole("ADMIN", "STAFF"), controller.list);
+router.patch("/read-all", requireRole("ADMIN", "STAFF"), controller.markAllRead);
+router.patch("/:id/read", requireRole("ADMIN", "STAFF"), controller.markOneRead);
 
 module.exports = router;

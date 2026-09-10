@@ -75,7 +75,7 @@ export const routes = [
   {
     path: "/notifications",
     element: Notifications,
-    nav: { label: "Notifications", icon: Bell, group: "Network", roles: ["ADMIN"] },
+    nav: { label: "Notifications", icon: Bell, group: "Network", roles: ["ADMIN", "STAFF"] },
   },
   {
     path: "/hospitals",

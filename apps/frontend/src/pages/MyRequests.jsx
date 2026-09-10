@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { Plus, ClipboardList } from "lucide-react";
 import { api } from "../services/api";
+import { useAuth } from "../context/AuthContext";
+import { canApproveExchanges } from "../utils/permissions";
 import PageHeader from "../components/ui/PageHeader";
 import Card from "../components/ui/Card";
 import Badge from "../components/ui/Badge";
@@ -14,6 +16,8 @@ import { useApp } from "../context/AppContext";
 import "./MyRequests.css";
 
 export default function MyRequests() {
+  const { user } = useAuth();
+  const canApprove = canApproveExchanges(user?.roleKey);
   const { activeHospital, refreshNotifications } = useApp();
   const [requests, setRequests] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -36,6 +40,7 @@ export default function MyRequests() {
   }, [load]);
 
   const handleConfirmDelivery = async (id) => {
+    if (!canApprove) return;
     setActionId(id);
     setError("");
     try {
@@ -110,7 +115,7 @@ export default function MyRequests() {
                     <Badge tone={statusTone(r.status)}>{r.status}</Badge>
                   </td>
                   <td>
-                    {r.status === "In Transit" ? (
+                    {r.status === "In Transit" && canApprove ? (
                       <Button
                         size="sm"
                         variant="teal"

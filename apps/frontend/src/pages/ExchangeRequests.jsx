@@ -2,6 +2,8 @@ import { useCallback, useEffect, useState } from "react";
 import clsx from "clsx";
 import { ArrowDownLeft, ArrowUpRight, Plus, Repeat2 } from "lucide-react";
 import { api } from "../services/api";
+import { useAuth } from "../context/AuthContext";
+import { canApproveExchanges } from "../utils/permissions";
 import PageHeader from "../components/ui/PageHeader";
 import Card from "../components/ui/Card";
 import Badge from "../components/ui/Badge";
@@ -17,6 +19,9 @@ import "./ExchangeRequests.css";
 const TABS = ["All", "Incoming", "Outgoing"];
 
 export default function ExchangeRequests() {
+  const { user } = useAuth();
+  const canApprove = canApproveExchanges(user?.roleKey);
+
   const [requests, setRequests] = useState(null);
   const [tab, setTab] = useState("All");
   const [showModal, setShowModal] = useState(false);
@@ -46,6 +51,7 @@ export default function ExchangeRequests() {
     }) ?? [];
 
   const handleStatus = async (id, statusLabel) => {
+    if (!canApprove) return;
     setActionId(id);
     setError("");
     try {
@@ -149,8 +155,8 @@ export default function ExchangeRequests() {
                 </div>
                 <Badge tone={statusTone(r.status)}>{r.status}</Badge>
 
-                {/* Supplier actions for incoming requests */}
-                {r.direction === "incoming" && r.status === "Pending" && (
+                {/* Supplier actions for incoming requests (Admin only) */}
+                {canApprove && r.direction === "incoming" && r.status === "Pending" && (
                   <div className="ex-actions">
                     <Button
                       size="sm"
@@ -171,7 +177,7 @@ export default function ExchangeRequests() {
                   </div>
                 )}
 
-                {r.direction === "incoming" && r.status === "Approved" && (
+                {canApprove && r.direction === "incoming" && r.status === "Approved" && (
                   <div className="ex-actions">
                     <Button
                       size="sm"
@@ -184,8 +190,8 @@ export default function ExchangeRequests() {
                   </div>
                 )}
 
-                {/* Recipient action for outgoing/incoming in transit */}
-                {r.direction === "outgoing" && r.status === "In Transit" && (
+                {/* Recipient action for outgoing/incoming in transit (Admin only) */}
+                {canApprove && r.direction === "outgoing" && r.status === "In Transit" && (
                   <div className="ex-actions">
                     <Button
                       size="sm"

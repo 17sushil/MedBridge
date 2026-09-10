@@ -11,12 +11,12 @@ export function AppProvider({ children }) {
   const [sidebarMobileOpen, setSidebarMobileOpen] = useState(false);
 
   useEffect(() => {
-    if (!user || user.roleKey !== "ADMIN") {
+    if (!user || user.roleKey === "INVENTORY_MANAGER") {
       queueMicrotask(() => setNotifications([]));
       return;
     }
     api.getNotifications().then(setNotifications).catch(() => setNotifications([]));
-    // Keep the bell badge fresh for ADMIN so new events (join requests, low stock,
+    // Keep the bell badge fresh for Admin & Staff so new events (join requests, low stock,
     // exchanges) appear without waiting for a page reload.
     const timer = setInterval(() => {
       api.getNotifications().then(setNotifications).catch(() => {});
@@ -25,7 +25,7 @@ export function AppProvider({ children }) {
   }, [user]);
 
   const markAllNotificationsRead = useCallback(async () => {
-    if (user?.roleKey !== "ADMIN") return;
+    if (!user || user.roleKey === "INVENTORY_MANAGER") return;
     try {
       const updated = await api.markAllNotificationsRead();
       setNotifications(updated);
@@ -35,7 +35,7 @@ export function AppProvider({ children }) {
   }, [user]);
 
   const refreshNotifications = useCallback(async () => {
-    if (user?.roleKey !== "ADMIN") return [];
+    if (!user || user.roleKey === "INVENTORY_MANAGER") return [];
     try {
       const items = await api.getNotifications();
       setNotifications(items);
